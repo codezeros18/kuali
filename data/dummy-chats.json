@@ -1,0 +1,270 @@
+[
+  {
+    "id": "chat-001",
+    "customerId": "cust-001",
+    "customerName": "Dinda Ayu",
+    "customerPhone": "081234567890",
+    "message": "Kak mau pesan 12 risol mayo buat besok jam 3, atas nama Dinda. Bayar nanti sore ya.",
+    "timestamp": "2025-05-17T08:15:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "item": "Risol Mayo",
+      "qty": 12,
+      "deliveryDate": "besok jam 3",
+      "customerName": "Dinda",
+      "paymentStatus": "bayar nanti",
+      "missingFields": []
+    }
+  },
+  {
+    "id": "chat-002",
+    "customerId": "cust-002",
+    "customerName": "Mas Budi",
+    "customerPhone": "081234567891",
+    "message": "Ayam geprek 5 ya, ambil siang.",
+    "timestamp": "2025-05-17T08:30:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "item": "Ayam Geprek",
+      "qty": 5,
+      "deliveryDate": "hari ini siang",
+      "customerName": "Mas Budi",
+      "paymentStatus": "belum info",
+      "missingFields": ["paymentStatus", "exactTime"]
+    }
+  },
+  {
+    "id": "chat-003",
+    "customerId": "cust-003",
+    "customerName": "Ibu Sari",
+    "customerPhone": "081234567892",
+    "message": "Mau yang kemarin kayak biasa.",
+    "timestamp": "2025-05-17T08:45:00+07:00",
+    "category": "ambiguous",
+    "parseHint": {
+      "item": "tidak diketahui",
+      "qty": null,
+      "deliveryDate": "tidak jelas",
+      "customerName": "Ibu Sari",
+      "paymentStatus": "belum info",
+      "missingFields": ["item", "qty", "deliveryDate", "paymentStatus"],
+      "note": "referensi ke pesanan sebelumnya — perlu cek history pelanggan"
+    }
+  },
+  {
+    "id": "chat-004",
+    "customerId": "cust-004",
+    "customerName": "Kak Rina",
+    "customerPhone": "081234567893",
+    "message": "nasi kotak 20 biji dong kak buat acara kantor jumat depan, mau diambil sendiri, transfer dulu ok",
+    "timestamp": "2025-05-17T09:00:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "item": "Nasi Kotak",
+      "qty": 20,
+      "deliveryDate": "jumat depan",
+      "customerName": "Kak Rina",
+      "paymentStatus": "transfer di muka",
+      "pickupMethod": "ambil sendiri",
+      "missingFields": ["pickupTime"]
+    }
+  },
+  {
+    "id": "chat-005",
+    "customerId": "cust-005",
+    "customerName": "Pak Hendra",
+    "customerPhone": "081234567894",
+    "message": "Kak, kemarin saya pesan snack box 30 sudah termasuk yang coklat ya? Sama tambah 5 lagi dong.",
+    "timestamp": "2025-05-17T09:15:00+07:00",
+    "category": "ambiguous",
+    "parseHint": {
+      "item": "Snack Box",
+      "qty": 5,
+      "deliveryDate": "tidak jelas",
+      "customerName": "Pak Hendra",
+      "paymentStatus": "belum info",
+      "missingFields": ["deliveryDate", "paymentStatus"],
+      "note": "ada pertanyaan konfirmasi tentang pesanan sebelumnya — butuh verifikasi manual"
+    }
+  },
+  {
+    "id": "chat-006",
+    "customerId": "cust-006",
+    "customerName": "Mbak Dewi",
+    "customerPhone": "081234567895",
+    "message": "Kak mau pesen 8 risol sm 10 lumpia basah buat besok pagi jam 7. bayar nanti ya. nama mbak dewi",
+    "timestamp": "2025-05-17T09:30:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "items": [
+        { "item": "Risol Mayo", "qty": 8 },
+        { "item": "Lumpia Basah", "qty": 10 }
+      ],
+      "deliveryDate": "besok jam 7 pagi",
+      "customerName": "Mbak Dewi",
+      "paymentStatus": "bayar nanti",
+      "missingFields": []
+    }
+  },
+  {
+    "id": "chat-007",
+    "customerId": "cust-007",
+    "customerName": "Anonim",
+    "customerPhone": "081234567896",
+    "message": "Ada nasi padang gak?",
+    "timestamp": "2025-05-17T09:45:00+07:00",
+    "category": "inquiry_not_order",
+    "parseHint": {
+      "item": "Nasi Padang",
+      "qty": null,
+      "isOrder": false,
+      "note": "ini pertanyaan ketersediaan menu, bukan order — perlu balasan informasi menu",
+      "missingFields": ["qty", "deliveryDate", "customerName", "paymentStatus"]
+    }
+  },
+  {
+    "id": "chat-008",
+    "customerId": "cust-001",
+    "customerName": "Dinda Ayu",
+    "customerPhone": "081234567890",
+    "message": "Kak saya Dinda, kemarin udah transfer ya buat order risol. Buktinya udah saya kirim.",
+    "timestamp": "2025-05-17T10:00:00+07:00",
+    "category": "payment_followup",
+    "parseHint": {
+      "isOrder": false,
+      "isPaymentConfirmation": true,
+      "customerName": "Dinda",
+      "note": "konfirmasi pembayaran — perlu cek bukti transfer dan update status order",
+      "missingFields": ["paymentProof"]
+    }
+  },
+  {
+    "id": "chat-009",
+    "customerId": "cust-008",
+    "customerName": "Bu Tini",
+    "customerPhone": "081234567897",
+    "message": "Kak mau frozen food, ada yang ready? Mau 2 pack ayam crispy sama 3 pack dimsum",
+    "timestamp": "2025-05-17T10:15:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "items": [
+        { "item": "Frozen Ayam Crispy", "qty": 2 },
+        { "item": "Frozen Dimsum", "qty": 3 }
+      ],
+      "deliveryDate": "tidak jelas",
+      "customerName": "Bu Tini",
+      "paymentStatus": "belum info",
+      "missingFields": ["deliveryDate", "paymentStatus", "pickupMethod"]
+    }
+  },
+  {
+    "id": "chat-010",
+    "customerId": "cust-009",
+    "customerName": "Mas Agus",
+    "customerPhone": "081234567898",
+    "message": "risol 6 bj, besok ya kak",
+    "timestamp": "2025-05-17T10:30:00+07:00",
+    "category": "typo_informal",
+    "parseHint": {
+      "item": "Risol Mayo",
+      "qty": 6,
+      "deliveryDate": "besok",
+      "customerName": "Mas Agus",
+      "paymentStatus": "belum info",
+      "missingFields": ["paymentStatus", "exactTime"],
+      "note": "'bj' = 'buah' — singkatan informal umum"
+    }
+  },
+  {
+    "id": "chat-011",
+    "customerId": "cust-010",
+    "customerName": "Kak Lisa",
+    "customerPhone": "081234567899",
+    "message": "Hallo kak, bisa pesan kopi literan? 2 liter kopi susu gula aren dong buat besok jam 8 pagi. Titip ke kurir ya. Nanti transfer.",
+    "timestamp": "2025-05-17T10:45:00+07:00",
+    "category": "happy_path",
+    "parseHint": {
+      "item": "Kopi Susu Gula Aren",
+      "qty": 2,
+      "unit": "liter",
+      "deliveryDate": "besok jam 8 pagi",
+      "customerName": "Kak Lisa",
+      "paymentStatus": "transfer nanti",
+      "deliveryMethod": "kurir",
+      "missingFields": []
+    }
+  },
+  {
+    "id": "chat-012",
+    "customerId": "cust-003",
+    "customerName": "Ibu Sari",
+    "customerPhone": "081234567892",
+    "message": "Eh sorry kak yang tadi, maksudnya mau pesan nasi box 15 buat jumat. Sama minta tolong tulis nama di setiap kotaknya ya.",
+    "timestamp": "2025-05-17T11:00:00+07:00",
+    "category": "correction_followup",
+    "parseHint": {
+      "item": "Nasi Kotak",
+      "qty": 15,
+      "deliveryDate": "jumat",
+      "customerName": "Ibu Sari",
+      "paymentStatus": "belum info",
+      "specialRequest": "tulis nama di setiap kotak",
+      "note": "ini koreksi dari chat-003 — terhubung ke order yang sama",
+      "missingFields": ["paymentStatus", "exactTime"]
+    }
+  },
+  {
+    "id": "chat-013",
+    "customerId": "cust-004",
+    "customerName": "Kak Rina",
+    "customerPhone": "081234567893",
+    "message": "Kak cancel aja yang 20 nasi kotak. Acaranya batal.",
+    "timestamp": "2025-05-17T11:15:00+07:00",
+    "category": "cancellation",
+    "parseHint": {
+      "isOrder": false,
+      "isCancellation": true,
+      "customerName": "Kak Rina",
+      "note": "pembatalan order — perlu konfirmasi manual dan update status",
+      "missingFields": []
+    }
+  },
+  {
+    "id": "chat-014",
+    "customerId": "cust-002",
+    "customerName": "Mas Budi",
+    "customerPhone": "081234567891",
+    "message": "Kak tambah dong 3 ayam geprek lagi sama 2 tahu walik. Jam ambilnya sama ya, siang.",
+    "timestamp": "2025-05-17T11:30:00+07:00",
+    "category": "order_addition",
+    "parseHint": {
+      "items": [
+        { "item": "Ayam Geprek", "qty": 3 },
+        { "item": "Tahu Walik", "qty": 2 }
+      ],
+      "deliveryDate": "hari ini siang",
+      "customerName": "Mas Budi",
+      "paymentStatus": "belum info",
+      "note": "tambahan ke order chat-002 yang sudah ada",
+      "missingFields": ["paymentStatus"]
+    }
+  },
+  {
+    "id": "chat-015",
+    "customerId": "cust-008",
+    "customerName": "Bu Tini",
+    "customerPhone": "081234567897",
+    "message": "Kak ayam crispynya ada gak yang pedas? Kalau ada mau yg pedas semua 2 packnya.",
+    "timestamp": "2025-05-17T11:45:00+07:00",
+    "category": "low_confidence",
+    "parseHint": {
+      "item": "Frozen Ayam Crispy Pedas",
+      "qty": 2,
+      "deliveryDate": "tidak jelas",
+      "customerName": "Bu Tini",
+      "paymentStatus": "belum info",
+      "confidenceIssue": "varian menu perlu dikonfirmasi — tidak ada 'ayam crispy pedas' di daftar standar",
+      "missingFields": ["deliveryDate", "paymentStatus", "menuVariantConfirmation"]
+    }
+  }
+]

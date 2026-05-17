@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ing-001",
+    "name": "Tepung Terigu",
+    "category": "Bahan Pokok",
+    "unit": "kg",
+    "pricePerUnit": 12000,
+    "currentStock": 10,
+    "supplier": "Toko Bahan Bu Mimin",
+    "notes": "Digunakan untuk hampir semua gorengan dan snack"
+  },
+  {
+    "id": "ing-002",
+    "name": "Telur",
+    "category": "Protein",
+    "unit": "butir",
+    "pricePerUnit": 2000,
+    "currentStock": 60,
+    "supplier": "Pak Karyo Peternak Telur",
+    "notes": "Telur ayam kampung lebih mahal, pakai telur ayam negeri untuk produksi"
+  },
+  {
+    "id": "ing-003",
+    "name": "Wortel",
+    "category": "Sayuran",
+    "unit": "kg",
+    "pricePerUnit": 8000,
+    "currentStock": 3,
+    "supplier": "Pasar Pagi Setempat",
+    "notes": "Beli segar, max simpan 3 hari"
+  },
+  {
+    "id": "ing-004",
+    "name": "Mayones",
+    "category": "Condiment",
+    "unit": "kg",
+    "pricePerUnit": 35000,
+    "currentStock": 1.5,
+    "supplier": "Alfamart / Indomaret",
+    "notes": "Pakai merek lokal untuk efisiensi biaya"
+  },
+  {
+    "id": "ing-005",
+    "name": "Minyak Goreng",
+    "category": "Bahan Pokok",
+    "unit": "liter",
+    "pricePerUnit": 17000,
+    "currentStock": 8,
+    "supplier": "Toko Bahan Bu Mimin",
+    "notes": "Pantau harga karena sering fluktuatif"
+  },
+  {
+    "id": "ing-006",
+    "name": "Ayam Potong",
+    "category": "Protein",
+    "unit": "kg",
+    "pricePerUnit": 38000,
+    "currentStock": 5,
+    "supplier": "Pak Jono Ayam Segar",
+    "notes": "Pesan H-1 untuk kebutuhan besar, stok terbatas harian"
+  },
+  {
+    "id": "ing-007",
+    "name": "Cabai Rawit",
+    "category": "Bumbu",
+    "unit": "kg",
+    "pricePerUnit": 45000,
+    "currentStock": 0.5,
+    "supplier": "Pasar Pagi Setempat",
+    "notes": "Harga sangat fluktuatif. Pantau tiap minggu."
+  },
+  {
+    "id": "ing-008",
+    "name": "Bawang Putih",
+    "category": "Bumbu",
+    "unit": "kg",
+    "pricePerUnit": 30000,
+    "currentStock": 1,
+    "supplier": "Pasar Pagi Setempat",
+    "notes": ""
+  },
+  {
+    "id": "ing-009",
+    "name": "Beras",
+    "category": "Bahan Pokok",
+    "unit": "kg",
+    "pricePerUnit": 14000,
+    "currentStock": 20,
+    "supplier": "Toko Bahan Bu Mimin",
+    "notes": "Beli per 25kg saat stok hampir habis"
+  },
+  {
+    "id": "ing-010",
+    "name": "Minyak Sawit",
+    "category": "Bahan Pokok",
+    "unit": "liter",
+    "pricePerUnit": 16000,
+    "currentStock": 5,
+    "supplier": "Toko Bahan Bu Mimin",
+    "notes": "Untuk masakan tumis dan nasi box, berbeda dari minyak goreng biasa"
+  },
+  {
+    "id": "ing-011",
+    "name": "Tahu Putih",
+    "category": "Protein",
+    "unit": "buah",
+    "pricePerUnit": 2000,
+    "currentStock": 30,
+    "supplier": "Pasar Pagi Setempat",
+    "notes": "Beli segar harian, tidak bisa disimpan lebih dari 2 hari. 1 papan = 9 buah."
+  },
+  {
+    "id": "ing-012",
+    "name": "Gula Aren",
+    "category": "Pemanis",
+    "unit": "kg",
+    "pricePerUnit": 28000,
+    "currentStock": 2,
+    "supplier": "Toko Bahan Bu Mimin",
+    "notes": "Untuk kopi susu gula aren literan. Cair lebih cepat larut daripada padat."
+  }
+]

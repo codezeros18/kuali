@@ -1,0 +1,181 @@
+[
+  {
+    "id": "menu-001",
+    "name": "Risol Mayo",
+    "category": "Gorengan",
+    "price": 3500,
+    "unit": "pcs",
+    "minOrder": 6,
+    "maxOrder": 100,
+    "description": "Risol kulit tipis isi sayur dan mayo",
+    "isAvailable": true,
+    "leadTimeHours": 12,
+    "recipe": {
+      "recipeId": "recipe-001",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.05, "unit": "kg" },
+        { "ingredientId": "ing-002", "name": "Telur", "qty": 0.1, "unit": "butir" },
+        { "ingredientId": "ing-003", "name": "Wortel", "qty": 0.02, "unit": "kg" },
+        { "ingredientId": "ing-004", "name": "Mayones", "qty": 0.01, "unit": "kg" },
+        { "ingredientId": "ing-005", "name": "Minyak Goreng", "qty": 0.02, "unit": "liter" }
+      ]
+    }
+  },
+  {
+    "id": "menu-002",
+    "name": "Ayam Geprek",
+    "category": "Lauk",
+    "price": 15000,
+    "unit": "porsi",
+    "minOrder": 1,
+    "maxOrder": 50,
+    "description": "Ayam goreng geprek dengan sambal bawang",
+    "isAvailable": true,
+    "leadTimeHours": 4,
+    "recipe": {
+      "recipeId": "recipe-002",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-006", "name": "Ayam Potong", "qty": 0.25, "unit": "kg" },
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.05, "unit": "kg" },
+        { "ingredientId": "ing-005", "name": "Minyak Goreng", "qty": 0.05, "unit": "liter" },
+        { "ingredientId": "ing-007", "name": "Cabai Rawit", "qty": 0.01, "unit": "kg" },
+        { "ingredientId": "ing-008", "name": "Bawang Putih", "qty": 0.005, "unit": "kg" }
+      ]
+    }
+  },
+  {
+    "id": "menu-003",
+    "name": "Nasi Kotak",
+    "category": "Nasi Box",
+    "price": 25000,
+    "unit": "kotak",
+    "minOrder": 10,
+    "maxOrder": 200,
+    "description": "Nasi putih + lauk 2 item + sayur + kerupuk dalam kotak",
+    "isAvailable": true,
+    "leadTimeHours": 24,
+    "recipe": {
+      "recipeId": "recipe-003",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-009", "name": "Beras", "qty": 0.2, "unit": "kg" },
+        { "ingredientId": "ing-006", "name": "Ayam Potong", "qty": 0.2, "unit": "kg" },
+        { "ingredientId": "ing-010", "name": "Minyak Sawit", "qty": 0.03, "unit": "liter" },
+        { "ingredientId": "ing-003", "name": "Wortel", "qty": 0.05, "unit": "kg" },
+        { "ingredientId": "ing-008", "name": "Bawang Putih", "qty": 0.005, "unit": "kg" }
+      ]
+    }
+  },
+  {
+    "id": "menu-004",
+    "name": "Snack Box",
+    "category": "Snack",
+    "price": 20000,
+    "unit": "kotak",
+    "minOrder": 10,
+    "maxOrder": 300,
+    "description": "Box berisi 5 item snack pilihan (risol, lumpia, tahu walik, dll)",
+    "isAvailable": true,
+    "leadTimeHours": 12,
+    "recipe": {
+      "recipeId": "recipe-004",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.1, "unit": "kg" },
+        { "ingredientId": "ing-002", "name": "Telur", "qty": 0.5, "unit": "butir" },
+        { "ingredientId": "ing-005", "name": "Minyak Goreng", "qty": 0.05, "unit": "liter" },
+        { "ingredientId": "ing-003", "name": "Wortel", "qty": 0.03, "unit": "kg" }
+      ]
+    }
+  },
+  {
+    "id": "menu-005",
+    "name": "Lumpia Basah",
+    "category": "Gorengan",
+    "price": 4000,
+    "unit": "pcs",
+    "minOrder": 5,
+    "maxOrder": 100,
+    "description": "Lumpia isi rebung dan bengkuang",
+    "isAvailable": true,
+    "leadTimeHours": 12,
+    "recipe": {
+      "recipeId": "recipe-005",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.04, "unit": "kg" },
+        { "ingredientId": "ing-002", "name": "Telur", "qty": 0.1, "unit": "butir" },
+        { "ingredientId": "ing-005", "name": "Minyak Goreng", "qty": 0.02, "unit": "liter" }
+      ]
+    }
+  },
+  {
+    "id": "menu-006",
+    "name": "Tahu Walik",
+    "category": "Gorengan",
+    "price": 3000,
+    "unit": "pcs",
+    "minOrder": 5,
+    "maxOrder": 100,
+    "description": "Tahu dibalik isi adonan bumbu pedas",
+    "isAvailable": true,
+    "leadTimeHours": 8,
+    "recipe": {
+      "recipeId": "recipe-006",
+      "servings": 1,
+      "ingredients": [
+        { "ingredientId": "ing-011", "name": "Tahu Putih", "qty": 1, "unit": "buah" },
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.02, "unit": "kg" },
+        { "ingredientId": "ing-005", "name": "Minyak Goreng", "qty": 0.02, "unit": "liter" },
+        { "ingredientId": "ing-007", "name": "Cabai Rawit", "qty": 0.005, "unit": "kg" },
+        { "ingredientId": "ing-008", "name": "Bawang Putih", "qty": 0.003, "unit": "kg" }
+      ]
+    }
+  },
+  {
+    "id": "menu-007",
+    "name": "Kopi Susu Gula Aren",
+    "category": "Minuman",
+    "price": 18000,
+    "unit": "liter",
+    "minOrder": 1,
+    "maxOrder": 20,
+    "description": "Kopi susu literan dengan gula aren asli",
+    "isAvailable": true,
+    "leadTimeHours": 4,
+    "recipe": {
+      "recipeId": "recipe-007",
+      "servings": 1,
+      "note": "Per 1 liter kopi susu gula aren",
+      "ingredients": [
+        { "ingredientId": "ing-012", "name": "Gula Aren", "qty": 0.1, "unit": "kg" },
+        { "ingredientId": "ing-002", "name": "Telur", "qty": 1, "unit": "butir", "note": "Untuk kocok kopi — opsional sesuai varian" }
+      ],
+      "missingIngredientsNote": "Kopi bubuk dan susu UHT/cair belum masuk tabel bahan — tambahkan di Phase 1 saat seed DB"
+    }
+  },
+  {
+    "id": "menu-008",
+    "name": "Frozen Ayam Crispy",
+    "category": "Frozen Food",
+    "price": 35000,
+    "unit": "pack",
+    "packContents": "6 pcs per pack",
+    "minOrder": 1,
+    "maxOrder": 30,
+    "description": "Ayam crispy beku siap goreng, isi 6 pcs",
+    "isAvailable": true,
+    "leadTimeHours": 24,
+    "recipe": {
+      "recipeId": "recipe-008",
+      "servings": 6,
+      "ingredients": [
+        { "ingredientId": "ing-006", "name": "Ayam Potong", "qty": 0.5, "unit": "kg" },
+        { "ingredientId": "ing-001", "name": "Tepung Terigu", "qty": 0.1, "unit": "kg" },
+        { "ingredientId": "ing-008", "name": "Bawang Putih", "qty": 0.01, "unit": "kg" }
+      ]
+    }
+  }
+]

@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "businessId": "biz-001",
+    "businessName": "Katering Bu Rani",
+    "metricsDate": "2025-05-17",
+    "generatedAt": "2025-05-17T20:00:00+07:00",
+    "disclaimer": "PENTING: Semua metrik di file ini adalah simulasi dari data dummy demo Kuali. Bukan klaim operasional nyata, bukan janji peningkatan, dan bukan hasil studi. Digunakan hanya untuk keperluan proposal dan demo hackathon Phase 0.",
+    "safeNarrativeNote": "Gunakan framing 'dalam demo ini' atau 'berdasarkan simulasi data dummy'. Jangan klaim 'Kuali terbukti meningkatkan X%'."
+  },
+
+  "operationalMetrics": {
+    "chatParsing": {
+      "label": "Chat berhasil diparse menjadi draft order",
+      "value": 13,
+      "outOf": 15,
+      "unit": "chat",
+      "percentSuccessRate": 86.7,
+      "demoNote": "2 chat gagal bukan error — satu adalah inquiry bukan order, satu lagi referensi pesanan lama yang perlu cek history."
+    },
+    "lowConfidenceDetected": {
+      "label": "Pesanan terdeteksi perlu cek ulang (confidence rendah)",
+      "value": 3,
+      "unit": "order",
+      "confidenceThreshold": 0.7,
+      "demoNote": "Sistem menampilkan badge 'Perlu Cek' agar Bu Rani tidak keliru approve pesanan yang tidak jelas."
+    },
+    "ownerApprovalControl": {
+      "label": "Semua order butuh approval Bu Rani sebelum dikonfirmasi",
+      "value": true,
+      "demoNote": "AI hanya membuat draft. Tidak ada satu pun order yang dikonfirmasi tanpa persetujuan owner."
+    },
+    "ordersConfirmedToday": {
+      "label": "Order dikonfirmasi hari ini",
+      "value": 5,
+      "unit": "order",
+      "demoNote": "Dari 11 order masuk, 5 sudah di-approve Bu Rani."
+    },
+    "unpaidOrdersTracked": {
+      "label": "Order belum bayar yang terdeteksi",
+      "value": 4,
+      "totalUnpaidAmount": 167000,
+      "unit": "order",
+      "demoNote": "Semua order unpaid terlihat di dashboard — Bu Rani tidak perlu ingat sendiri."
+    },
+    "qrisDummyRemindersReady": {
+      "label": "Reminder QRIS siap dikirim",
+      "value": 5,
+      "unit": "reminder",
+      "demoNote": "Bu Rani tinggal salin dan kirim ke pelanggan. QRIS ini adalah dummy — bukan settlement otomatis."
+    }
+  },
+
+  "productionMetrics": {
+    "ingredientsCalculatedFromActualOrders": {
+      "label": "Bahan produksi terhitung otomatis dari order aktual",
+      "value": true,
+      "ingredientsCount": 6,
+      "demoNote": "Bukan dari perkiraan. Dari order yang sudah di-approve × resep yang sudah dimasukkan."
+    },
+    "productionPlanGenerated": {
+      "label": "Rencana produksi besok tersedia",
+      "value": true,
+      "planDate": "2025-05-18",
+      "demoNote": "Bu Rani tahu persis berapa bahan yang harus disiapkan malam ini."
+    },
+    "stockSufficientForTomorrow": {
+      "label": "Stok cukup untuk produksi besok",
+      "value": true,
+      "stockWarnings": 0,
+      "demoNote": "Kalau stok mendekati batas, sistem akan tampilkan warning. Besok aman."
+    }
+  },
+
+  "dailySummaryMetrics": {
+    "summaryGenerated": {
+      "label": "Daily summary dibuat otomatis",
+      "value": true,
+      "demoNote": "Bu Rani tidak perlu rekap manual di akhir hari."
+    },
+    "totalOrdersInSummary": {
+      "label": "Total order dalam summary hari ini",
+      "value": 11,
+      "unit": "order"
+    },
+    "narrativeGenerated": {
+      "label": "Ringkasan narasi dalam Bahasa Indonesia dibuat otomatis",
+      "value": true,
+      "demoNote": "Draft narasi bisa diedit Bu Rani sebelum dibagikan ke tim."
+    }
+  },
+
+  "comparisonSimulation": {
+    "disclaimer": "Perbandingan di bawah ini adalah SIMULASI ILUSTRATIF. Bukan hasil pengukuran waktu aktual. Gunakan hanya untuk menggambarkan nilai produk secara konseptual.",
+    "withoutKuali": {
+      "scenarioLabel": "Tanpa Kuali — rekap manual seperti biasa",
+      "estimatedTimeMinutes": 40,
+      "description": "Bu Rani membuka semua chat satu per satu, catat di buku atau notes HP, hitung bahan pakai perkiraan, ingat siapa yang belum bayar dari memori.",
+      "painPoints": [
+        "Mudah tercecer kalau banyak chat bersamaan",
+        "Pembayaran terlupakan",
+        "Estimasi bahan tidak akurat",
+        "Tidak ada rekap yang bisa dibaca ulang dengan jelas"
+      ]
+    },
+    "withKuali": {
+      "scenarioLabel": "Dengan Kuali — draft order + summary otomatis",
+      "estimatedTimeMinutes": 8,
+      "description": "Chat masuk → AI parsing → Bu Rani cek dan approve → dashboard update → production planner terhitung → summary selesai.",
+      "benefits": [
+        "Order tidak tercecer",
+        "Unpaid langsung terlihat",
+        "Bahan terhitung dari order aktual",
+        "Rekap harian tersedia tanpa input manual"
+      ]
+    },
+    "timeSavedSimulation": {
+      "label": "Estimasi waktu tersimpan (simulasi)",
+      "value": 32,
+      "unit": "menit/hari",
+      "safeWording": "Berdasarkan simulasi data dummy, Kuali berpotensi membantu Bu Rani menghemat waktu rekap harian. Hasil aktual tergantung volume order dan kebiasaan masing-masing owner."
+    }
+  },
+
+  "weeklyTrendSimulation": {
+    "disclaimer": "Data tren mingguan di bawah adalah simulasi dummy untuk keperluan demo dashboard. Bukan data historis aktual.",
+    "period": "2025-05-11 hingga 2025-05-17",
+    "dailyOrderCount": [
+      { "date": "2025-05-11", "orders": 8, "confirmed": 7, "paid": 5 },
+      { "date": "2025-05-12", "orders": 10, "confirmed": 9, "paid": 7 },
+      { "date": "2025-05-13", "orders": 14, "confirmed": 13, "paid": 10 },
+      { "date": "2025-05-14", "orders": 9, "confirmed": 8, "paid": 6 },
+      { "date": "2025-05-15", "orders": 11, "confirmed": 10, "paid": 8 },
+      { "date": "2025-05-16", "orders": 7, "confirmed": 6, "paid": 4 },
+      { "date": "2025-05-17", "orders": 11, "confirmed": 5, "paid": 1, "note": "Hari ini — masih berjalan" }
+    ],
+    "weeklyTotals": {
+      "totalOrders": 70,
+      "totalConfirmed": 58,
+      "totalPaid": 41,
+      "averageConfidenceScore": 0.82
+    }
+  },
+
+  "metricsSafeToUseInPitch": [
+    "13 dari 15 chat berhasil diparse menjadi draft order (dalam demo ini)",
+    "3 pesanan berhasil diidentifikasi butuh cek ulang sebelum dikonfirmasi",
+    "4 pesanan unpaid terdeteksi otomatis — reminder QRIS siap dikirim",
+    "6 bahan produksi besok terhitung dari order aktual, bukan perkiraan",
+    "Daily summary dibuat otomatis tanpa rekap manual dari Bu Rani"
+  ],
+
+  "metricsForbiddenInPitch": [
+    "Profit Bu Rani naik X%",
+    "Food waste turun Y%",
+    "Semua pelanggan pasti puas",
+    "Semua stok sisa pasti laku",
+    "Harga bahan pasti lebih murah",
+    "UMKM pasti lebih sukses dengan Kuali",
+    "Kuali menggantikan kebutuhan admin"
+  ]
+}

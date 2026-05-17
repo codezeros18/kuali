@@ -1,0 +1,421 @@
+[
+  {
+    "id": "recipe-001",
+    "menuId": "menu-001",
+    "menuName": "Risol Mayo",
+    "servingUnit": "pcs",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 20,
+    "cookTimeMinutes": 10,
+    "totalTimeMinutes": 30,
+    "difficulty": "sedang",
+    "productionNotes": "Kulit risol bisa dibuat batch besar (50–100 pcs sekaligus) lalu diisi dan digoreng bertahap.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.05,
+        "unit": "kg",
+        "purpose": "kulit risol"
+      },
+      {
+        "ingredientId": "ing-002",
+        "name": "Telur",
+        "qtyPerServing": 0.1,
+        "unit": "butir",
+        "purpose": "adonan kulit dan pelapis"
+      },
+      {
+        "ingredientId": "ing-003",
+        "name": "Wortel",
+        "qtyPerServing": 0.02,
+        "unit": "kg",
+        "purpose": "isian sayur"
+      },
+      {
+        "ingredientId": "ing-004",
+        "name": "Mayones",
+        "qtyPerServing": 0.01,
+        "unit": "kg",
+        "purpose": "isian mayo"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "qtyPerServing": 0.02,
+        "unit": "liter",
+        "purpose": "menggoreng"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 26,
+      "totalIngredients": [
+        { "ingredientId": "ing-001", "total": 1.3, "unit": "kg" },
+        { "ingredientId": "ing-002", "total": 2.6, "unit": "butir" },
+        { "ingredientId": "ing-003", "total": 0.52, "unit": "kg" },
+        { "ingredientId": "ing-004", "total": 0.26, "unit": "kg" },
+        { "ingredientId": "ing-005", "total": 0.52, "unit": "liter" }
+      ],
+      "note": "Contoh kalkulasi untuk 26 pcs (dari dummy orders hari ini)"
+    }
+  },
+  {
+    "id": "recipe-002",
+    "menuId": "menu-002",
+    "menuName": "Ayam Geprek",
+    "servingUnit": "porsi",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 15,
+    "cookTimeMinutes": 20,
+    "totalTimeMinutes": 35,
+    "difficulty": "mudah",
+    "productionNotes": "Siapkan bumbu marinasi semalaman untuk rasa lebih meresap. Goreng mendekati waktu ambil.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-006",
+        "name": "Ayam Potong",
+        "qtyPerServing": 0.25,
+        "unit": "kg",
+        "purpose": "bahan utama"
+      },
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.05,
+        "unit": "kg",
+        "purpose": "balutan tepung"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "qtyPerServing": 0.05,
+        "unit": "liter",
+        "purpose": "menggoreng"
+      },
+      {
+        "ingredientId": "ing-007",
+        "name": "Cabai Rawit",
+        "qtyPerServing": 0.01,
+        "unit": "kg",
+        "purpose": "sambal geprek"
+      },
+      {
+        "ingredientId": "ing-008",
+        "name": "Bawang Putih",
+        "qtyPerServing": 0.005,
+        "unit": "kg",
+        "purpose": "bumbu marinasi dan sambal"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 5,
+      "totalIngredients": [
+        { "ingredientId": "ing-006", "total": 1.25, "unit": "kg" },
+        { "ingredientId": "ing-001", "total": 0.25, "unit": "kg" },
+        { "ingredientId": "ing-005", "total": 0.25, "unit": "liter" },
+        { "ingredientId": "ing-007", "total": 0.05, "unit": "kg" },
+        { "ingredientId": "ing-008", "total": 0.025, "unit": "kg" }
+      ],
+      "note": "Contoh untuk 5 porsi"
+    }
+  },
+  {
+    "id": "recipe-003",
+    "menuId": "menu-003",
+    "menuName": "Nasi Kotak",
+    "servingUnit": "kotak",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 30,
+    "cookTimeMinutes": 45,
+    "totalTimeMinutes": 75,
+    "difficulty": "sedang",
+    "productionNotes": "Masak nasi H-0 pagi hari. Lauk bisa disiapkan malam sebelumnya. Rakitan kotak dilakukan 1–2 jam sebelum kirim.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-009",
+        "name": "Beras",
+        "qtyPerServing": 0.2,
+        "unit": "kg",
+        "purpose": "nasi putih"
+      },
+      {
+        "ingredientId": "ing-006",
+        "name": "Ayam Potong",
+        "qtyPerServing": 0.2,
+        "unit": "kg",
+        "purpose": "lauk utama"
+      },
+      {
+        "ingredientId": "ing-010",
+        "name": "Minyak Sawit",
+        "qtyPerServing": 0.03,
+        "unit": "liter",
+        "purpose": "menumis lauk dan sayur"
+      },
+      {
+        "ingredientId": "ing-003",
+        "name": "Wortel",
+        "qtyPerServing": 0.05,
+        "unit": "kg",
+        "purpose": "sayur pelengkap"
+      },
+      {
+        "ingredientId": "ing-008",
+        "name": "Bawang Putih",
+        "qtyPerServing": 0.005,
+        "unit": "kg",
+        "purpose": "bumbu dasar"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 20,
+      "totalIngredients": [
+        { "ingredientId": "ing-009", "total": 4.0, "unit": "kg" },
+        { "ingredientId": "ing-006", "total": 4.0, "unit": "kg" },
+        { "ingredientId": "ing-010", "total": 0.6, "unit": "liter" },
+        { "ingredientId": "ing-003", "total": 1.0, "unit": "kg" },
+        { "ingredientId": "ing-008", "total": 0.1, "unit": "kg" }
+      ],
+      "note": "Contoh untuk 20 kotak (order Kak Rina)"
+    }
+  },
+  {
+    "id": "recipe-004",
+    "menuId": "menu-004",
+    "menuName": "Snack Box",
+    "servingUnit": "kotak",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 45,
+    "cookTimeMinutes": 30,
+    "totalTimeMinutes": 75,
+    "difficulty": "sedang",
+    "productionNotes": "1 kotak berisi 5 item snack campuran (risol, lumpia, tahu walik, dll). Komposisi bisa bervariasi per order. Bahan dihitung berdasarkan komposisi standar.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.1,
+        "unit": "kg",
+        "purpose": "kulit dan balutan berbagai snack"
+      },
+      {
+        "ingredientId": "ing-002",
+        "name": "Telur",
+        "qtyPerServing": 0.5,
+        "unit": "butir",
+        "purpose": "pengikat adonan"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "qtyPerServing": 0.05,
+        "unit": "liter",
+        "purpose": "menggoreng campuran snack"
+      },
+      {
+        "ingredientId": "ing-003",
+        "name": "Wortel",
+        "qtyPerServing": 0.03,
+        "unit": "kg",
+        "purpose": "isian sayur"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 30,
+      "totalIngredients": [
+        { "ingredientId": "ing-001", "total": 3.0, "unit": "kg" },
+        { "ingredientId": "ing-002", "total": 15, "unit": "butir" },
+        { "ingredientId": "ing-005", "total": 1.5, "unit": "liter" },
+        { "ingredientId": "ing-003", "total": 0.9, "unit": "kg" }
+      ],
+      "note": "Contoh untuk 30 kotak (order Pak Hendra sebelumnya)"
+    }
+  },
+  {
+    "id": "recipe-005",
+    "menuId": "menu-005",
+    "menuName": "Lumpia Basah",
+    "servingUnit": "pcs",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 15,
+    "cookTimeMinutes": 10,
+    "totalTimeMinutes": 25,
+    "difficulty": "mudah",
+    "productionNotes": "Kulit bisa dibuat batch. Isian rebung/bengkuang harus dibumbui dulu dan didinginkan sebelum dimasukkan ke kulit.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.04,
+        "unit": "kg",
+        "purpose": "kulit lumpia"
+      },
+      {
+        "ingredientId": "ing-002",
+        "name": "Telur",
+        "qtyPerServing": 0.1,
+        "unit": "butir",
+        "purpose": "adonan kulit"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "qtyPerServing": 0.02,
+        "unit": "liter",
+        "purpose": "menggoreng atau olesan pan"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 10,
+      "totalIngredients": [
+        { "ingredientId": "ing-001", "total": 0.4, "unit": "kg" },
+        { "ingredientId": "ing-002", "total": 1.0, "unit": "butir" },
+        { "ingredientId": "ing-005", "total": 0.2, "unit": "liter" }
+      ],
+      "note": "Contoh untuk 10 pcs (order Mbak Dewi)"
+    }
+  },
+  {
+    "id": "recipe-006",
+    "menuId": "menu-006",
+    "menuName": "Tahu Walik",
+    "servingUnit": "pcs",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 10,
+    "cookTimeMinutes": 10,
+    "totalTimeMinutes": 20,
+    "difficulty": "mudah",
+    "productionNotes": "Tahu dibalik kulitnya lalu diisi adonan bumbu dan digoreng. Siapkan tahu segar hari-H. Tidak bisa terlalu lama setelah digoreng.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-011",
+        "name": "Tahu Putih",
+        "qtyPerServing": 1,
+        "unit": "buah",
+        "purpose": "bahan utama — dibalik dan diisi"
+      },
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.02,
+        "unit": "kg",
+        "purpose": "adonan isian"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "qtyPerServing": 0.02,
+        "unit": "liter",
+        "purpose": "menggoreng"
+      },
+      {
+        "ingredientId": "ing-007",
+        "name": "Cabai Rawit",
+        "qtyPerServing": 0.005,
+        "unit": "kg",
+        "purpose": "bumbu pedas isian"
+      },
+      {
+        "ingredientId": "ing-008",
+        "name": "Bawang Putih",
+        "qtyPerServing": 0.003,
+        "unit": "kg",
+        "purpose": "bumbu isian"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 2,
+      "totalIngredients": [
+        { "ingredientId": "ing-011", "total": 2, "unit": "buah" },
+        { "ingredientId": "ing-001", "total": 0.04, "unit": "kg" },
+        { "ingredientId": "ing-005", "total": 0.04, "unit": "liter" },
+        { "ingredientId": "ing-007", "total": 0.01, "unit": "kg" },
+        { "ingredientId": "ing-008", "total": 0.006, "unit": "kg" }
+      ],
+      "note": "Contoh untuk 2 pcs (order Mas Budi tambahan)"
+    }
+  },
+  {
+    "id": "recipe-007",
+    "menuId": "menu-007",
+    "menuName": "Kopi Susu Gula Aren",
+    "servingUnit": "liter",
+    "servingsPerBatch": 1,
+    "prepTimeMinutes": 10,
+    "cookTimeMinutes": 5,
+    "totalTimeMinutes": 15,
+    "difficulty": "mudah",
+    "productionNotes": "Siapkan gula aren cair dahulu. Seduh kopi, campur susu, lalu tambah gula aren sesuai selera pelanggan. Kemas di botol atau teko tertutup.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-012",
+        "name": "Gula Aren",
+        "qtyPerServing": 0.1,
+        "unit": "kg",
+        "purpose": "pemanis utama"
+      },
+      {
+        "ingredientId": "ing-002",
+        "name": "Telur",
+        "qtyPerServing": 1,
+        "unit": "butir",
+        "purpose": "kocok kopi — opsional, sesuai varian",
+        "isOptional": true
+      }
+    ],
+    "missingIngredientsNote": "Kopi Bubuk dan Susu UHT/Cair belum masuk tabel bahan (ing-013 dan ing-014). Tambahkan saat Phase 1 setup DB seed.",
+    "productionCalcExample": {
+      "qty": 2,
+      "totalIngredients": [
+        { "ingredientId": "ing-012", "total": 0.2, "unit": "kg" },
+        { "ingredientId": "ing-002", "total": 2, "unit": "butir" }
+      ],
+      "note": "Contoh untuk 2 liter (order Kak Lisa)"
+    }
+  },
+  {
+    "id": "recipe-008",
+    "menuId": "menu-008",
+    "menuName": "Frozen Ayam Crispy",
+    "servingUnit": "pack",
+    "servingsPerBatch": 1,
+    "batchSize": "1 pack = 6 pcs ayam",
+    "prepTimeMinutes": 30,
+    "cookTimeMinutes": 25,
+    "totalTimeMinutes": 55,
+    "difficulty": "sedang",
+    "productionNotes": "Produksi dalam batch besar (min 10 pack sekaligus) agar efisien. Bekukan setelah digoreng setengah matang. Beri label tanggal produksi dan expired.",
+    "ingredients": [
+      {
+        "ingredientId": "ing-006",
+        "name": "Ayam Potong",
+        "qtyPerServing": 0.5,
+        "unit": "kg",
+        "purpose": "bahan utama (6 potong per pack)"
+      },
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "qtyPerServing": 0.1,
+        "unit": "kg",
+        "purpose": "balutan crispy"
+      },
+      {
+        "ingredientId": "ing-008",
+        "name": "Bawang Putih",
+        "qtyPerServing": 0.01,
+        "unit": "kg",
+        "purpose": "marinasi"
+      }
+    ],
+    "productionCalcExample": {
+      "qty": 3,
+      "totalIngredients": [
+        { "ingredientId": "ing-006", "total": 1.5, "unit": "kg" },
+        { "ingredientId": "ing-001", "total": 0.3, "unit": "kg" },
+        { "ingredientId": "ing-008", "total": 0.03, "unit": "kg" }
+      ],
+      "note": "Contoh untuk 3 pack (order Bu Tini sebelumnya)"
+    }
+  }
+]

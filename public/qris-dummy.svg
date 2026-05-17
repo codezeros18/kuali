@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none">
+  <!-- Background -->
+  <rect width="240" height="240" fill="white" rx="12"/>
+
+  <!-- Outer border -->
+  <rect x="8" y="8" width="224" height="224" rx="8" stroke="#1A1A1A" stroke-width="4" fill="none"/>
+
+  <!-- Top-left finder pattern -->
+  <rect x="20" y="20" width="60" height="60" rx="4" fill="#1A1A1A"/>
+  <rect x="28" y="28" width="44" height="44" rx="2" fill="white"/>
+  <rect x="36" y="36" width="28" height="28" rx="1" fill="#1A1A1A"/>
+
+  <!-- Top-right finder pattern -->
+  <rect x="160" y="20" width="60" height="60" rx="4" fill="#1A1A1A"/>
+  <rect x="168" y="28" width="44" height="44" rx="2" fill="white"/>
+  <rect x="176" y="36" width="28" height="28" rx="1" fill="#1A1A1A"/>
+
+  <!-- Bottom-left finder pattern -->
+  <rect x="20" y="160" width="60" height="60" rx="4" fill="#1A1A1A"/>
+  <rect x="28" y="168" width="44" height="44" rx="2" fill="white"/>
+  <rect x="36" y="176" width="28" height="28" rx="1" fill="#1A1A1A"/>
+
+  <!-- Data dots (simplified QR-like pattern) -->
+  <rect x="96" y="20" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="108" y="20" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="20" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="136" y="20" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="20" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="32" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="32" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="32" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="108" y="44" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="136" y="44" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="56" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="56" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="56" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="68" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="108" y="68" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="136" y="68" width="8" height="8" fill="#1A1A1A"/>
+
+  <!-- Left side data -->
+  <rect x="20" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="32" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="56" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="68" y="96" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="20" y="108" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="44" y="108" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="68" y="108" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="32" y="120" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="56" y="120" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="20" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="44" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="68" y="132" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="32" y="144" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="44" y="144" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="68" y="144" width="8" height="8" fill="#1A1A1A"/>
+
+  <!-- Center data block -->
+  <rect x="96" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="144" y="96" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="108" y="108" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="132" y="108" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="120" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="144" y="120" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="108" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="132" y="132" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="144" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="144" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="144" y="144" width="8" height="8" fill="#1A1A1A"/>
+
+  <!-- Right side data -->
+  <rect x="172" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="196" y="96" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="96" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="172" y="108" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="184" y="108" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="108" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="196" y="120" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="172" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="184" y="132" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="132" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="172" y="144" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="196" y="144" width="8" height="8" fill="#1A1A1A"/>
+
+  <!-- Bottom data rows -->
+  <rect x="96" y="160" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="160" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="160" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="172" y="160" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="196" y="160" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="160" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="108" y="172" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="136" y="172" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="172" y="172" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="172" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="184" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="184" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="184" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="184" y="184" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="108" y="196" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="136" y="196" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="160" y="196" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="196" y="196" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="196" width="8" height="8" fill="#1A1A1A"/>
+
+  <rect x="96" y="208" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="120" y="208" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="148" y="208" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="172" y="208" width="8" height="8" fill="#1A1A1A"/>
+  <rect x="212" y="208" width="8" height="8" fill="#1A1A1A"/>
+
+  <!-- DUMMY label overlay -->
+  <rect x="60" y="103" width="120" height="34" rx="4" fill="#E8541A" opacity="0.92"/>
+  <text x="120" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">QRIS DUMMY</text>
+</svg>

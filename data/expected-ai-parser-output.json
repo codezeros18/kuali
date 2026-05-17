@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "description": "Expected AI parser output untuk demo utama Kuali. Digunakan sebagai referensi mock response dan validasi output format.",
+    "chatId": "chat-001",
+    "demoContext": "Katering Bu Rani — skenario happy path utama",
+    "disclaimer": "File ini adalah referensi expected output, bukan hasil AI live. Gunakan sebagai mock response saat USE_MOCK_AI=true."
+  },
+
+  "input": {
+    "chatText": "Kak mau pesan 12 risol mayo buat besok jam 3, atas nama Dinda. Bayar nanti sore ya.",
+    "availableMenus": [
+      "Risol Mayo",
+      "Ayam Geprek",
+      "Nasi Kotak",
+      "Snack Box",
+      "Lumpia Basah",
+      "Tahu Walik",
+      "Kopi Susu Gula Aren",
+      "Frozen Ayam Crispy"
+    ],
+    "businessContext": "Katering Bu Rani — pre-order makanan rumahan, WhatsApp-first"
+  },
+
+  "output": {
+    "customerName": "Dinda",
+    "items": [
+      {
+        "menuName": "Risol Mayo",
+        "qty": 12,
+        "matchedMenuId": "menu-001",
+        "unitPrice": 3500,
+        "subtotal": 42000
+      }
+    ],
+    "deliveryDate": "besok",
+    "deliveryDateResolved": "2025-05-18",
+    "deliveryTime": "15:00",
+    "paymentStatus": "belum_bayar",
+    "pickupMethod": "delivery",
+    "specialRequest": null,
+    "confidenceScore": 0.95,
+    "missingFields": [],
+    "suggestedReply": "Halo Kak Dinda, pesanan 12 risol mayo untuk besok jam 3 sudah kami catat ya. Kami akan kirimkan info pembayaran sore ini. Terima kasih! 🙏",
+    "parserNotes": "Semua field terdeteksi. Nama pelanggan, menu, jumlah, waktu kirim, dan status bayar jelas."
+  },
+
+  "validation": {
+    "menuExists": true,
+    "menuMatchedId": "menu-001",
+    "qtyWithinRange": true,
+    "minOrder": 6,
+    "maxOrder": 100,
+    "confidenceCategory": "HIGH",
+    "readyForOwnerApproval": true
+  },
+
+  "guardrailChecks": {
+    "priceInvented": false,
+    "menuInvented": false,
+    "paymentAutoConfirmed": false,
+    "messageSentWithoutApproval": false,
+    "allGuardrailsPassed": true
+  },
+
+  "lowConfidenceExample": {
+    "_note": "Contoh output untuk chat-015 (Bu Tini) — digunakan untuk demo edge case",
+    "chatId": "chat-015",
+    "rawInput": "Kak ayam crispynya ada yang pedas gak? Mau yang pedas semua 2 packnya.",
+    "output": {
+      "customerName": "Bu Tini",
+      "items": [
+        {
+          "menuName": "Frozen Ayam Crispy",
+          "qty": 2,
+          "matchedMenuId": "menu-008",
+          "variantNote": "varian pedas — belum dikonfirmasi tersedia di menu standar"
+        }
+      ],
+      "deliveryDate": null,
+      "deliveryTime": null,
+      "paymentStatus": "belum info",
+      "pickupMethod": null,
+      "specialRequest": "varian pedas",
+      "confidenceScore": 0.45,
+      "missingFields": ["deliveryDate", "deliveryTime", "pickupMethod", "paymentStatus", "varianKonfirmasi"],
+      "suggestedReply": "Halo Bu Tini, untuk ayam crispy varian pedas, kami perlu konfirmasi dulu ketersediaannya ya. Boleh tanya juga untuk tanggal dan jam pengambilannya? 🙏",
+      "parserNotes": "Confidence rendah: varian menu pedas tidak ada di daftar standar. Tanggal dan metode ambil belum disebutkan."
+    },
+    "validation": {
+      "menuExists": true,
+      "menuMatchedId": "menu-008",
+      "confidenceCategory": "LOW",
+      "readyForOwnerApproval": false,
+      "requiresManualVerification": true
+    }
+  }
+}

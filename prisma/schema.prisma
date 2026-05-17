@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  name      String
+  ownerName String
+  phone     String?
+  createdAt DateTime @default(now())
+
+  orders Order[]
+}
+
+model Menu {
+  id          String  @id
+  name        String
+  unit        String
+  pricePerUnit Int
+  isActive    Boolean @default(true)
+
+  orderItems  OrderItem[]
+  recipeItems RecipeItem[]
+}
+
+model Ingredient {
+  id          String  @id
+  name        String
+  unit        String
+  stockQty    Float   @default(0)
+
+  recipeItems RecipeItem[]
+}
+
+model RecipeItem {
+  id           String @id @default(cuid())
+  menuId       String
+  ingredientId String
+  qtyPerUnit   Float
+
+  menu       Menu       @relation(fields: [menuId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Customer {
+  id    String  @id @default(cuid())
+  name  String
+  phone String  @unique
+
+  orders Order[]
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  orderNumber     String    @unique
+  businessId      String?
+  customerId      String?
+  customerName    String
+  customerPhone   String?
+  sourceChat      String?
+  status          String    @default("draft")
+  paymentStatus   String    @default("unpaid")
+  totalAmount     Int       @default(0)
+  deliveryDate    String?
+  deliveryTime    String?
+  pickupMethod    String?
+  specialRequest  String?
+  confidenceScore Float     @default(0)
+  missingFields   String    @default("[]")
+  qrisDummyShown  Boolean   @default(false)
+  notes           String?
+  approvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  business  Business?   @relation(fields: [businessId], references: [id])
+  customer  Customer?   @relation(fields: [customerId], references: [id])
+  items     OrderItem[]
+  payments  Payment[]
+}
+
+model OrderItem {
+  id         String @id @default(cuid())
+  orderId    String
+  menuId     String
+  menuName   String
+  qty        Int
+  unitPrice  Int
+  subtotal   Int
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menu  Menu  @relation(fields: [menuId], references: [id])
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  orderId       String
+  amount        Int
+  method        String   @default("qris_dummy")
+  status        String   @default("pending")
+  reminderSent  Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model NotificationLog {
+  id        String   @id @default(cuid())
+  orderId   String?
+  type      String
+  recipient String?
+  message   String
+  status    String   @default("simulated")
+  createdAt DateTime @default(now())
+}
+
+model DailySummary {
+  id              String   @id @default(cuid())
+  date            String   @unique
+  totalOrders     Int      @default(0)
+  confirmedOrders Int      @default(0)
+  draftOrders     Int      @default(0)
+  totalRevenue    Int      @default(0)
+  unpaidAmount    Int      @default(0)
+  parsedChats     Int      @default(0)
+  totalChats      Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

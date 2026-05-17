@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "businessId": "biz-001",
+    "businessName": "Katering Bu Rani",
+    "summaryDate": "2025-05-17",
+    "generatedAt": "2025-05-17T20:00:00+07:00",
+    "disclaimer": "Data ini adalah ringkasan dummy untuk keperluan demo dan proposal Phase 0 Kuali."
+  },
+
+  "orderSummary": {
+    "totalOrdersToday": 11,
+    "byStatus": {
+      "confirmed": 5,
+      "draft": 6,
+      "cancelled": 0,
+      "completed": 0
+    },
+    "byPayment": {
+      "paid": 1,
+      "unpaid": 10,
+      "refunded": 0
+    },
+    "needsReview": 3,
+    "needsReviewDetail": [
+      {
+        "orderId": "order-005",
+        "orderNumber": "KL-20250517-005",
+        "customerName": "Bu Tini",
+        "reason": "missing field: deliveryDate, pickupMethod",
+        "confidenceScore": 0.65
+      },
+      {
+        "orderId": "order-019",
+        "orderNumber": "KL-20250512-002",
+        "customerName": "Pak Hendra",
+        "reason": "pertanyaan tentang order sebelumnya, deliveryDate tidak jelas",
+        "confidenceScore": 0.6
+      },
+      {
+        "orderId": "order-020",
+        "orderNumber": "KL-20250517-010",
+        "customerName": "Bu Tini",
+        "reason": "LOW CONFIDENCE — varian menu pedas belum dikonfirmasi tersedia",
+        "confidenceScore": 0.45
+      }
+    ]
+  },
+
+  "financialSummary": {
+    "confirmedRevenuePotential": 667000,
+    "confirmedRevenuePotentialDetail": [
+      { "orderId": "order-001", "amount": 42000, "paymentStatus": "unpaid" },
+      { "orderId": "order-003", "amount": 500000, "paymentStatus": "paid" },
+      { "orderId": "order-004", "amount": 68000, "paymentStatus": "unpaid" },
+      { "orderId": "order-006", "amount": 21000, "paymentStatus": "unpaid" },
+      { "orderId": "order-007", "amount": 36000, "paymentStatus": "unpaid" }
+    ],
+    "paidToday": 500000,
+    "unpaidConfirmed": 167000,
+    "unpaidConfirmedOrders": 4,
+    "pendingDraftTotal": 741000,
+    "note": "Total potensi dari draft belum dihitung sebagai pendapatan — masih menunggu approval owner"
+  },
+
+  "chatParsingSummary": {
+    "totalChatsReceived": 15,
+    "successfullyParsed": 13,
+    "lowConfidenceParsed": 3,
+    "failedToParse": 0,
+    "lowConfidenceCases": [
+      {
+        "chatId": "chat-003",
+        "customerName": "Ibu Sari",
+        "issue": "Referensi ke pesanan sebelumnya — 'yang biasa'",
+        "confidenceScore": null,
+        "action": "perlu konfirmasi manual"
+      },
+      {
+        "chatId": "chat-005",
+        "customerName": "Pak Hendra",
+        "issue": "Pertanyaan konfirmasi sebelum order final",
+        "confidenceScore": 0.6,
+        "action": "perlu klarifikasi"
+      },
+      {
+        "chatId": "chat-015",
+        "customerName": "Bu Tini",
+        "issue": "Varian menu pedas belum ada di daftar standar",
+        "confidenceScore": 0.45,
+        "action": "konfirmasi ketersediaan varian"
+      }
+    ]
+  },
+
+  "productionPlan": {
+    "planDate": "2025-05-18",
+    "basedOnConfirmedOrders": [
+      {
+        "orderId": "order-001",
+        "orderNumber": "KL-20250517-001",
+        "customerName": "Dinda Ayu",
+        "items": [{ "menuName": "Risol Mayo", "qty": 12 }],
+        "deliveryTime": "15:00"
+      },
+      {
+        "orderId": "order-004",
+        "orderNumber": "KL-20250517-004",
+        "customerName": "Mbak Dewi",
+        "items": [
+          { "menuName": "Risol Mayo", "qty": 8 },
+          { "menuName": "Lumpia Basah", "qty": 10 }
+        ],
+        "deliveryTime": "07:00"
+      },
+      {
+        "orderId": "order-006",
+        "orderNumber": "KL-20250517-006",
+        "customerName": "Mas Agus",
+        "items": [{ "menuName": "Risol Mayo", "qty": 6 }],
+        "deliveryTime": null
+      },
+      {
+        "orderId": "order-007",
+        "orderNumber": "KL-20250517-007",
+        "customerName": "Kak Lisa",
+        "items": [{ "menuName": "Kopi Susu Gula Aren", "qty": 2, "unit": "liter" }],
+        "deliveryTime": "08:00"
+      }
+    ],
+    "menuSummary": [
+      {
+        "menuId": "menu-001",
+        "menuName": "Risol Mayo",
+        "totalQty": 26,
+        "unit": "pcs",
+        "sourceOrders": ["order-001 (12pcs)", "order-004 (8pcs)", "order-006 (6pcs)"]
+      },
+      {
+        "menuId": "menu-005",
+        "menuName": "Lumpia Basah",
+        "totalQty": 10,
+        "unit": "pcs",
+        "sourceOrders": ["order-004 (10pcs)"]
+      },
+      {
+        "menuId": "menu-007",
+        "menuName": "Kopi Susu Gula Aren",
+        "totalQty": 2,
+        "unit": "liter",
+        "sourceOrders": ["order-007 (2 liter)"]
+      }
+    ],
+    "aggregatedIngredients": [
+      {
+        "ingredientId": "ing-001",
+        "name": "Tepung Terigu",
+        "totalNeeded": 1.7,
+        "unit": "kg",
+        "currentStock": 10,
+        "stockSufficient": true,
+        "calculation": "Risol (26×0.05=1.3kg) + Lumpia (10×0.04=0.4kg) = 1.7kg"
+      },
+      {
+        "ingredientId": "ing-002",
+        "name": "Telur",
+        "totalNeeded": 5.6,
+        "unit": "butir",
+        "totalNeededRounded": 6,
+        "unit_rounded": "butir",
+        "currentStock": 60,
+        "stockSufficient": true,
+        "calculation": "Risol (26×0.1=2.6) + Lumpia (10×0.1=1.0) + Kopi (2×1=2) = 5.6 butir, dibulatkan ke 6"
+      },
+      {
+        "ingredientId": "ing-003",
+        "name": "Wortel",
+        "totalNeeded": 0.52,
+        "unit": "kg",
+        "currentStock": 3,
+        "stockSufficient": true,
+        "calculation": "Risol (26×0.02=0.52kg)"
+      },
+      {
+        "ingredientId": "ing-004",
+        "name": "Mayones",
+        "totalNeeded": 0.26,
+        "unit": "kg",
+        "currentStock": 1.5,
+        "stockSufficient": true,
+        "calculation": "Risol (26×0.01=0.26kg)"
+      },
+      {
+        "ingredientId": "ing-005",
+        "name": "Minyak Goreng",
+        "totalNeeded": 0.72,
+        "unit": "liter",
+        "currentStock": 8,
+        "stockSufficient": true,
+        "calculation": "Risol (26×0.02=0.52L) + Lumpia (10×0.02=0.2L) = 0.72L"
+      },
+      {
+        "ingredientId": "ing-012",
+        "name": "Gula Aren",
+        "totalNeeded": 0.2,
+        "unit": "kg",
+        "currentStock": 2,
+        "stockSufficient": true,
+        "calculation": "Kopi Susu (2×0.1=0.2kg)"
+      }
+    ],
+    "stockWarnings": [],
+    "productionOrderSuggestion": [
+      { "priority": 1, "task": "Mulai produksi Risol Mayo (26 pcs) — untuk pengiriman Mbak Dewi jam 07:00" },
+      { "priority": 2, "task": "Produksi Lumpia Basah (10 pcs) — bersamaan dengan risol" },
+      { "priority": 3, "task": "Siapkan Kopi Susu Gula Aren (2 liter) — untuk Kak Lisa jam 08:00" },
+      { "priority": 4, "task": "Siapkan sisanya (6 Risol Mas Agus + 12 Risol Dinda) — pengiriman sore" }
+    ]
+  },
+
+  "narrative": {
+    "dailySummaryText": "Hari ini Katering Bu Rani menerima 11 pesanan baru. Lima pesanan sudah dikonfirmasi dan siap diproduksi. Satu pesanan sudah lunas (Kak Rina, Rp 500.000). Ada 4 pesanan yang sudah dikonfirmasi tapi belum bayar totalnya Rp 167.000 — reminder QRIS sudah disiapkan. Tiga chat masuk dengan tingkat keyakinan rendah dan perlu konfirmasi manual. Besok, Bu Rani perlu menyiapkan 26 risol mayo, 10 lumpia basah, dan 2 liter kopi susu gula aren. Semua stok bahan cukup untuk produksi besok.",
+    "toneNote": "Narasi ini dibuat otomatis oleh Kuali dari data order aktual. Bu Rani bisa edit sebelum dibagikan.",
+    "language": "id"
+  }
+}
