@@ -14,7 +14,6 @@ import { formatRupiah } from "@/lib/format";
 import { dashboardMetrics, orders as dummyOrders, business } from "@/lib/dummy-data";
 import type { Order } from "@/lib/dummy-data";
 import { cn } from "@/lib/utils";
-import pakWokMascot from "../../../assets/pak-wok.svg";
 
 interface Metrics {
   totalOrdersToday: number;
@@ -210,7 +209,7 @@ export default function DashboardPage() {
         {/* Belum Dibayar Hero Card */}
         <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl border border-[rgba(180,83,9,0.15)] p-6 relative overflow-hidden flex flex-col gap-2.5 shadow-sm w-full">
           <img 
-            src={pakWokMascot.src} 
+            src="/pak-wok.svg"
             width="104" height="104" 
             alt=""
             onError={(e) => (e.currentTarget.style.display = "none")}
