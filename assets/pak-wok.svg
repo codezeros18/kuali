@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220" role="img" aria-label="Pak Wok — Kuali mascot">
+  
+  
+  <path d="M60 88 Q54 62, 66 44 Q73 30, 60 14" stroke="#E8541A" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"></path>
+  <path d="M100 88 Q95 56, 108 38 Q117 22, 100 6" stroke="#E8541A" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.55"></path>
+  <path d="M140 88 Q146 64, 132 46 Q125 30, 140 16" stroke="#E8541A" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"></path>
+
+  
+  <rect x="14" y="93" width="22" height="14" rx="7" fill="#E8541A"></rect>
+  <rect x="164" y="93" width="22" height="14" rx="7" fill="#E8541A"></rect>
+
+  
+  <path d="M30 100 A70 60 0 0 0 170 100 Z" fill="#E8541A"></path>
+
+  
+  <ellipse cx="100" cy="106" rx="58" ry="6" fill="#D14A1A"></ellipse>
+
+  
+  <ellipse cx="68" cy="142" rx="9" ry="5" fill="#FBB498" opacity="0.6"></ellipse>
+  <ellipse cx="132" cy="142" rx="9" ry="5" fill="#FBB498" opacity="0.6"></ellipse>
+
+  
+  <path d="M73 130 Q80 124, 87 130" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+  <path d="M113 130 Q120 124, 127 130" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+
+  
+  <path d="M85 148 Q100 160, 115 148" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+</svg>
