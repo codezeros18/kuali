@@ -605,7 +605,6 @@ export default function DemoPage() {
         </Link>
       }
       noBottomNav
-      fullHeight
       desktopContent={desktopContent}
     >
       {/* Mobile */}
