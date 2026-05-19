@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 
 interface MockWhatsappChatProps {
   onParsed?: (order: ParsedOrder) => void;
+  onChatChange?: () => void;
 }
 
-export function MockWhatsappChat({ onParsed }: MockWhatsappChatProps) {
+export function MockWhatsappChat({ onParsed, onChatChange }: MockWhatsappChatProps) {
   const [selectedChatId, setSelectedChatId] = useState<string>("chat-001");
   const [isParsing, setIsParsing] = useState(false);
   const [parsedOrder, setParsedOrder] = useState<ParsedOrder | null>(null);
@@ -45,6 +46,7 @@ export function MockWhatsappChat({ onParsed }: MockWhatsappChatProps) {
     setSelectedChatId(id);
     setParsedOrder(null);
     setIsParsing(false);
+    onChatChange?.();
   }
 
   return (

@@ -40,6 +40,7 @@ export async function GET() {
       totalAmount: o.totalAmount,
       confidenceScore: o.confidenceScore,
       createdAt: o.createdAt,
+      items: o.items.map((i) => ({ menuName: i.menuName, qty: i.qty })),
     }));
 
     return NextResponse.json({

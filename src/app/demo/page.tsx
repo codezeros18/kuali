@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, ClipboardList, ChefHat, BarChart2,
   ArrowRight, Home, CheckCircle, RotateCcw, Sparkles,
-  LayoutDashboard, TrendingUp, Zap,
+  LayoutDashboard, TrendingUp, Zap, CreditCard, AlertTriangle,
 } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
 import { MockWhatsappChat } from "@/components/kuali/MockWhatsappChat";
@@ -15,15 +15,18 @@ import { ProductionPlanCard } from "@/components/kuali/ProductionPlanCard";
 import { ImpactDashboard } from "@/components/kuali/ImpactDashboard";
 import { RoadmapCard } from "@/components/kuali/RoadmapCard";
 import { DemoNavigation } from "@/components/kuali/DemoNavigation";
+import { PaymentReminderCard } from "@/components/kuali/PaymentReminderCard";
 import type { ParsedOrder } from "@/lib/dummy-data";
+import { dashboardMetrics, productionPlan } from "@/lib/dummy-data";
+import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // ── Types ────────────────────────────────────────────────────────────────────
-type DemoStep = "intro" | "parse" | "approve" | "production" | "impact" | "roadmap" | "done";
-const STEP_ORDER: DemoStep[] = ["intro", "parse", "approve", "production", "impact", "roadmap", "done"];
+type DemoStep = "intro" | "parse" | "qris" | "production" | "impact" | "roadmap" | "done";
+const STEP_ORDER: DemoStep[] = ["intro", "parse", "qris", "production", "impact", "roadmap", "done"];
 const FLOW_STEPS = [
   { id: "parse" as const,      label: "Chat",       Icon: MessageCircle },
-  { id: "approve" as const,    label: "Konfirmasi", Icon: ClipboardList },
+  { id: "qris" as const,       label: "Pembayaran", Icon: CreditCard },
   { id: "production" as const, label: "Dapur",      Icon: ChefHat },
   { id: "impact" as const,     label: "Rekap",      Icon: BarChart2 },
 ];
@@ -54,13 +57,8 @@ function Stepper({ step, hasParsed }: { step: DemoStep; hasParsed: boolean }) {
   // Tentukan index progres aktif dasar
   let currentIdx = FLOW_STEPS.findIndex(s => s.id === step);
   
-  // Trik Intuitif: Jika step masih di 'parse' tapi data sudah dapet, 
-  // buat visual langkah ke-2 ('approve'/Konfirmasi) menyala aktif!
-  if (step === "parse" && hasParsed) {
-    currentIdx = 1; 
-  } else if (step === "approve") {
-    currentIdx = 1;
-  }
+  // When parse is done (order extracted) highlight "Pembayaran" as the next target
+  if (step === "parse" && hasParsed) currentIdx = 1;
 
   return (
     <div className="mb-6 flex-shrink-0">
@@ -362,7 +360,10 @@ export default function DemoPage() {
         <StepHeader number={1} title="1. Pilih Chat Masuk"
           desc="Pilih contoh pesan pelanggan di bawah, lalu tekan tombol 'Parse dengan AI' untuk mengekstrak data otomatis." />
         <div className="flex-1 overflow-y-auto min-h-0">
-          <MockWhatsappChat onParsed={(data) => setParsedOrder(data)} />
+          <MockWhatsappChat
+            onParsed={(data) => setParsedOrder(data)}
+            onChatChange={() => setParsedOrder(null)}
+          />
         </div>
       </GlassCard>
 
@@ -372,19 +373,36 @@ export default function DemoPage() {
           {parsedOrder ? (
             <div className="flex flex-col h-full min-h-0">
               <StepHeader number={2} title="2. Konfirmasi Draft Order"
-                desc="Hasil ekstraksi AI tersaji instan. Sila periksa data di bawah ini, lalu klik Konfirmasi untuk meneruskan ke dapur." />
+                desc="Hasil ekstraksi AI tersaji instan. Periksa data lalu klik Konfirmasi untuk lanjut ke reminder pembayaran." />
+
+              {/* Low-confidence callout */}
+              {parsedOrder.confidenceScore < 70 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-3 flex gap-2.5 bg-red-50 border border-red-200 rounded-xl p-3 flex-shrink-0"
+                >
+                  <AlertTriangle size={15} className="text-red-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[12px] font-black text-red-700 mb-0.5">Confidence rendah ({parsedOrder.confidenceScore}%)</p>
+                    <p className="text-[11px] text-red-500 font-medium leading-relaxed">
+                      Ini contoh kasus yang <em className="not-italic font-bold">butuh review manual</em>. Tombol konfirmasi dinonaktifkan. Pilih chat lain (Dinda/Mas Budi/Kak Rina) untuk melanjutkan demo penuh.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
               <div className="flex-1 overflow-y-auto min-h-0">
-                <ParsedOrderCard 
-                  order={parsedOrder} 
+                <ParsedOrderCard
+                  order={parsedOrder}
                   onApprove={async () => {
                     fetch("/api/orders", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify(parsedOrder),
                     }).catch(() => null);
-                    // Setelah tombol konfirmasi asli di card ditekan, barulah maju ke step Dapur
-                    setTimeout(() => advance("production"), 400);
-                  }} 
+                    setTimeout(() => advance("qris"), 400);
+                  }}
                 />
               </div>
             </div>
@@ -406,6 +424,66 @@ export default function DemoPage() {
     </motion.div>
   );
 
+  // ── QRIS / PAYMENT REMINDER ───────────────────────────────────────────────
+  const qrisAmount = parsedOrder?.items.reduce((s, i) => s + i.subtotal, 0) ?? 42000;
+  const qrisItems  = parsedOrder?.items.map((i) => `${i.qty}x ${i.menu}`).join(", ") ?? "12x Risol Mayo";
+  const qrisCustomer = parsedOrder?.customerName ?? "Dinda Ayu";
+
+  const qrisContent = (
+    <motion.div key="qris" variants={stepIn} initial="hidden" animate="visible" exit="exit"
+      className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full w-full min-h-0"
+    >
+      {/* Left: Payment reminder card */}
+      <GlassCard>
+        <StepHeader number={<CreditCard size={13} />} title="QRIS & Reminder Pembayaran"
+          desc="Setelah order dikonfirmasi, Kuali menyiapkan draft pesan reminder dan QR dummy untuk diforward ke pelanggan." />
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <PaymentReminderCard
+            customerName={qrisCustomer}
+            amount={qrisAmount}
+            orderNumber="KL-20250519-001"
+            items={qrisItems}
+          />
+        </div>
+      </GlassCard>
+
+      {/* Right: Context + next */}
+      <div className="flex flex-col gap-3 min-h-0">
+        <GlassCard className="flex-1 bg-amber-50/30 border-amber-100">
+          <motion.div
+            animate={{ scale: [1, 1.06, 1] }}
+            transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
+            className="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-600 mx-auto mb-4"
+          >
+            <CreditCard size={26} />
+          </motion.div>
+          <p className="text-[15px] font-bold text-[#1A1A1A] text-center mb-2">Tagih lebih mudah</p>
+          <p className="text-[13px] text-[#6B6B6B] font-medium text-center max-w-[240px] leading-relaxed mx-auto">
+            Salin pesan + QRIS dummy, lalu paste ke chat WhatsApp pelanggan. Tidak ada API WhatsApp nyata yang digunakan.
+          </p>
+
+          {/* Feature callout grid */}
+          <div className="mt-5 grid grid-cols-1 gap-2 w-full">
+            {[
+              { icon: "✅", text: "Draft pesan reminder otomatis" },
+              { icon: "📋", text: "Satu klik salin ke clipboard" },
+              { icon: "🔒", text: "QR dummy — tidak ada pembayaran nyata" },
+            ].map(({ icon, text }) => (
+              <div key={text} className="flex items-center gap-2.5 px-3 py-2 bg-white rounded-xl border border-amber-100">
+                <span className="text-base leading-none">{icon}</span>
+                <span className="text-[12px] font-semibold text-[#555555]">{text}</span>
+              </div>
+            ))}
+          </div>
+        </GlassCard>
+
+        <PrimaryBtn onClick={() => advance("production")}>
+          Lanjut ke Rencana Dapur <ArrowRight size={15} />
+        </PrimaryBtn>
+      </div>
+    </motion.div>
+  );
+
   // ── PRODUCTION ────────────────────────────────────────────────────────────
   const productionContent = (
     <motion.div key="production" variants={stepIn} initial="hidden" animate="visible" exit="exit"
@@ -420,17 +498,40 @@ export default function DemoPage() {
       </GlassCard>
 
       <div className="flex flex-col gap-3 min-h-0">
-        <GlassCard className="flex-1 items-center justify-center bg-orange-50/30 border-orange-100">
-          <motion.div
-            animate={{ rotate: [0, -5, 5, -2, 0] }}
-            transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-orange-100 border border-orange-200 flex items-center justify-center text-orange-500 mx-auto mb-4"
-          >
-            <ChefHat size={28} />
-          </motion.div>
-          <p className="text-[15px] font-bold text-[#1A1A1A] text-center mb-2">Dapur efisien</p>
-          <p className="text-[13px] text-[#6B6B6B] font-medium text-center max-w-[240px] leading-relaxed">
-            Kalkulasi otomatis ini mengurangi <em className="text-orange-600 font-semibold not-italic">food waste</em> dan mempercepat proses belanja bahan katering.
+        <GlassCard className="flex-1 flex-col gap-4">
+          {/* Confirmed order badge */}
+          {parsedOrder && (
+            <div className="flex items-center gap-2.5 bg-green-50 border border-green-200 rounded-xl px-3 py-2.5 flex-shrink-0">
+              <CheckCircle size={14} className="text-green-600 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-[12px] font-black text-green-700 leading-none">Order dikonfirmasi</p>
+                <p className="text-[11px] text-green-600 font-medium mt-0.5 truncate">
+                  {parsedOrder.customerName} — {parsedOrder.items.map(i => `${i.qty}× ${i.menu}`).join(", ")}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Ingredient status summary */}
+          <div className="flex-shrink-0">
+            <p className="text-[11px] font-black text-[#A3A3A3] uppercase tracking-wider mb-2.5">Status Bahan Baku</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Cukup",        count: productionPlan.filter(i => i.status === "sufficient").length,   color: "text-green-600",  bg: "bg-green-50",  border: "border-green-200" },
+                { label: "Hampir Habis", count: productionPlan.filter(i => i.status === "low").length,          color: "text-amber-600",  bg: "bg-amber-50",  border: "border-amber-200" },
+                { label: "Perlu Beli",   count: productionPlan.filter(i => i.status === "insufficient").length, color: "text-red-600",    bg: "bg-red-50",    border: "border-red-200"   },
+              ].map(({ label, count, color, bg, border }) => (
+                <div key={label} className={`${bg} border ${border} rounded-xl p-2.5 text-center`}>
+                  <div className={`text-[20px] font-black ${color} leading-none`}>{count}</div>
+                  <div className="text-[10px] font-bold text-[#6B6B6B] mt-1 leading-tight">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Context note */}
+          <p className="text-[12px] text-[#6B6B6B] font-medium leading-relaxed flex-1">
+            Kuali menghitung kebutuhan bahan dari resep dan stok aktual — sehingga Bu Rani tahu persis apa yang harus disiapkan sebelum mulai masak.
           </p>
         </GlassCard>
         <PrimaryBtn onClick={() => advance("impact")}>
@@ -446,8 +547,24 @@ export default function DemoPage() {
       className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full w-full min-h-0"
     >
       <GlassCard>
-        <StepHeader number={4} title="Analisis Finansial & Rekap"
-          desc="Pantau performa finansial, status pembayaran, dan total omzet dalam satu dasbor terpusat." />
+        <StepHeader number={4} title="Rekap Harian & Dampak Operasional"
+          desc="Pantau total pesanan, piutang, dan efisiensi parsing AI dalam satu laporan harian." />
+
+        {/* Daily summary strip */}
+        <div className="grid grid-cols-4 gap-2 mb-4 flex-shrink-0">
+          {[
+            { val: dashboardMetrics.totalOrdersToday, label: "Order Masuk",   color: "text-blue-600",  bg: "bg-blue-50" },
+            { val: dashboardMetrics.confirmed,         label: "Dikonfirmasi", color: "text-green-600", bg: "bg-green-50" },
+            { val: dashboardMetrics.needsReview,       label: "Perlu Cek",    color: "text-red-500",   bg: "bg-red-50" },
+            { val: formatRupiah(dashboardMetrics.unpaidAmount), label: "Belum Bayar", color: "text-amber-700", bg: "bg-amber-50" },
+          ].map(({ val, label, color, bg }) => (
+            <div key={label} className={`${bg} rounded-xl p-2.5 text-center`}>
+              <div className={`text-[16px] font-black ${color} leading-none mb-0.5`}>{val}</div>
+              <div className="text-[10px] font-bold text-[#6B6B6B] leading-tight">{label}</div>
+            </div>
+          ))}
+        </div>
+
         <div className="flex-1 overflow-y-auto min-h-0">
           <ImpactDashboard />
         </div>
@@ -570,7 +687,7 @@ export default function DemoPage() {
   const contentMap: Record<DemoStep, React.ReactNode> = {
     intro:      introContent,
     parse:      parseContent,
-    approve:    introContent, // Digabung ke parseContent alur barunya
+    qris:       qrisContent,
     production: productionContent,
     impact:     impactContent,
     roadmap:    roadmapContent,
