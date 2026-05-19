@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight, AlertTriangle, ChevronRight,
   BarChart2, CheckCircle2, Clock, CreditCard, Layers3,
@@ -13,11 +13,36 @@ import { ImpactDashboard } from "@/components/kuali/ImpactDashboard";
 import { RoadmapCard } from "@/components/kuali/RoadmapCard";
 import { PaymentReminderCard } from "@/components/kuali/PaymentReminderCard";
 import { formatRupiah } from "@/lib/format";
-import { dailySummary, orders, dashboardMetrics } from "@/lib/dummy-data";
+import { dailySummary, orders as dummyOrders, dashboardMetrics } from "@/lib/dummy-data";
 import { NARRATIVE_SAFE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-const unpaidOrder = orders.find((o) => o.paymentStatus === "unpaid" && o.totalAmount > 0);
+interface LiveMetrics {
+  totalOrdersToday: number;
+  confirmed: number;
+  draftPending: number;
+  needsReview: number;
+  unpaidOrders: number;
+  unpaidAmount: number;
+}
+
+interface RecentOrder {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  status: string;
+  paymentStatus: string;
+  totalAmount: number;
+}
+
+const DUMMY_METRICS: LiveMetrics = {
+  totalOrdersToday: dashboardMetrics.totalOrdersToday,
+  confirmed: dashboardMetrics.confirmed,
+  draftPending: dashboardMetrics.draftPending,
+  needsReview: dashboardMetrics.needsReview,
+  unpaidOrders: dashboardMetrics.unpaidOrders,
+  unpaidAmount: dashboardMetrics.unpaidAmount,
+};
 
 // ── Animation variants ────────────────────────────────────────────────────────
 const containerVariants = {
@@ -108,6 +133,31 @@ function StatCard({
 export default function SummaryPage() {
   const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<LiveMetrics>(DUMMY_METRICS);
+  const [narrative, setNarrative] = useState<string>(dailySummary.narrative);
+  const [unpaidOrder, setUnpaidOrder] = useState<RecentOrder | null>(
+    dummyOrders.find((o) => o.paymentStatus === "unpaid" && o.totalAmount > 0) as RecentOrder | null
+  );
+
+  useEffect(() => {
+    fetch("/api/dashboard")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setMetrics(data.metrics);
+        const firstUnpaid = (data.recentOrders as RecentOrder[]).find(
+          (o) => o.paymentStatus === "unpaid" && o.status === "confirmed"
+        );
+        if (firstUnpaid) setUnpaidOrder(firstUnpaid);
+        const m = data.metrics as LiveMetrics;
+        setNarrative(
+          `Hari ini ${m.totalOrdersToday} pesanan masuk. ${m.confirmed} sudah dikonfirmasi. ` +
+          `${m.unpaidOrders} belum bayar — total ${m.unpaidAmount > 0 ? "Rp " + m.unpaidAmount.toLocaleString("id-ID") : "Rp 0"}. ` +
+          (m.needsReview > 0 ? `${m.needsReview} pesanan perlu dicek ulang oleh Bu Rani.` : "Semua pesanan sudah diproses.")
+        );
+      })
+      .catch(() => null);
+  }, []);
 
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -116,7 +166,7 @@ export default function SummaryPage() {
   const statCardsData = [
     {
       id: "total", icon: BarChart2, label: "Total Order",
-      val: dailySummary.confirmed + dailySummary.draft,
+      val: metrics.totalOrdersToday,
       sublabel: "Pesanan masuk harian", badge: "Aktivitas",
       bgIcon: "bg-[#EFF6FF] text-[#2563EB]", color: "#2563EB",
       path: "M0 24 L20 16 L40 22 L60 10 L80 14 L100 6 L120 12 L140 4",
@@ -124,7 +174,7 @@ export default function SummaryPage() {
     },
     {
       id: "confirmed", icon: CheckCircle2, label: "Dikonfirmasi",
-      val: dailySummary.confirmed,
+      val: metrics.confirmed,
       sublabel: "Siap diproduksi harian", badge: "Stabil",
       bgIcon: "bg-[#F0FDF4] text-[#16A34A]", color: "#16A34A",
       path: "M0 28 L20 25 L40 26 L60 18 L80 20 L100 12 L120 14 L140 8",
@@ -132,7 +182,7 @@ export default function SummaryPage() {
     },
     {
       id: "draft", icon: Clock, label: "Draft / Pending",
-      val: dailySummary.draft,
+      val: metrics.draftPending,
       sublabel: "Menunggu review berkas", badge: null,
       bgIcon: "bg-[#FFFBEB] text-[#D97706]", color: "#D97706",
       path: "M0 20 L20 22 L40 18 L60 25 L80 22 L100 28 L120 24 L140 26",
@@ -140,9 +190,9 @@ export default function SummaryPage() {
     },
     {
       id: "review", icon: AlertTriangle, label: "Perlu Dicek",
-      val: dashboardMetrics.needsReview,
+      val: metrics.needsReview,
       sublabel: "Keandalan sistem rendah",
-      badge: dashboardMetrics.needsReview > 0 ? "Tinjau" : null,
+      badge: metrics.needsReview > 0 ? "Tinjau" : null,
       bgIcon: "bg-[#FEF2F2] text-[#DC2626]", color: "#DC2626",
       path: "M0 32 L20 31 L40 32 L60 29 L80 30 L100 27 L120 28 L140 26",
       filter: "needs_check",
@@ -205,10 +255,10 @@ export default function SummaryPage() {
             </span>
           </div>
           <p className="text-[28px] font-black text-[#1A1A1A] leading-none tracking-tight mb-1">
-            {formatRupiah(dashboardMetrics.unpaidAmount)}
+            {formatRupiah(metrics.unpaidAmount)}
           </p>
           <p className="text-[13px] text-[#92400E] font-semibold">
-            Dari <strong className="font-black text-[#1A1A1A]">{dashboardMetrics.unpaidOrders} order</strong> dikonfirmasi
+            Dari <strong className="font-black text-[#1A1A1A]">{metrics.unpaidOrders} order</strong> dikonfirmasi
           </p>
           <button
             onClick={() => router.push("/orders?filter=unpaid")}
@@ -222,7 +272,7 @@ export default function SummaryPage() {
         <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-[#E8E8E6] p-5 shadow-sm">
           <Label>Catatan Hari Ini</Label>
           <p className="text-[13px] text-[#555555] font-medium leading-relaxed">
-            {dailySummary.narrative}
+            {narrative}
           </p>
           <p className="text-[10px] text-[#ADADAD] font-semibold mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">
             {NARRATIVE_SAFE.impactNote}
@@ -231,7 +281,7 @@ export default function SummaryPage() {
       </div>
 
       {/* Needs-check alert */}
-      {dashboardMetrics.needsReview > 0 && (
+      {metrics.needsReview > 0 && (
         <motion.div variants={itemVariants}>
           <button
             onClick={() => router.push("/orders?filter=needs_check")}
@@ -242,7 +292,7 @@ export default function SummaryPage() {
             </div>
             <div className="flex-1">
               <p className="text-[13px] font-black text-red-700">
-                {dashboardMetrics.needsReview} pesanan perlu dicek ulang
+                {metrics.needsReview} pesanan perlu dicek ulang
               </p>
               <p className="text-[11px] text-red-500 font-medium mt-0.5">
                 Confidence AI rendah — perlu verifikasi Bu Rani
@@ -262,7 +312,7 @@ export default function SummaryPage() {
               customerName={unpaidOrder.customerName}
               amount={unpaidOrder.totalAmount}
               orderNumber={unpaidOrder.orderNumber}
-              items={unpaidOrder.items}
+              items={unpaidOrder.orderNumber}
             />
           )}
         </motion.div>
@@ -329,9 +379,9 @@ export default function SummaryPage() {
           <Label>Angka Capaian Hari Ini</Label>
           <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
             <div className="grid grid-cols-3 gap-4 py-1">
-              <BigMetric value={dailySummary.confirmed} label="Dikonfirmasi" icon="✅" />
-              <BigMetric value={dailySummary.draft} label="Draft" icon="📝" />
-              <BigMetric value={dashboardMetrics.needsReview} label="Perlu Cek" icon="⚠️" />
+              <BigMetric value={metrics.confirmed} label="Dikonfirmasi" icon="✅" />
+              <BigMetric value={metrics.draftPending} label="Draft" icon="📝" />
+              <BigMetric value={metrics.needsReview} label="Perlu Cek" icon="⚠️" />
             </div>
             <div className="border-t border-[#F4F4F2] my-3" />
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
@@ -339,23 +389,23 @@ export default function SummaryPage() {
                 Total belum dibayar
               </p>
               <p className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-                {formatRupiah(dashboardMetrics.unpaidAmount)}
+                {formatRupiah(metrics.unpaidAmount)}
               </p>
               <p className="text-[12px] text-[#6B6B6B] font-medium mt-1">
-                Dari {dashboardMetrics.unpaidOrders} order
+                Dari {metrics.unpaidOrders} order
               </p>
             </div>
           </div>
         </div>
 
         {/* Needs check */}
-        {dashboardMetrics.needsReview > 0 && (
+        {metrics.needsReview > 0 && (
           <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
               <AlertTriangle size={15} className="text-red-600" strokeWidth={2.5} />
             </div>
             <p className="text-[13px] text-red-700 font-bold leading-tight">
-              {dashboardMetrics.needsReview} pesanan perlu dicek ulang
+              {metrics.needsReview} pesanan perlu dicek ulang
             </p>
           </div>
         )}
@@ -365,7 +415,7 @@ export default function SummaryPage() {
           <Label>Catatan Hari Ini</Label>
           <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
             <p className="text-[13px] text-[#555555] font-medium leading-relaxed">
-              {dailySummary.narrative}
+              {narrative}
             </p>
             <p className="text-[10px] text-[#ADADAD] mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">
               {NARRATIVE_SAFE.impactNote}
@@ -381,7 +431,7 @@ export default function SummaryPage() {
               customerName={unpaidOrder.customerName}
               amount={unpaidOrder.totalAmount}
               orderNumber={unpaidOrder.orderNumber}
-              items={unpaidOrder.items}
+              items={unpaidOrder.orderNumber}
             />
           </div>
         )}
