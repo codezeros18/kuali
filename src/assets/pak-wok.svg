@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" fill="none">
+  <!-- Pak Wok mascot — decorative wok with steam -->
+  <!-- Handle kiri -->
+  <rect x="4" y="48" width="14" height="8" rx="4" fill="#B45309"/>
+  <!-- Handle kanan -->
+  <rect x="86" y="48" width="14" height="8" rx="4" fill="#B45309"/>
+  <!-- Wok body -->
+  <path d="M18 44 Q52 80 86 44" stroke="#92400E" stroke-width="3" fill="#D97706"/>
+  <ellipse cx="52" cy="44" rx="34" ry="10" fill="#F59E0B"/>
+  <!-- Isi wok (makanan) -->
+  <ellipse cx="52" cy="43" rx="26" ry="7" fill="#FCD34D"/>
+  <circle cx="42" cy="42" r="4" fill="#EF4444"/>
+  <circle cx="54" cy="40" r="3.5" fill="#10B981"/>
+  <circle cx="63" cy="43" r="4" fill="#F97316"/>
+  <!-- Steam 1 -->
+  <path d="M38 28 Q36 22 38 16 Q40 10 38 4" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Steam 2 -->
+  <path d="M52 30 Q50 24 52 18 Q54 12 52 6" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Steam 3 -->
+  <path d="M66 28 Q64 22 66 16 Q68 10 66 4" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg>
