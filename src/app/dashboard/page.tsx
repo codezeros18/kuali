@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
   // ── Desktop Layout Full Width & Viewport Locked ──────────────────
   const desktopContent = (
-    <div className="h-[calc(100vh-120px)] flex flex-col gap-5 w-full px-6 overflow-hidden animate-fade-in">
+    <div className="flex flex-col gap-5 w-full px-6 pb-6 animate-fade-in">
 
       {/* Header Greeting */}
       <div className="flex-shrink-0 pt-1">
@@ -283,7 +283,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Row 3: Tabel Log Order Terbaru (Scroll Internal) ── */}
-      <DashCard className="p-0 gap-0 flex-1 min-h-0 w-full">
+      <DashCard className="p-0 gap-0 min-h-[320px] w-full">
         <div className="flex items-center justify-between px-7 py-4 border-b border-[#F4F4F2] flex-shrink-0">
           <div>
             <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider">Ikhtisar Data</p>
@@ -296,27 +296,30 @@ export default function DashboardPage() {
             Lihat semua <ArrowRight size={14} />
           </button>
         </div>
-        
-        {/* Header Tabel */}
-        <div className="grid grid-cols-[150px_1fr_130px_140px_90px] items-center gap-4 px-7 py-3 bg-[#FAFAF8] border-b border-[#F4F4F2] flex-shrink-0 w-full">
-          {[
-            ["No. Order", ""],
-            ["Nama Pelanggan & Item Menu", ""],
-            ["Status", ""],
-            ["Total Omzet", "text-right pr-2"],
-            ["Akurasi AI", "text-right pr-2"],
-          ].map(([col, cls], idx) => (
-            <div key={idx} className={cn("text-[11px] font-black text-[#ADADAD] uppercase tracking-wider", cls)}>
-              {col}
-            </div>
-          ))}
-        </div>
 
-        {/* Baris Konten Tabel dengan internal scrollbar */}
-        <div className="divide-y divide-[#F4F4F2] overflow-y-auto flex-1 min-h-0 w-full no-scrollbar">
-          {recentOrders.map((order) => (
-            <DOrderRow key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
-          ))}
+        {/* Tabel dengan scroll internal untuk viewport rendah atau sempit */}
+        <div className="flex-1 min-h-0 w-full overflow-auto">
+          <div className="min-w-[760px]">
+            <div className="sticky top-0 z-10 grid grid-cols-[150px_1fr_130px_140px_90px] items-center gap-4 px-7 py-3 bg-[#FAFAF8] border-b border-[#F4F4F2] w-full">
+              {[
+                ["No. Order", ""],
+                ["Nama Pelanggan & Item Menu", ""],
+                ["Status", ""],
+                ["Total Omzet", "text-right pr-2"],
+                ["Akurasi AI", "text-right pr-2"],
+              ].map(([col, cls], idx) => (
+                <div key={idx} className={cn("text-[11px] font-black text-[#ADADAD] uppercase tracking-wider", cls)}>
+                  {col}
+                </div>
+              ))}
+            </div>
+
+            <div className="divide-y divide-[#F4F4F2]">
+              {recentOrders.map((order) => (
+                <DOrderRow key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
+              ))}
+            </div>
+          </div>
         </div>
       </DashCard>
 

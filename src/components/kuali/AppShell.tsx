@@ -26,11 +26,13 @@ function DesktopSidebar() {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-kuali-border">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-kuali-primary flex items-center justify-center shrink-0 group-hover:brightness-90 transition-all">
-            <span className="text-white font-bold text-base" style={{ fontFamily: "Poppins, sans-serif" }}>K</span>
-          </div>
+          <img
+            src="/kuali-logo-mark.svg"
+            alt="Kuali"
+            className="w-9 h-9 shrink-0 group-hover:opacity-80 transition-opacity"
+          />
           <div>
-            <div className="font-bold text-sm text-kuali-text-dark leading-tight" style={{ fontFamily: "Poppins, sans-serif" }}>Kuali</div>
+            <div className="font-black text-sm text-kuali-text-dark leading-tight tracking-tight">kuali</div>
             <div className="text-[10px] text-kuali-text-light leading-tight">Dapur Bu Rani</div>
           </div>
         </Link>
@@ -137,7 +139,7 @@ function DesktopTopBar({
           </button>
         )}
         <div>
-          <h1 className="text-lg font-bold text-kuali-text-dark leading-tight" style={{ fontFamily: "Poppins, sans-serif" }}>
+          <h1 className="text-lg font-black text-kuali-text-dark leading-tight tracking-tight">
             {title}
           </h1>
           {subtitle && <p className="text-sm text-kuali-text-mid mt-0.5">{subtitle}</p>}
@@ -200,6 +202,8 @@ interface ShellProps {
   noBottomNav?: boolean;
   /** Show mobile header (default true) */
   showMobileHeader?: boolean;
+  /** Lock outer height to viewport — no page scroll, content scrolls internally */
+  fullHeight?: boolean;
   className?: string;
 }
 
@@ -215,25 +219,30 @@ export function Shell({
   noPadding,
   noBottomNav,
   showMobileHeader = true,
+  fullHeight = false,
   className,
 }: ShellProps) {
   return (
-    <div className="min-h-screen bg-kuali-background">
+    <div className={cn("bg-kuali-background", fullHeight ? "h-screen overflow-hidden" : "min-h-screen")}>
       {/* ── DESKTOP ────────────────────────────────────────────── */}
-      <div className="hidden lg:flex min-h-screen">
+      <div className={cn("hidden lg:flex", fullHeight ? "h-screen overflow-hidden" : "min-h-screen")}>
         <DesktopSidebar />
-        <div className="flex-1 flex flex-col min-h-screen overflow-auto">
+        <div className={cn(
+          "flex-1 flex flex-col",
+          fullHeight ? "h-screen overflow-hidden" : "min-h-screen overflow-auto"
+        )}>
           <DesktopTopBar title={title} subtitle={subtitle} right={headerRight} back={back} />
-          <main className={cn("flex-1 px-8 py-6", className)}>
+          <main className={cn("flex-1 px-8 py-6", fullHeight && "overflow-y-auto", className)}>
             {desktopContent ?? children}
           </main>
         </div>
       </div>
 
       {/* ── MOBILE ─────────────────────────────────────────────── */}
-      <div className="lg:hidden flex justify-center">
+      <div className={cn("lg:hidden flex justify-center", fullHeight && "h-screen overflow-hidden")}>
         <div className={cn(
-          "w-full max-w-[430px] min-h-screen bg-kuali-background relative",
+          "w-full max-w-[430px] bg-kuali-background relative flex flex-col",
+          fullHeight ? "h-screen overflow-hidden" : "min-h-screen",
           !noBottomNav && "pb-20"
         )}>
           {showMobileHeader && (
@@ -245,7 +254,7 @@ export function Shell({
               sticky
             />
           )}
-          <div className={cn(!noPadding && "")}>
+          <div className={cn("flex-1", fullHeight && "overflow-y-auto", !noPadding && "")}>
             {children}
           </div>
           {!noBottomNav && <MobileBottomNav />}

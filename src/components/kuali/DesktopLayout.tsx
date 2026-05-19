@@ -24,7 +24,7 @@ function DesktopSidebar() {
             <span className="text-white font-bold text-sm">K</span>
           </div>
           <div>
-            <div className="font-bold text-sm text-kuali-text-dark leading-tight">Kuali</div>
+            <div className="font-bold text-sm text-kuali-text-dark leading-tight">kuali</div>
             <div className="text-[10px] text-kuali-text-light leading-tight">Dapur Bu Rani</div>
           </div>
         </div>
