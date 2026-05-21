@@ -7,6 +7,7 @@ import {
   Zap, ArrowUpRight, Check,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { AuthModal } from "@/components/kuali/AuthModal";
 import { cn } from "@/lib/utils";
 
 // ── Animated counter ──────────────────────────────────────────────────────────
@@ -458,6 +459,7 @@ const scaleUp = { hidden: { opacity: 0, scale: 0.95, y: 18 }, visible: { opacity
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
+  const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
   return (
     <div className="min-h-screen bg-[#FAFAF8] text-[#1A1A1A] antialiased">
 
@@ -481,14 +483,23 @@ export default function LandingPage() {
             </motion.div>
             <span className="font-black text-[28px] tracking-tight">kuali</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <div className="hidden sm:flex items-center gap-2 bg-white/80 backdrop-blur border border-[#E5E5E3] rounded-full px-3.5 py-1.5 shadow-sm">
               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               <span className="text-[11px] font-semibold text-[#6B6B6B]">Gunadarma Code Week 2.0</span>
             </div>
-            <Link href="/demo" className="bg-[#E8541A] text-white text-[13px] font-bold px-5 py-2.5 rounded-full shadow-lg shadow-orange-200/50 hover:bg-[#d4491a] active:scale-[0.97] transition-all">
-              Coba Demo
-            </Link>
+            <button
+              onClick={() => setAuthModal("login")}
+              className="hidden sm:block text-[13px] font-bold text-[#6B6B6B] px-4 py-2.5 rounded-full hover:bg-[#F4F4F2] active:scale-[0.97] transition-all"
+            >
+              Masuk
+            </button>
+            <button
+              onClick={() => setAuthModal("register")}
+              className="bg-[#E8541A] text-white text-[13px] font-bold px-5 py-2.5 rounded-full shadow-lg shadow-orange-200/50 hover:bg-[#d4491a] active:scale-[0.97] transition-all"
+            >
+              Daftar
+            </button>
           </div>
         </motion.nav>
 
@@ -595,9 +606,12 @@ export default function LandingPage() {
                 <Link href="/demo" className="bg-white text-[#E8541A] font-black text-[13px] px-8 py-3.5 rounded-2xl flex items-center gap-2 shadow-xl hover:bg-orange-50 active:scale-[0.97] transition-all">
                   Mulai Demo Sekarang <ArrowRight size={14} />
                 </Link>
-                <Link href="/dashboard" className="bg-white/15 text-white font-bold text-[13px] px-8 py-3.5 rounded-2xl border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all backdrop-blur-sm">
-                  Masuk Dashboard
-                </Link>
+                <button
+                  onClick={() => setAuthModal("login")}
+                  className="bg-white/15 text-white font-bold text-[13px] px-8 py-3.5 rounded-2xl border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all backdrop-blur-sm"
+                >
+                  Masuk ke Kuali
+                </button>
               </div>
             </div>
           </motion.div>
@@ -616,6 +630,13 @@ export default function LandingPage() {
         </footer>
 
       </div>
+
+      {/* Auth Modal */}
+      <AnimatePresence>
+        {authModal && (
+          <AuthModal defaultMode={authModal} onClose={() => setAuthModal(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
