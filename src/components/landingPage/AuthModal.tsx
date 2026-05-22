@@ -52,11 +52,11 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "Terjadi kesalahan."); return; }
+      const data = await res.json().catch(() => ({})) as { error?: string };
+      if (!res.ok) { setError(data.error ?? "Terjadi kesalahan server."); return; }
       window.location.href = "/dashboard";
     } catch {
-      setError("Gagal terhubung ke server.");
+      setError("Tidak dapat terhubung ke server. Cek apakah server sudah berjalan.");
     } finally {
       setLoading(false);
     }
