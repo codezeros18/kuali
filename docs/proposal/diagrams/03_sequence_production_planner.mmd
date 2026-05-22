@@ -1,0 +1,25 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+sequenceDiagram
+    participant Owner as Owner / Bu Rani
+    participant Dashboard as Dashboard UI (Next.js)
+    participant API as Kuali API (Next.js)
+    participant OrderDB as Order Store (SQLite)
+    participant RecipeDB as Recipe Store (SQLite)
+    participant Planner as Production Planner
+
+    Owner->>Dashboard: Buka halaman Production Planner
+    Dashboard->>API: GET /api/production-plan?date=hari-ini
+    API->>OrderDB: Ambil semua order confirmed hari ini
+    OrderDB-->>API: Daftar order + OrderItem
+
+    loop Untuk setiap OrderItem
+        API->>RecipeDB: Hitung qty bahan = qty_order × qty_per_resep
+        RecipeDB-->>API: Kebutuhan bahan per item
+    end
+
+    API->>API: Agregasi total kebutuhan<br/>per bahan (groupBy ingredient)
+    API-->>Dashboard: Daftar bahan + total qty + status stok
+
+    Dashboard-->>Owner: Tampilkan ingredient list<br/>(nama bahan, total, satuan, CUKUP/HAMPIR HABIS/PERLU BELI)
+
+    Note over Owner,Dashboard: Owner bisa screenshot atau salin<br/>untuk panduan belanja bahan

@@ -2,7 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
+
+// Fires before browser paint on the client (prevents flash); falls back to
+// useEffect on the server where useLayoutEffect would warn.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, ClipboardList, ChefHat, BarChart2,
@@ -33,25 +38,20 @@ const SIDEBAR_EXTRA_ITEMS = [
   { href: "/help",    label: "Bantuan",       Icon: HelpCircle },
 ];
 
-// ── Sidebar collapse (localStorage + auto-detect tablet) ─────────────────────
+// ── Sidebar collapse (localStorage-persisted) ────────────────────────────────
 function useSidebarCollapsed() {
-  const [collapsed, setCollapsed] = useState(true); // SSR default: collapsed
-  // `ready` gates the CSS transition — stays false until after the first
-  // localStorage read, so the initial width renders without animation.
-  const [ready, setReady] = useState(false);
+  // Default: expanded (false). useIsomorphicLayoutEffect corrects from
+  // localStorage before the first browser paint — so there is no flash and
+  // no unwanted expand/collapse animation when navigating between pages.
+  const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     try {
       const stored = localStorage.getItem("kuali_sidebar_collapsed");
       if (stored !== null) {
         setCollapsed(stored === "true");
-      } else {
-        setCollapsed(window.innerWidth < 1024);
       }
     } catch {}
-    // One animation frame ensures the corrected width is painted before we
-    // enable transitions — subsequent user-triggered toggles then animate.
-    requestAnimationFrame(() => setReady(true));
   }, []);
 
   const toggle = () => setCollapsed((prev) => {
@@ -60,7 +60,7 @@ function useSidebarCollapsed() {
     return next;
   });
 
-  return { collapsed, toggle, ready };
+  return { collapsed, toggle };
 }
 
 async function handleLogout() {
@@ -69,7 +69,7 @@ async function handleLogout() {
 }
 
 // ── Desktop / Tablet sidebar ──────────────────────────────────────────────────
-function DesktopSidebar({ collapsed, onToggle, ready }: { collapsed: boolean; onToggle: () => void; ready: boolean }) {
+function DesktopSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
@@ -81,8 +81,7 @@ function DesktopSidebar({ collapsed, onToggle, ready }: { collapsed: boolean; on
     // navigating between pages never triggers an unwanted grow/shrink animation.
     <aside
       className={cn(
-        "hidden md:flex flex-col shrink-0 bg-white border-r border-kuali-border h-screen sticky top-0 z-20",
-        ready && "transition-[width] duration-300 ease-in-out",
+        "hidden md:flex flex-col shrink-0 bg-white border-r border-kuali-border h-screen sticky top-0 z-20 transition-[width] duration-300 ease-in-out",
         collapsed ? "w-[68px]" : "w-60"
       )}
     >
@@ -391,7 +390,7 @@ export function Shell({
   noPadding, noBottomNav, showMobileHeader = true,
   fullHeight = false, className,
 }: ShellProps) {
-  const { collapsed, toggle, ready } = useSidebarCollapsed();
+  const { collapsed, toggle } = useSidebarCollapsed();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
@@ -400,7 +399,7 @@ export function Shell({
 
       {/* ── TABLET + DESKTOP (md = 768px+) ────────────────────── */}
       <div className={cn("hidden md:flex", fullHeight ? "h-screen overflow-hidden" : "min-h-screen")}>
-        <DesktopSidebar collapsed={collapsed} onToggle={toggle} ready={ready} />
+        <DesktopSidebar collapsed={collapsed} onToggle={toggle} />
         <div className={cn("flex-1 flex flex-col min-w-0", fullHeight ? "h-screen overflow-hidden" : "min-h-screen")}>
           <DesktopTopBar title={title} subtitle={subtitle} right={headerRight} back={back} />
           <main className={cn(

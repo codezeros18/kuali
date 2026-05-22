@@ -1,0 +1,39 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+flowchart TD
+    Pelanggan(["👤 Pelanggan"])
+    Owner(["🧑‍🍳 Owner / Bu Rani"])
+    Admin(["👨‍👩‍👧 Admin / Keluarga"])
+    AIParser(["🤖 AI Parser\n(Rule-based · Mock)"])
+    KualiSys(["⚙️ Sistem Kuali\n(Next.js + SQLite)"])
+
+    subgraph UseCaseMVP["🟢 Use Case — MVP Saat Ini"]
+        UC0["Kirim chat pesanan\n(Mock WA UI)"]
+        UC1["Input & pilih chat\npesanan masuk"]
+        UC2["Parse chat menjadi\ndraft order terstruktur"]
+        UC3["Tampilkan confidence score\n& missing fields"]
+        UC4["Review dan konfirmasi\natau tolak draft order"]
+        UC5["Kirim reminder pembayaran\n(QRIS dummy — teks siap salin)"]
+        UC6["Buka production planner"]
+        UC7["Lihat daftar bahan\ndari order aktual hari ini"]
+        UC8["Lihat daily summary\n& impact dashboard"]
+    end
+
+    Pelanggan -->|"Kirim pesan pesanan"| UC0
+    UC0 -->|"Chat masuk ke owner"| UC1
+
+    Owner --> UC1
+    Admin --> UC1
+    Owner --> UC4
+    Owner --> UC5
+    Owner --> UC6
+    Owner --> UC8
+
+    UC1 --> AIParser
+    AIParser --> UC2
+    UC2 --> UC3
+    UC3 --> UC4
+
+    UC4 --> KualiSys
+    KualiSys --> UC6
+    UC6 --> UC7
+    KualiSys --> UC8

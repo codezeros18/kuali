@@ -1,0 +1,34 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+sequenceDiagram
+    participant Pelanggan as Pelanggan
+    participant MockWA as Mock WhatsApp UI
+    participant API as Kuali API (Next.js)
+    participant AI as AI Parser (Rule-based)
+    participant DB as Prototype Storage (SQLite)
+    participant Owner as Owner / Bu Rani
+
+    Pelanggan->>MockWA: Kirim pesan pesanan
+    Note over MockWA: "Kak mau pesan 12 risol mayo<br/>buat besok jam 3. Atas nama Dinda."
+    MockWA->>API: POST /api/ai/parse-order
+    API->>AI: Teks chat mentah
+
+    AI->>AI: Ekstrak nama, menu, qty,<br/>tanggal, metode bayar
+    AI-->>API: Draft JSON + confidence score
+
+    API->>DB: Validasi menu & harga dari data bisnis
+    DB-->>API: Data menu dari prototype storage
+
+    API-->>MockWA: Draft order terstruktur
+    MockWA-->>Owner: Tampilkan ParsedOrderCard<br/>(confidence, missing fields)
+
+    alt Confidence tinggi (≥ 85%)
+        Owner->>API: Konfirmasi order langsung
+    else Confidence sedang (60–84%)
+        Owner->>API: Edit lalu konfirmasi
+    else Confidence rendah (< 60%)
+        Owner->>MockWA: Minta klarifikasi ke pelanggan
+    end
+
+    API->>DB: Simpan order dikonfirmasi
+    DB-->>API: Order ID tersimpan
+    API-->>MockWA: Status order: Confirmed

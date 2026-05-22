@@ -1,0 +1,32 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+erDiagram
+    BusinessState ||--o{ OrderStore : "menerima pesanan"
+    BusinessState ||--o{ InventoryEstimation : "menentukan resep bahan"
+    OrderStore ||--|{ InventoryEstimation : "memicu kalkulasi"
+
+    BusinessState {
+        string namaUsaha
+        string ownerName
+        string menuAktif
+        string resepBahan
+        string modeTampilan
+    }
+
+    OrderStore {
+        string orderNumber
+        string pelangganName
+        string itemDipesan
+        string statusOrder
+        string statusPembayaran
+        datetime tanggalKirim
+        float confidenceScore
+        string rawMessage
+    }
+
+    InventoryEstimation {
+        date tanggalProduksi
+        string namaBahan
+        float totalQtyDibutuhkan
+        string satuan
+        string statusStok
+    }

@@ -1,0 +1,37 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+%% ⚠️ ROADMAP SAJA — bukan fitur yang tersedia di prototype hackathon saat ini.
+%% Supabase, GCP, WhatsApp Cloud API, n8n TIDAK ada di MVP.
+flowchart LR
+    subgraph MVP["🟢 MVP — Prototype Hackathon (Saat Ini)"]
+        direction TB
+        M1["Mock WhatsApp UI\n(Input manual chat)"]
+        M2["Mock AI Parser\n(Rule-based · tanpa external API)"]
+        M3["SQLite + Prisma ORM\n(Dev & Demo · dummy data)"]
+        M4["QRIS Dummy Reminder\n(Teks siap salin · bukan gateway)"]
+        M5["Production Planner\n(Kalkulasi dari resep lokal)"]
+        M6["Daily Summary\n(Rekap otomatis)"]
+    end
+
+    subgraph R1["🔵 Roadmap Fase 1 — Post-Hackathon"]
+        direction TB
+        R1A["WhatsApp Business Cloud API\n(Meta · webhook nyata)"]
+        R1B["Real AI Parser\n(OpenAI / Anthropic structured output)"]
+        R1C["Supabase PostgreSQL\n(Multi-tenant · scalable)"]
+        R1D["Real QRIS Payment Reminder\n(BI SNAP API · bukan settlement)"]
+        R1E["Auth Multi-tenant\n(Owner + staff access)"]
+    end
+
+    subgraph R2["🟣 Roadmap Fase 2 — Skala"]
+        direction TB
+        R2A["Community Sourcing\n(Opt-in supplier pooling)"]
+        R2B["Rescue Sale\n(Consent-based flash sale)"]
+        R2C["GCP Cloud Run\n(Production deployment)"]
+        R2D["SaaS Subscription\n(Freemium → Pro plan)"]
+    end
+
+    MVP -->|"Validasi product-market fit\npost-hackathon"| R1
+    R1 -->|"Traction & revenue\nvalidation"| R2
+
+    style MVP fill:#d4edda,stroke:#28a745,color:#000
+    style R1 fill:#cce5ff,stroke:#004085,color:#000
+    style R2 fill:#e2d9f3,stroke:#6f42c1,color:#000
