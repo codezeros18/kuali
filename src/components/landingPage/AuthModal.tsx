@@ -74,23 +74,35 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
   }
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      {/* Backdrop Kaca */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-md" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none">
+      {/*
+        Frosted glass — dua layer terpisah:
+        1. Blur layer: STATIC, dicomposite sekali oleh GPU (background landing page tidak bergerak)
+        2. Tint layer: hanya animate opacity — murni compositor, tidak trigger repaint blur
+        Ini berbeda dari satu layer blur+animate yang harus reblur tiap frame.
+      */}
+      <div className="absolute inset-0 backdrop-blur-md" />
+      <motion.div
+        className="absolute inset-0 bg-black/40 cursor-pointer"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.18 }}
+        onClick={onClose}
+      />
 
       <motion.div
         className="relative bg-white rounded-[28px] w-full max-w-4xl overflow-hidden grid grid-cols-1 md:grid-cols-[1.1fr_1fr] min-h-[580px] border border-white/10"
-        style={{ boxShadow: "0 32px 100px -20px rgba(0,0,0,0.3)" }}
-        initial={{ opacity: 0, scale: 0.96, y: 30 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 30 }}
-        transition={{ type: "spring", stiffness: 300, damping: 26 }}
+        style={{
+          boxShadow: "0 32px 100px -20px rgba(0,0,0,0.3)",
+          willChange: "transform, opacity",
+          backfaceVisibility: "hidden",
+          transform: "translateZ(0)",
+        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.25 }}
       >
         {/* Tombol Close Pojok Atas */}
         <button
@@ -419,6 +431,6 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
           </p>
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
