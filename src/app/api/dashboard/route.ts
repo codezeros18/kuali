@@ -31,6 +31,10 @@ export async function GET() {
     const unpaidOrders = unpaidConfirmed.length;
     const unpaidAmount = unpaidConfirmed.reduce((sum, o) => sum + o.totalAmount, 0);
 
+    const paidConfirmed = orders.filter((o) => o.status === "confirmed" && o.paymentStatus === "paid");
+    const paidOrders = paidConfirmed.length;
+    const paidAmount = paidConfirmed.reduce((sum, o) => sum + o.totalAmount, 0);
+
     const recentOrders = orders.slice(0, 5).map((o) => ({
       id: o.id,
       orderNumber: o.orderNumber,
@@ -44,7 +48,7 @@ export async function GET() {
     }));
 
     return NextResponse.json({
-      metrics: { totalOrdersToday, confirmed, draftPending, needsReview, unpaidOrders, unpaidAmount },
+      metrics: { totalOrdersToday, confirmed, draftPending, needsReview, unpaidOrders, unpaidAmount, paidOrders, paidAmount },
       recentOrders,
       parsedChats: summary?.parsedChats ?? 13,
       totalChats: summary?.totalChats ?? 15,

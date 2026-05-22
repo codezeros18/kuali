@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Kuali — Order rapi, produksi siap",
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="bg-kuali-background min-h-screen">
+        <Providers>
         {children}
         <Toaster
           position="top-center"
@@ -34,6 +36,7 @@ export default function RootLayout({
             },
           }}
         />
+        </Providers>
       </body>
     </html>
   );
