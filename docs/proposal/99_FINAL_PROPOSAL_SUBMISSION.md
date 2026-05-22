@@ -34,6 +34,7 @@
    - 3.2 User Journey
    - 3.3 Alur Layar Produk (Mockup)
    - 3.4 Prinsip UX
+   - 3.5 Desain Inklusif — Mode Sederhana dan Mode Standar
 4. Teknologi & Implementasi
    - 4.1 Pemanfaatan AI
    - 4.2 Use Case Diagram (Tekstual)
@@ -117,8 +118,7 @@ Kuali bertujuan untuk:
 - Daftar bahan yang harus disiapkan lebih jelas dan terhitung dari pesanan nyata.
 - Produksi dapat direncanakan dengan lebih baik sejak pagi hari.
 
-**Komunitas UMKM kuliner (roadmap):**
-- Potensi pengembangan fitur berbagi kebutuhan bahan bersama UMKM lain di sekitar (community sourcing berbasis consent pengguna — bukan fitur MVP).
+*Fitur komunitas (community sourcing, supplier pooling, rescue sale) adalah bagian dari roadmap jangka panjang — tidak termasuk dalam MVP ini. Lihat Bagian 5.2.*
 
 ---
 
@@ -136,7 +136,7 @@ Kuali bertujuan untuk:
 | Key Resources | Mock AI parser; dashboard web; menu dan resep sederhana; Prisma + SQLite/PostgreSQL |
 | Key Activities | Parsing chat order; owner approval flow; production planner; payment reminder; daily summary |
 | Key Partnerships | (Roadmap) WhatsApp Business API; supplier bahan lokal; komunitas UMKM |
-| Cost Structure | Infrastruktur cloud (Vercel/GCP); development; WhatsApp API cost (roadmap) |
+| Cost Structure | Infrastruktur cloud (Vercel); development; WhatsApp API cost (roadmap) |
 
 ### 2.2 Analisis Kompetitor
 
@@ -168,12 +168,13 @@ Kuali tidak berusaha menggantikan semua solusi yang sudah ada. Kuali mengisi cel
 **Opportunities (Peluang Eksternal):**
 - Banyak UMKM kuliner sudah aktif berjualan melalui WhatsApp [NEED SOURCE]
 - Pertumbuhan penggunaan QR payment di kalangan UMKM Indonesia [NEED SOURCE: Bank Indonesia — QRIS adoption]
-- Potensi pengembangan fitur komunitas sourcing berbasis consent sebagai differensiator roadmap
+- Potensi pengembangan fitur komunitas sourcing berbasis consent sebagai differensiator *(roadmap jangka panjang — tidak termasuk prototype hackathon)*
+- Tingkat kenyamanan digital yang bervariasi antar pelaku UMKM membuka peluang desain inklusif yang belum diakomodasi tools yang ada
 
 **Threats (Ancaman Eksternal):**
 - Pesaing POS besar dengan sumber daya dan ekosistem lebih besar
 - Perubahan kebijakan WhatsApp Business API yang dapat mempengaruhi roadmap integrasi
-- Variasi kemampuan adopsi teknologi antar segmen UMKM yang berbeda
+- Kenyamanan adopsi teknologi baru bervariasi — membutuhkan onboarding yang ringkas dan tampilan yang tidak mengintimidasi
 
 ### 2.4 Strategi Go-To-Market
 
@@ -217,7 +218,6 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 | Aspek | Detail |
 |---|---|
 | Nama | Bu Rani |
-| Usia | 30–45 tahun |
 | Jenis Usaha | Catering rumahan, nasi box |
 | Kanal Jualan | WhatsApp, grup pelanggan, Instagram Story, repeat order |
 | Volume Order | 20–50 pesanan/hari saat ramai |
@@ -226,6 +226,7 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 | Pain Utama | Order tercecer, pembayaran perlu dicek satu per satu, bahan dihitung pakai perkiraan |
 | Takut | Salah order, pelanggan kecewa, bahan kurang/berlebih, lupa tagih |
 | Butuh | Order rapi, reminder pembayaran, daftar bahan, rekap harian |
+| Tampilan yang cocok | Mode Sederhana — fokus ke aksi utama tanpa grafik |
 
 **Jobs-To-Be-Done Bu Rani:**
 - Bu Rani tidak butuh POS canggih — ia butuh order dari WhatsApp tidak tercecer.
@@ -234,10 +235,13 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 - Bu Rani tidak butuh AI yang memutuskan — ia butuh AI yang membantu buat draft agar ia bisa cek sendiri.
 
 **Persona Sekunder 1 — Mas Budi (Penjual Snack Box / Pre-order):**
-Mahasiswa atau fresh graduate yang berjualan risol, snack box, atau makanan ringan pre-order melalui WhatsApp grup teman kampus dan kantor. Volume 10–30 pesanan per hari atau minggu. Pain utama: pesanan kecil tapi banyak varian, reminder pembayaran mudah terlupa. Butuh: draft order cepat, reminder, rekap sederhana.
+Mahasiswa atau fresh graduate yang berjualan risol, snack box, atau makanan ringan pre-order melalui WhatsApp grup teman kampus dan kantor. Volume 10–30 pesanan per hari atau minggu. Pain utama: pesanan kecil tapi banyak varian, reminder pembayaran mudah terlupa. Butuh: draft order cepat, reminder, rekap sederhana. Tampilan cocok: **Mode Standar** — terbiasa membaca angka dan tabel.
 
 **Persona Sekunder 2 — Kak Rina (Bakery / Dessert Rumahan):**
-Pelaku usaha bakery atau dessert rumahan yang melayani pesanan acara khusus dan repeat order. Volume bervariasi, pesanan sering memiliki tanggal pengiriman berbeda dan varian yang detail. Pain utama: banyak pesanan beda tanggal dan item, kebutuhan bahan harus tepat karena barang tidak tahan lama. Butuh: order detail, tanggal ambil jelas, estimasi bahan akurat.
+Pelaku usaha bakery atau dessert rumahan yang melayani pesanan acara khusus dan repeat order. Volume bervariasi, pesanan sering memiliki tanggal pengiriman berbeda dan varian yang detail. Pain utama: banyak pesanan beda tanggal dan item, kebutuhan bahan harus tepat karena barang tidak tahan lama. Butuh: order detail, tanggal ambil jelas, estimasi bahan akurat. Tampilan cocok: **Mode Standar** — membutuhkan detail operasional lengkap.
+
+**Persona Aksesibilitas — Owner dengan Kenyamanan Digital Rendah:**
+Pemilik usaha yang terbiasa dengan WhatsApp, tetapi kurang nyaman membaca grafik, tabel, atau istilah teknis di layar HP. Bukan soal usia — kenyamanan digital setiap orang berbeda. Yang dibutuhkan: tombol besar, teks langsung ke aksi, tanpa grafik yang membutuhkan interpretasi. Tampilan cocok: **Mode Sederhana** — fokus ke pesanan, pembayaran, dan bahan. Kuali tidak meminta pengguna memasukkan usia atau menentukan kategori kemampuan — pilihan tampilan tersedia secara langsung dan dapat diubah kapan saja.
 
 ### 3.2 User Journey
 
@@ -267,23 +271,48 @@ Kuali dirancang sebagai web app mobile-first dengan layar-layar berikut:
 2. **Mock WhatsApp UI** — input chat pesanan, preset chat dummy untuk demo.
 3. **AI Parsed Draft Order** — card order terstruktur dengan confidence score dan missing field indicator.
 4. **Owner Approval Screen** — konfirmasi atau penolakan draft oleh owner, dengan ringkasan order.
-5. **Dashboard Hari Ini** — metrik utama (total order, belum bayar, perlu cek, draft pending), daftar order terbaru.
-6. **Daftar Order** — dengan filter status (semua, draft, dikonfirmasi, belum bayar).
-7. **Detail Order** — informasi lengkap order, confidence bar, missing fields, aksi approve/edit/tolak.
-8. **Payment Reminder QRIS Dummy** — preview reminder dengan QRIS dummy, tombol salin pesan, disclaimer jelas bahwa ini bukan settlement.
-9. **Production Planner** — daftar bahan yang harus disiapkan berdasarkan order aktual yang dikonfirmasi, dengan perbandingan stok tersedia.
-10. **Daily Summary** — rekap harian: total order, dikonfirmasi, belum bayar, bahan utama produksi besok.
-11. **Impact Dashboard** — metrik operasional dari data demo: jumlah chat diparse, order dikonfirmasi, reminder siap, bahan terhitung.
-12. **Roadmap Simulation Card** — preview fitur masa depan dengan label jelas "Roadmap — Belum tersedia di MVP".
+5. **Dashboard Mode Sederhana** — tampilan ringkas untuk owner yang ingin aksi langsung: Pesanan Perlu Dicek, Pelanggan Belum Bayar, Bahan untuk Besok, Rekap Hari Ini. Tombol besar, tanpa grafik.
+6. **Dashboard Mode Standar** — tampilan lengkap dengan metric cards, grafik tren, tabel order terbaru, dan confidence score. Untuk owner atau admin yang membutuhkan detail operasional.
+7. **Daftar Order** — dengan filter status (semua, draft, dikonfirmasi, belum bayar).
+8. **Detail Order** — informasi lengkap order, confidence bar, missing fields, aksi approve/edit/tolak.
+9. **Payment Reminder QRIS Dummy** — preview reminder dengan QRIS dummy, tombol salin pesan, disclaimer jelas bahwa ini bukan settlement.
+10. **Production Planner** — daftar bahan yang harus disiapkan berdasarkan order aktual yang dikonfirmasi, dengan perbandingan stok tersedia.
+11. **Daily Summary** — rekap harian: total order, dikonfirmasi, belum bayar, bahan utama produksi besok.
+12. **Impact Dashboard** — metrik operasional dari data demo: jumlah chat diparse, order dikonfirmasi, reminder siap, bahan terhitung.
+13. **Profil Usaha** — informasi dasar usaha (nama, jenis, area, WhatsApp, menu aktif, QRIS dummy, preferensi tampilan). Ringan dan tidak meminta data personal yang tidak diperlukan MVP.
+
+*Catatan: Fitur roadmap (community sourcing, rescue sale, supplier pooling) tidak termasuk dalam layar demo utama. Jika ada pertanyaan juri, tersedia di Bagian 5.2.*
 
 ### 3.4 Prinsip UX
 
 - **Mobile-first (360–430px):** Semua layar dirancang untuk layar HP Android ukuran sedang ke bawah. Tombol dengan tinggi minimum 52px agar mudah disentuh satu tangan.
 - **Bahasa Indonesia sederhana:** Tidak ada istilah teknis atau Bahasa Inggris tanpa konteks. Teks tombol menggunakan kata kerja: Konfirmasi, Simpan, Salin, Kirim.
 - **Status langsung terbaca:** Badge berwarna untuk setiap status order dan pembayaran — tidak perlu membaca keterangan panjang.
-- **Dashboard ringan:** Tidak ada grafik kompleks atau tabel besar. Informasi disajikan dalam card sederhana yang bisa dibaca sekilas.
+- **Pilihan tampilan adaptif:** Kuali menyediakan dua mode tampilan — Mode Sederhana untuk aksi cepat tanpa grafik, dan Mode Standar untuk detail operasional lengkap. Pengguna memilih berdasarkan kenyamanan, bukan berdasarkan kategori usia atau kemampuan.
+- **Low cognitive load:** Mode Sederhana membatasi informasi di layar pertama menjadi maksimal 4 kartu aksi utama. Tidak ada angka yang perlu diinterpretasi — hanya aksi yang perlu dilakukan.
 - **Tidak terlihat seperti POS kasir:** Tidak ada tampilan struk, meja, printer, atau multi-cabang. Kuali adalah alat operasional chat, bukan sistem kasir.
 - **Owner selalu punya kontrol penuh:** Setiap hasil AI ditampilkan sebagai draft. Tidak ada satu pun order yang dikonfirmasi tanpa persetujuan eksplisit dari owner.
+
+### 3.5 Desain Inklusif — Mode Sederhana dan Mode Standar
+
+Kuali memahami bahwa pelaku UMKM mikro memiliki tingkat kenyamanan digital yang berbeda-beda. Bukan soal usia — seorang pemilik warung berusia 28 tahun bisa lebih nyaman dengan tampilan sederhana, sementara pemilik katering berusia 50 tahun terbiasa membaca laporan keuangan di spreadsheet. Kenyamanan digital ditentukan oleh pengalaman dan kebiasaan, bukan angka tahun lahir.
+
+Karena itu, Kuali menyediakan dua mode tampilan yang bisa dipilih sendiri oleh pengguna kapan saja, tanpa perlu mengisi formulir profil atau menjawab pertanyaan tentang kemampuan digital:
+
+**Mode Sederhana**
+Tampilan difokuskan pada 4 kartu aksi utama: pesanan baru masuk, order perlu dikonfirmasi, pembayaran belum diterima, dan rencana produksi hari ini. Tidak ada grafik, tidak ada tabel angka panjang, tidak ada istilah teknis. Setiap kartu memiliki satu tombol aksi yang jelas — pengguna tahu langsung apa yang harus dilakukan berikutnya.
+
+**Mode Standar**
+Tampilan penuh dengan metrik operasional: total order, breakdown status, ringkasan pembayaran, grafik harian, dan daftar order lengkap. Cocok untuk owner yang ingin gambaran lengkap operasional sebelum memulai hari.
+
+Pengguna bisa berpindah mode kapan saja dengan toggle yang terlihat di sudut kanan atas dashboard. Tidak ada mode yang "lebih rendah" atau "lebih mudah" — keduanya adalah pilihan tampilan yang setara. Kuali tidak menyimpan mode pengguna sebagai data profil yang dikirim ke server; pilihan disimpan secara lokal di perangkat.
+
+**Prinsip desain inklusif Kuali:**
+- Tidak ada pertanyaan tentang usia, tingkat pendidikan, atau kemampuan teknologi.
+- Pilihan tampilan tersedia untuk semua pengguna secara langsung.
+- Label dan teks menggunakan kata kerja aksi, bukan jargon teknis.
+- Ukuran tombol minimum 52px × 44px — dapat disentuh dengan satu jari di HP Android ukuran sedang.
+- Kontras warna minimum 4.5:1 pada semua teks penting.
 
 ---
 
@@ -417,7 +446,7 @@ sequenceDiagram
 | API | Next.js API Routes |
 | ORM | Prisma |
 | Database (dev) | SQLite |
-| Database (prod roadmap) | Supabase PostgreSQL |
+| Database | SQLite (via Prisma ORM) |
 
 **AI:**
 
@@ -431,8 +460,7 @@ sequenceDiagram
 | Layer | Teknologi |
 |---|---|
 | Hosting | Vercel |
-| Database | SQLite (dev) / Supabase (roadmap) |
-| Automation | n8n (roadmap) |
+| Database | SQLite (via Prisma ORM) |
 
 **Diagram Arsitektur Sistem:**
 
@@ -451,12 +479,10 @@ graph TB
 
     subgraph AI["AI Layer"]
         MockParser["Mock AI Parser\n(Rule-based, tanpa external API)"]
-        RoadmapAI["OpenAI / Anthropic\n(Roadmap)"]
     end
 
     subgraph DB["Database (Prisma ORM)"]
-        SQLite["SQLite (dev)"]
-        Postgres["Supabase PostgreSQL\n(Roadmap)"]
+        SQLite["SQLite"]
     end
 
     NextJS --> ParseAPI
@@ -464,11 +490,9 @@ graph TB
     NextJS --> DashAPI
     NextJS --> PlanAPI
     ParseAPI --> MockParser
-    MockParser -.-> RoadmapAI
     OrderAPI --> SQLite
     DashAPI --> SQLite
     PlanAPI --> SQLite
-    SQLite -.-> Postgres
 ```
 
 **Entitas Database:**
@@ -566,7 +590,7 @@ Kuali bukan POS. Bukan marketplace. Bukan chatbot biasa. Kuali adalah asisten op
 Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian dari prototype hackathon ini. Fitur roadmap hanya akan dikembangkan setelah validasi dari pengguna nyata.
 
 1. **Integrasi WhatsApp Business Cloud API** — Memungkinkan parsing langsung dari pesan WhatsApp tanpa perlu copy-paste. Memerlukan persetujuan dari Meta dan proses review Business Verification.
-2. **Auth multi-tenant** — Satu platform melayani banyak UMKM dengan data yang terpisah dan aman.
+2. **Auth multi-tenant** — Satu sistem melayani banyak UMKM dengan data yang terpisah dan aman.
 3. **Customer opt-in/opt-out system** — Pelanggan dapat memilih untuk menerima atau tidak menerima notifikasi dari sistem.
 4. **Community sourcing** — UMKM sekitar dapat menggabungkan kebutuhan bahan untuk pembelian bersama. Berbasis consent pengguna — bukan broadcast otomatis.
 5. **Supplier pooling berbasis consent** — Jaringan supplier bahan baku lokal yang terhubung ke UMKM yang sudah opt-in.
@@ -627,7 +651,7 @@ Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian d
       "subtotal": 42000
     }
   ],
-  "deliveryDate": "Besok, 18 Mei 2025",
+  "deliveryDate": "Besok, 23 Mei 2026",
   "deliveryTime": "15:00",
   "paymentStatus": "unpaid",
   "paymentNote": "Bayar nanti sore",
@@ -650,5 +674,5 @@ Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian d
 ---
 
 *Dokumen ini adalah draft proposal untuk review leader. Belum dalam format PDF final.*
-*Tanggal terakhir diperbarui: 2026-05-17*
-*Versi: 1.0 — Draft*
+*Tanggal terakhir diperbarui: 2026-05-22*
+*Versi: 1.1 — Pre-submission*

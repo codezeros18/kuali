@@ -5,8 +5,8 @@ export const APP_DESCRIPTION =
 export const BUSINESS_NAME = "Katering Bu Rani";
 export const BUSINESS_AREA = "Kelapa Dua, Depok";
 
-export const DEMO_DATE = "Sabtu, 17 Mei 2025";
-export const DEMO_PRODUCTION_DATE = "Minggu, 18 Mei 2025";
+export const DEMO_DATE = "Jumat, 22 Mei 2026";
+export const DEMO_PRODUCTION_DATE = "Sabtu, 23 Mei 2026";
 
 export const NAV_ITEMS = [
   { label: "Hari Ini", href: "/dashboard", icon: "Home" },

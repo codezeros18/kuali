@@ -350,7 +350,7 @@ erDiagram
 
 ## DIA-07 — Roadmap Architecture Diagram
 
-Menggambarkan evolusi arsitektur Kuali dari MVP prototype hingga visi roadmap. **Diagram ini hanya untuk menunjukkan arah pengembangan — bukan bagian MVP yang didemonstrasikan.**
+> ⚠️ **BUKAN BAGIAN DEMO UTAMA.** Diagram ini menggambarkan arah pengembangan jangka panjang, bukan fitur yang ada di prototype hackathon saat ini. Gunakan hanya untuk Q&A juri atau bagian Rencana Pengembangan (5.2) di proposal. Community sourcing, rescue sale, supplier pooling, dan SaaS subscription **tidak didemonstrasikan** dalam demo 3 menit.
 
 ```mermaid
 flowchart LR

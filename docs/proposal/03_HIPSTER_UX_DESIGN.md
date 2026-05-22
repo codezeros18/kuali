@@ -9,11 +9,12 @@ Role Hipster bertanggung jawab membuat Kuali mudah dipahami, mudah digunakan, mo
 1. Mobile-first.
 2. WhatsApp-first.
 3. Bahasa Indonesia sederhana.
-4. Tombol besar.
-5. Dashboard ringan.
-6. Tidak terlalu banyak chart.
-7. Cocok untuk HP kentang.
-8. Owner tetap memegang kendali.
+4. Tombol besar (min 52px × 44px).
+5. Pilihan tampilan adaptif — Mode Sederhana dan Mode Standar, dipilih pengguna kapan saja.
+6. Mode Sederhana: maksimal 4 kartu aksi, tidak ada grafik, tidak ada angka yang perlu diinterpretasi.
+7. Cocok untuk HP Android ukuran sedang ke bawah.
+8. Owner tetap memegang kendali penuh atas setiap draft AI.
+9. Tidak ada pertanyaan usia, tingkat pendidikan, atau kemampuan teknologi kepada pengguna.
 
 ## Design Principles
 
@@ -22,8 +23,11 @@ Role Hipster bertanggung jawab membuat Kuali mudah dipahami, mudah digunakan, mo
 | 3 Tap Rule | Flow utama maksimal 3 tap dari dashboard |
 | Status jelas | Badge Perlu Cek, Belum Bayar, Siap |
 | Owner in control | Semua hasil AI tampil sebagai draft |
-| Roadmap separated | Belanja bareng/rescue sale hanya roadmap card |
+| Roadmap separated | Community sourcing/rescue sale hanya roadmap card — tidak masuk demo |
 | Visual calm | Card layout, spacing luas, copy pendek |
+| Mode Sederhana | 4 kartu aksi utama, tidak ada grafik, toggle kapan saja |
+| Mode Standar | Metrik lengkap, grafik, daftar order penuh |
+| Inklusif tanpa asumsi | Tidak ada data usia/profil digital yang dikumpulkan dari pengguna |
 
 ## User Persona
 
@@ -31,13 +35,13 @@ Role Hipster bertanggung jawab membuat Kuali mudah dipahami, mudah digunakan, mo
 
 | Aspek | Detail |
 |---|---|
-| Usia | 34 tahun |
-| Usaha | Catering rumahan dan nasi box |
+| Usaha | Catering rumahan dan nasi box pre-order |
 | Kanal jualan | WhatsApp, Instagram Story, repeat customer |
 | Device | Android mid-low |
 | Pain point | Order banyak, rekap manual, pembayaran belum rapi, bahan dihitung perkiraan |
 | Kebutuhan | Order rapi, payment reminder, daftar bahan produksi |
 | Kekhawatiran | Order salah, pelanggan kecewa, bahan kurang, app terlalu ribet |
+| Tampilan yang cocok | Mode Sederhana — fokus ke aksi utama tanpa grafik |
 
 ### Persona 2 — Kak Dinda, Penjual Snack Box
 
@@ -56,6 +60,19 @@ Role Hipster bertanggung jawab membuat Kuali mudah dipahami, mudah digunakan, mo
 | Kanal | WhatsApp dan Instagram |
 | Pain | Banyak order beda tanggal dan varian |
 | Butuh | Order detail, tanggal ambil, production list |
+| Tampilan yang cocok | Mode Standar — ingin lihat semua detail |
+
+### Persona Aksesibilitas — Owner dengan Kenyamanan Digital Rendah
+
+Bukan persona demografis berdasarkan usia. Ini adalah persona use-case: pemilik usaha yang terbiasa dengan WhatsApp, tetapi kurang nyaman membaca grafik, tabel, atau istilah teknis di layar HP. Bisa berusia berapa saja — kenyamanan digital ditentukan oleh kebiasaan dan pengalaman, bukan tahun lahir.
+
+| Aspek | Detail |
+|---|---|
+| Kanal | WhatsApp — sangat terbiasa |
+| Hambatan digital | Kurang nyaman dengan grafik, angka berlapis, atau istilah seperti "dashboard", "metrics", "conversion" |
+| Butuh | Tombol besar, teks langsung ke aksi, tidak ada grafik yang membutuhkan interpretasi |
+| Tampilan yang cocok | Mode Sederhana — 4 kartu aksi, tanpa grafik, tanpa istilah teknis |
+| Catatan desain | Kuali tidak meminta pengguna mengisi data usia atau kategori kemampuan. Mode dipilih sendiri dan dapat diubah kapan saja. |
 
 ## User Journey
 
@@ -148,9 +165,21 @@ Total order, belum bayar, menu terlaris, ringkasan AI.
 
 Metrik aman: chat disimulasikan, parsed, perlu cek, unpaid, estimasi waktu rekap.
 
-### 10. Roadmap Simulation Card
+### 10. Dashboard Mode Sederhana
 
-Label: **Roadmap Simulation**. Jelaskan belanja bareng/rescue sale sebagai vision, bukan MVP.
+4 kartu aksi besar: "Pesanan Baru Masuk", "Perlu Dikonfirmasi", "Belum Bayar", "Produksi Hari Ini". Tidak ada grafik. Tidak ada tabel. Toggle "Mode Standar" di pojok kanan atas.
+
+### 11. Dashboard Mode Standar
+
+Tampilan penuh: metrik harian, breakdown status order, ringkasan pembayaran, grafik. Toggle "Mode Sederhana" tersedia di pojok kanan atas.
+
+### 12. Profil Usaha
+
+Bukan Company Profile. Berisi: nama usaha, jenis kuliner, area, nomor WhatsApp, menu aktif, QRIS dummy. Termasuk toggle pilihan tampilan default (Mode Sederhana / Mode Standar).
+
+### 13. Roadmap Simulation Card *(DROPPED — tidak masuk demo)*
+
+Label: **Roadmap Simulation**. Tidak ditampilkan dalam demo utama. Hanya untuk Q&A juri jika ditanya soal roadmap.
 
 ## UX Copy Bahasa Indonesia
 
@@ -177,6 +206,9 @@ Label: **Roadmap Simulation**. Jelaskan belanja bareng/rescue sale sebagai visio
 - DailySummaryCard
 - ImpactDashboard
 - RoadmapCard
+- SimpleDashboard *(Mode Sederhana — 4 aksi utama)*
+- ViewModeToggle *(toggle Mode Sederhana / Mode Standar)*
+- ProfilUsahaCard
 - EmptyState
 - LoadingState
 - ErrorState

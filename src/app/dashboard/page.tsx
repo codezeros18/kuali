@@ -10,10 +10,13 @@ import { Shell } from "@/components/kuali/AppShell";
 import { MetricCard } from "@/components/kuali/MetricCard";
 import { OrderCard } from "@/components/kuali/OrderCard";
 import { StatusBadge } from "@/components/kuali/StatusBadge";
+import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
+import { SimpleDashboardView } from "@/components/kuali/SimpleDashboardView";
 import { formatRupiah } from "@/lib/format";
 import { dashboardMetrics, orders as dummyOrders } from "@/lib/dummy-data";
 import type { Order } from "@/lib/dummy-data";
 import { useUser } from "@/lib/user-context";
+import { useViewMode } from "@/lib/view-mode";
 import { cn } from "@/lib/utils";
 
 interface Metrics {
@@ -92,7 +95,7 @@ function DOrderRow({ order, onClick }: { order: Order; onClick: () => void }) {
           "text-[12px] font-bold mt-2 inline-block leading-none",
           order.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"
         )}>
-          {order.paymentStatus === "paid" ? "Lunas" : "Belum Payar"}
+          {order.paymentStatus === "paid" ? "Lunas" : "Belum Bayar"}
         </div>
       </div>
       <div className={cn("text-right text-[14px] font-black pr-4", confColor)}>
@@ -105,7 +108,8 @@ function DOrderRow({ order, onClick }: { order: Order; onClick: () => void }) {
 export default function DashboardPage() {
   const router = useRouter();
   const user = useUser();
-  const [metrics, setMetrics] = useState<Metrics>({ ...dashboardMetrics, paidOrders: 1, paidAmount: 500000 });
+  const { mode, toggle } = useViewMode();
+  const [metrics, setMetrics] = useState<Metrics>({ ...dashboardMetrics, paidOrders: 4, paidAmount: 742000 });
   const [recentOrders, setRecentOrders] = useState<Order[]>(dummyOrders.slice(0, 5));
   const [parsedChats, setParsedChats] = useState(13);
   const [totalChats, setTotalChats] = useState(15);
@@ -129,20 +133,20 @@ export default function DashboardPage() {
 
   // ── Desktop Layout Full Width & Viewport Locked ──────────────────
   const desktopContent = (
-    <div className="flex flex-col gap-5 w-full px-6 pb-6 animate-fade-in">
+    <div className="flex flex-col gap-5 w-full pb-6 animate-fade-in">
 
       {/* Header Greeting */}
       <div className="flex-shrink-0 pt-1">
         <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-          Selamat datang, {user?.name ?? "kamu"}
+          Selamat datang, {user?.name ?? "Bu Rani"}
         </h2>
         <p className="text-[14px] font-medium text-[#6B6B6B] mt-0.5">
           {today} <span className="mx-1 text-[#CECECE]">·</span> <span className="text-orange-500 font-bold">{metrics.totalOrdersToday}</span> pesanan aktif hari ini
         </p>
       </div>
 
-      {/* ── Row 1: 4 Dashboard Metric Cards (Lebih Lebar & Besar) ── */}
-      <div className="grid grid-cols-4 gap-4 flex-shrink-0 w-full">
+      {/* ── Row 1: 4 Dashboard Metric Cards ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 w-full">
         {[
           { id: "total", label: "Total Order", value: metrics.totalOrdersToday, sub: "vs 8 kemarin", badge: "↑ 27%", bgIcon: "bg-[#EFF6FF] text-[#2563EB]", filter: "", path: "M0 24 L20 16 L40 22 L60 10 L80 14 L100 6 L120 12 L140 4", color: "#2563EB" },
           { id: "confirmed", label: "Dikonfirmasi", value: metrics.confirmed, sub: "siap produksi", badge: "↑ 2", bgIcon: "bg-[#F0FDF4] text-[#16A34A]", filter: "confirmed", path: "M0 28 L20 25 L40 26 L60 18 L80 20 L100 12 L120 14 L140 8", color: "#16A34A" },
@@ -208,7 +212,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Row 2: Keuangan & Rasio Ekstraksi AI ── */}
-      <div className="grid grid-cols-[1.4fr_1fr] gap-4 flex-shrink-0 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-3 md:gap-4 w-full">
 
         {/* Belum Dibayar Hero Card */}
         <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl border border-[rgba(180,83,9,0.15)] p-6 relative overflow-hidden flex flex-col gap-2.5 shadow-sm w-full">
@@ -337,7 +341,7 @@ export default function DashboardPage() {
       </DashCard>
 
       {/* Tombol Aksi Cepat */}
-      <div className="flex gap-3.5 flex-shrink-0 pb-1">
+      <div className="flex flex-wrap gap-3 pb-1">
         <motion.button
           whileHover={{ scale: 1.015, boxShadow: "0 10px 25px rgba(232,84,26,0.2)" }}
           whileTap={{ scale: 0.985 }}
@@ -358,19 +362,40 @@ export default function DashboardPage() {
     </div>
   );
 
+  const standardDesktopContent = desktopContent;
+  const activeDesktopContent = mode === "simple"
+    ? <SimpleDashboardView metrics={metrics} />
+    : standardDesktopContent;
+
   return (
     <Shell
       title="Dashboard Hari Ini"
-      subtitle={user?.business ?? user?.name}
+      subtitle={user?.business ?? user?.name ?? "Katering Bu Rani"}
       headerRight={
-        <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-full shadow-sm">
-          <Zap size={12} className="fill-orange-500" /> Mock AI aktif
+        <div className="flex items-center gap-3">
+          <ViewModeToggle mode={mode} onToggle={toggle} />
+          <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-full shadow-sm">
+            <Zap size={12} className="fill-orange-500" /> Mode Demo aktif
+          </div>
         </div>
       }
-      desktopContent={desktopContent}
+      desktopContent={activeDesktopContent}
     >
       {/* Mobile view */}
       <div className="px-4 py-4 flex flex-col gap-5">
+
+        {/* Mode toggle — mobile */}
+        <div className="flex justify-end">
+          <ViewModeToggle mode={mode} onToggle={toggle} />
+        </div>
+
+        {/* Mode Sederhana mobile */}
+        {mode === "simple" && (
+          <SimpleDashboardView metrics={metrics} />
+        )}
+
+        {/* Mode Standar mobile */}
+        {mode !== "simple" && (<>
         <div>
           <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-3">Ringkasan</p>
           <div className="grid grid-cols-2 gap-3">
@@ -409,6 +434,7 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
+        </>)}
       </div>
     </Shell>
   );

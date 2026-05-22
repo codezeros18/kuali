@@ -278,7 +278,7 @@ export default function DemoPage() {
               transition={{ delay: 0.25, duration: 0.45 }}
               className="text-[14px] font-medium text-[#555555] leading-relaxed max-w-sm"
             >
-              Simulasikan alur lengkap — dari pesan WhatsApp pelanggan hingga laporan rekap harian — dalam satu demo interaktif.
+              Simulasikan alur inti — dari pesan WhatsApp pelanggan hingga laporan rekap harian — dalam 3 menit.
             </motion.p>
           </div>
 
@@ -301,6 +301,7 @@ export default function DemoPage() {
               </div>
             ))}
           </motion.div>
+          <p className="text-[10px] text-[#CECECE] font-semibold text-center">· Data simulasi demo — bukan data nyata ·</p>
         </div>
       </GlassCard>
 
@@ -373,7 +374,7 @@ export default function DemoPage() {
           {parsedOrder ? (
             <div className="flex flex-col h-full min-h-0">
               <StepHeader number={2} title="2. Konfirmasi Draft Order"
-                desc="Hasil ekstraksi AI tersaji instan. Periksa data lalu klik Konfirmasi untuk lanjut ke reminder pembayaran." />
+                desc="Hasil ekstraksi AI tersaji sebagai draft. Periksa & verifikasi data, lalu klik Konfirmasi — AI hanya membuat draft, keputusan ada di Bu Rani." />
 
               {/* Low-confidence callout */}
               {parsedOrder.confidenceScore < 70 && (
@@ -435,13 +436,13 @@ export default function DemoPage() {
     >
       {/* Left: Payment reminder card */}
       <GlassCard>
-        <StepHeader number={<CreditCard size={13} />} title="QRIS & Reminder Pembayaran"
-          desc="Setelah order dikonfirmasi, Kuali menyiapkan draft pesan reminder dan QR dummy untuk diforward ke pelanggan." />
+        <StepHeader number={<CreditCard size={13} />} title="QRIS Dummy & Reminder Pembayaran"
+          desc="Setelah order dikonfirmasi, Kuali menyiapkan draft pesan reminder dan QRIS dummy — bukan pembayaran nyata — untuk diforward ke pelanggan." />
         <div className="flex-1 overflow-y-auto min-h-0">
           <PaymentReminderCard
             customerName={qrisCustomer}
             amount={qrisAmount}
-            orderNumber="KL-20250519-001"
+            orderNumber="KL-20260522-001"
             items={qrisItems}
           />
         </div>
@@ -579,11 +580,11 @@ export default function DemoPage() {
           </motion.div>
           <p className="text-[15px] font-bold text-[#1A1A1A] text-center mb-2">Alur hampir selesai</p>
           <p className="text-[13px] text-[#6B6B6B] font-medium text-center max-w-[220px] leading-relaxed">
-            Lihat roadmap pengembangan atau langsung selesaikan simulasi.
+            Selesaikan demo 3 menit di sini, atau lihat roadmap sebagai referensi opsional.
           </p>
         </GlassCard>
         <GhostBtn onClick={() => advance("roadmap")}>
-          Lihat Roadmap Fitur <ArrowRight size={15} />
+          Lihat Roadmap (Opsional) <ArrowRight size={15} />
         </GhostBtn>
         <PrimaryBtn onClick={() => advance("done")}>
           Selesaikan Demo <CheckCircle size={15} />
@@ -598,8 +599,8 @@ export default function DemoPage() {
       className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full w-full min-h-0"
     >
       <GlassCard>
-        <StepHeader number={<Sparkles size={13} />} title="Peta Pengembangan Kuali"
-          desc="Fitur dan integrasi ekosistem baru yang sedang dirancang tim pengembang."
+        <StepHeader number={<Sparkles size={13} />} title="Roadmap Pengembangan Kuali"
+          desc="Fitur-fitur ini belum tersedia di MVP. Ditampilkan sebagai referensi arah pengembangan — bukan bagian dari demo utama."
           accent="violet" />
         <div className="flex-1 overflow-y-auto min-h-0">
           <RoadmapCard />
@@ -617,7 +618,7 @@ export default function DemoPage() {
           </motion.div>
           <p className="text-[15px] font-bold text-[#1A1A1A] text-center mb-2">Coming soon</p>
           <p className="text-[13px] text-[#6B6B6B] font-medium text-center max-w-[220px] leading-relaxed">
-            Fitur-fitur ini sedang dalam pengembangan aktif oleh tim Kuali.
+            Fitur-fitur ini belum tersedia di demo MVP. Modul ini hanya untuk referensi juri.
           </p>
         </GlassCard>
         <PrimaryBtn onClick={() => advance("done")}>
@@ -658,7 +659,7 @@ export default function DemoPage() {
               transition={{ delay: 0.35 }}
               className="text-[14px] text-[#555555] font-medium leading-relaxed max-w-sm mx-auto"
             >
-              Anda telah melihat ekosistem penuh Kuali — dari pesan WhatsApp tak terstruktur hingga laporan harian profesional.
+              Anda telah melihat alur operasional harian Kuali — dari pesan WhatsApp tak terstruktur hingga laporan harian siap pakai.
             </motion.p>
           </div>
           <motion.button

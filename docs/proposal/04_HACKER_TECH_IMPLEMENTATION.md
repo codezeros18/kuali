@@ -6,16 +6,17 @@ Role Hacker menjelaskan bagaimana Kuali dapat dibangun secara teknis dengan real
 
 ## Technical Overview
 
-| Layer | Teknologi |
+| Layer | Teknologi (Prototype Aktual) |
 |---|---|
-| Frontend | Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui |
-| UI Utility | Framer Motion, Lucide React, Sonner, Recharts |
-| Validation | Zod, React Hook Form |
-| Database | Supabase PostgreSQL + Prisma ORM |
-| AI | OpenAI API atau Anthropic API dengan structured JSON |
-| WhatsApp | Mock WhatsApp UI, n8n optional, Meta Cloud API roadmap |
-| Payment | QRIS dummy image, payment reminder only |
-| Deployment | Vercel, Supabase, Railway optional, GCP roadmap |
+| Frontend | Next.js 14 App Router, TypeScript, Tailwind CSS |
+| UI / Animation | Framer Motion, Lucide React, Sonner |
+| Database | SQLite + Prisma ORM |
+| AI (prototype) | Mock rule-based parser — tanpa external AI API |
+| AI (roadmap) | OpenAI / Anthropic structured JSON output |
+| WhatsApp | Mock WhatsApp UI — tidak ada integrasi real |
+| WhatsApp (roadmap) | Meta WhatsApp Business Cloud API |
+| Payment | QRIS dummy image, reminder siap salin — bukan settlement |
+| Deployment | Vercel |
 
 ## AI Utilization
 
@@ -160,41 +161,37 @@ sequenceDiagram
 flowchart TD
     A[Mock WhatsApp UI] --> B[Next.js Frontend]
     B --> C[API Routes]
-    C --> D[AI Parser Service]
+    C --> D[Mock AI Parser\nRule-based, no external API]
     C --> E[Order Service]
     C --> F[Production Planner Service]
     C --> G[Daily Summary Service]
-    E --> H[(Supabase PostgreSQL)]
+    E --> H[(SQLite via Prisma ORM)]
     F --> H
     G --> H
-    D --> I[OpenAI/Anthropic or Mock Fallback]
     C --> J[Notification Service]
-    J --> K[QRIS Dummy Reminder]
+    J --> K[QRIS Dummy Reminder\nSimulasi saja]
 ```
 
 ## ERD
 
 ```mermaid
 erDiagram
-    User ||--o{ Business : owns
     Business ||--o{ Menu : has
     Business ||--o{ Ingredient : has
+    Business ||--o{ Order : receives
+    Business ||--o{ DailySummary : generates
     Menu ||--o{ RecipeItem : uses
     Ingredient ||--o{ RecipeItem : included_in
-    Business ||--o{ Customer : serves
     Customer ||--o{ Order : places
-    Business ||--o{ Order : receives
     Order ||--o{ OrderItem : contains
     Menu ||--o{ OrderItem : ordered
     Order ||--o| Payment : has
     Order ||--o{ NotificationLog : sends
-    Business ||--o{ DailySummary : generates
 ```
 
 ## Database Design
 
-Entities MVP:
-- User
+Entities MVP (10 entitas — sesuai `prisma/schema.prisma` aktual):
 - Business
 - Menu
 - Ingredient
@@ -205,6 +202,8 @@ Entities MVP:
 - Payment
 - NotificationLog
 - DailySummary
+
+*Catatan: Tidak ada entitas User / Auth di MVP — single-tenant prototype.*
 
 ## API Endpoint Draft
 
@@ -221,18 +220,16 @@ Entities MVP:
 | POST | `/api/menus` | Add menu |
 | GET | `/api/ingredients` | List ingredients |
 | POST | `/api/ai/parse-order` | Parse chat |
-| POST | `/api/ai/production-plan` | Generate production plan |
-| POST | `/api/ai/daily-summary` | Generate daily summary |
-| POST | `/api/webhooks/whatsapp` | Future webhook |
+| GET | `/api/production-plan` | Production plan dari order aktual |
+| GET | `/api/daily-summary` | Rekap harian |
 | POST | `/api/notifications/payment-reminder` | Payment reminder dummy |
 
 ## WhatsApp Integration Plan
 
 | Phase | Approach | Status |
 |---|---|---|
-| Proposal / Mockup | Mock WhatsApp UI | MVP baseline |
-| Prototype Advanced | n8n webhook simulation | Optional |
-| Roadmap | Meta WhatsApp Business Cloud API | Deferred |
+| MVP / Demo | Mock WhatsApp UI (built-in) | ✅ Aktif |
+| Roadmap | Meta WhatsApp Business Cloud API | Belum diimplementasi |
 
 ## Payment Plan
 

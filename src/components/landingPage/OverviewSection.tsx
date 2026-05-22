@@ -21,10 +21,10 @@ export function OverviewSection() {
       >
         <span className="text-[11px] font-black text-[#E8541A] uppercase tracking-[0.16em]">Semua Fitur</span>
         <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] font-black tracking-tight mt-1.5 text-[#1A1A1A]">
-          Satu ekosistem, semua terpadu.
+          Satu alur, semua terpadu.
         </h2>
         <p className="text-[15px] text-[#6B6B6B] mt-3 max-w-md mx-auto leading-relaxed">
-          Dari pesan masuk hingga laporan selesai — Kuali menangani seluruh alur operasional katering kamu.
+          Kuali membantu merapikan alur pesanan WhatsApp — dari chat masuk hingga dapur siap produksi.
         </p>
       </motion.div>
 

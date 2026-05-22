@@ -117,7 +117,7 @@ export function DesktopZapBadge() {
   return (
     <div className="flex items-center gap-1.5 text-xs text-kuali-primary font-medium bg-kuali-primary/10 px-3 py-1.5 rounded-full">
       <Zap size={12} />
-      Mock AI aktif
+      Mode Demo aktif
     </div>
   );
 }
