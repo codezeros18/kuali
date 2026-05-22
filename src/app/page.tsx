@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Zap } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatedNumber } from "@/components/landingPage/AnimatedNumber";
 import { AuthModal } from "@/components/landingPage/AuthModal";
 import { OverviewSection } from "@/components/landingPage/OverviewSection";
@@ -13,6 +13,19 @@ import type { AuthMode } from "@/components/landingPage/types";
 
 export default function Page() {
   const [authModal, setAuthModal] = useState<AuthMode | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (data) setIsLoggedIn(true); })
+      .catch(() => null);
+  }, []);
+
+  function handleLogin() {
+    if (isLoggedIn) { window.location.href = "/dashboard"; return; }
+    setAuthModal("login");
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] text-[#1A1A1A] antialiased">
@@ -52,16 +65,16 @@ export default function Page() {
               <span className="text-[11px] font-semibold text-[#6B6B6B]">Gunadarma Code Week 2.0</span>
             </div>
             <button
-              onClick={() => setAuthModal("login")}
+              onClick={handleLogin}
               className="hidden sm:block text-[13px] font-bold text-[#6B6B6B] px-4 py-2.5 rounded-full hover:bg-[#F4F4F2] active:scale-[0.97] transition-all"
             >
-              Masuk
+              {isLoggedIn ? "Ke Dashboard" : "Masuk"}
             </button>
             <button
-              onClick={() => setAuthModal("register")}
+              onClick={() => isLoggedIn ? window.location.href = "/dashboard" : setAuthModal("register")}
               className="bg-[#E8541A] text-white text-[13px] font-bold px-5 py-2.5 rounded-full shadow-lg shadow-orange-200/50 hover:bg-[#d4491a] active:scale-[0.97] transition-all"
             >
-              Daftar
+              {isLoggedIn ? "Dashboard" : "Daftar"}
             </button>
           </div>
         </motion.nav>
@@ -187,10 +200,10 @@ export default function Page() {
                   Mulai Demo Sekarang <ArrowRight size={14} />
                 </Link>
                 <button
-                  onClick={() => setAuthModal("login")}
+                  onClick={handleLogin}
                   className="bg-white/15 text-white font-bold text-[13px] px-8 py-3.5 rounded-2xl border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all backdrop-blur-sm"
                 >
-                  Masuk ke Kuali
+                  {isLoggedIn ? "Ke Dashboard" : "Masuk ke Kuali"}
                 </button>
               </div>
             </div>
