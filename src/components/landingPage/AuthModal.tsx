@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Building2,
-  ChefHat,
   Eye,
   EyeOff,
   Lock,
@@ -128,12 +127,7 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
 
           {/* Logo Brand Kuali */}
           <div className="relative z-10 flex items-center gap-3">
-            <motion.div 
-              whileHover={{ rotate: [-5, 5, 0] }}
-              className="w-10 h-10 bg-white/15 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center shadow-md"
-            >
-              <ChefHat size={20} className="text-white" strokeWidth={2.5} />
-            </motion.div>
+            <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-9 h-9 brightness-0 invert" />
             <span className="font-black text-2xl tracking-tight text-white">kuali</span>
           </div>
 
@@ -196,9 +190,7 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
           
           {/* Mobile Brand Header View (Tampil hanya di HP) */}
           <div className="flex items-center gap-2.5 mb-6 md:hidden">
-            <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center shadow-md">
-              <ChefHat size={18} className="text-white" strokeWidth={2.5} />
-            </div>
+            <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-9 h-9" />
             <span className="font-black text-xl tracking-tight text-[#1A1A1A]">kuali</span>
           </div>
 
