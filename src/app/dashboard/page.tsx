@@ -11,8 +11,9 @@ import { MetricCard } from "@/components/kuali/MetricCard";
 import { OrderCard } from "@/components/kuali/OrderCard";
 import { StatusBadge } from "@/components/kuali/StatusBadge";
 import { formatRupiah } from "@/lib/format";
-import { dashboardMetrics, orders as dummyOrders, business } from "@/lib/dummy-data";
+import { dashboardMetrics, orders as dummyOrders } from "@/lib/dummy-data";
 import type { Order } from "@/lib/dummy-data";
+import { useUser } from "@/lib/user-context";
 import { cn } from "@/lib/utils";
 
 interface Metrics {
@@ -22,6 +23,8 @@ interface Metrics {
   needsReview: number;
   unpaidOrders: number;
   unpaidAmount: number;
+  paidOrders: number;
+  paidAmount: number;
 }
 
 interface ApiOrder {
@@ -101,7 +104,8 @@ function DOrderRow({ order, onClick }: { order: Order; onClick: () => void }) {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [metrics, setMetrics] = useState<Metrics>(dashboardMetrics);
+  const user = useUser();
+  const [metrics, setMetrics] = useState<Metrics>({ ...dashboardMetrics, paidOrders: 1, paidAmount: 500000 });
   const [recentOrders, setRecentOrders] = useState<Order[]>(dummyOrders.slice(0, 5));
   const [parsedChats, setParsedChats] = useState(13);
   const [totalChats, setTotalChats] = useState(15);
@@ -111,7 +115,7 @@ export default function DashboardPage() {
     fetch("/api/dashboard")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!data) return;
+        if (!data || data.metrics.totalOrdersToday === 0) return;
         setMetrics(data.metrics);
         setRecentOrders((data.recentOrders as ApiOrder[]).slice(0, 6).map(apiToOrder));
         setParsedChats(data.parsedChats);
@@ -130,7 +134,7 @@ export default function DashboardPage() {
       {/* Header Greeting */}
       <div className="flex-shrink-0 pt-1">
         <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-          Selamat datang, Bu Rani 👋
+          Selamat datang, {user?.name ?? "kamu"}
         </h2>
         <p className="text-[14px] font-medium text-[#6B6B6B] mt-0.5">
           {today} <span className="mx-1 text-[#CECECE]">·</span> <span className="text-orange-500 font-bold">{metrics.totalOrdersToday}</span> pesanan aktif hari ini
@@ -228,20 +232,29 @@ export default function DashboardPage() {
           </div>
           
           <div className="text-[13px] text-[#92400E] max-w-[65%] font-semibold mt-0.5">
-            Dari <strong className="font-black text-[#1A1A1A]">{metrics.unpaidOrders} order</strong> dikonfirmasi · 1 lunas (Rp 500rb)
+            Dari <strong className="font-black text-[#1A1A1A]">{metrics.unpaidOrders} order</strong> dikonfirmasi belum bayar
+            {metrics.paidOrders > 0 && (
+              <span className="text-[#92400E]"> · {metrics.paidOrders} lunas ({formatRupiah(metrics.paidAmount)})</span>
+            )}
           </div>
-          
-          <div className="flex h-1.5 rounded-full overflow-hidden gap-0.5 max-w-[65%] w-full mt-1.5">
-            <div className="flex-[4] bg-[#B45309]"></div>
-            <div className="flex-[1] bg-[#059669]"></div>
-          </div>
-          
+
+          {(metrics.unpaidOrders + metrics.paidOrders) > 0 && (
+            <div className="flex h-1.5 rounded-full overflow-hidden gap-0.5 max-w-[65%] w-full mt-1.5">
+              {metrics.unpaidOrders > 0 && (
+                <div className="bg-[#B45309]" style={{ flex: metrics.unpaidOrders }}></div>
+              )}
+              {metrics.paidOrders > 0 && (
+                <div className="bg-[#059669]" style={{ flex: metrics.paidOrders }}></div>
+              )}
+            </div>
+          )}
+
           <div className="flex gap-4 text-[11px] font-black text-[#555555] mt-0.5">
             <span className="flex items-center gap-1.5">
               <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#B45309]"></span>{metrics.unpaidOrders} belum
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#059669]"></span>1 lunas
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#059669]"></span>{metrics.paidOrders} lunas
             </span>
           </div>
 
@@ -348,7 +361,7 @@ export default function DashboardPage() {
   return (
     <Shell
       title="Dashboard Hari Ini"
-      subtitle={business.name}
+      subtitle={user?.business ?? user?.name}
       headerRight={
         <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-full shadow-sm">
           <Zap size={12} className="fill-orange-500" /> Mock AI aktif

@@ -143,7 +143,7 @@ export default function SummaryPage() {
     fetch("/api/dashboard")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!data) return;
+        if (!data || data.metrics.totalOrdersToday === 0) return;
         setMetrics(data.metrics);
         const firstUnpaid = (data.recentOrders as RecentOrder[]).find(
           (o) => o.paymentStatus === "unpaid" && o.status === "confirmed"

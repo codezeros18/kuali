@@ -363,14 +363,14 @@ function OrdersContent() {
     >
       {/* Mobile list view */}
       <div className="px-4 py-4 flex flex-col gap-4">
-        {/* Mobile Filter Grid */}
-        <div className="grid grid-cols-2 gap-2 mt-1">
-          {tabs.slice(0, 4).map((tab) => (
+        {/* Mobile Filter Strip — horizontally scrollable to show all 5 tabs */}
+        <div className="flex gap-2 mt-1 overflow-x-auto no-scrollbar">
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "p-4 rounded-xl border text-left flex flex-col justify-between min-h-[76px]",
+                "flex-shrink-0 min-w-[148px] p-4 rounded-xl border text-left flex flex-col justify-between min-h-[76px]",
                 activeTab === tab.id ? `${tab.bgActive} text-white` : "bg-white border-[#E8E8E6]"
               )}
             >

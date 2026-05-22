@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, ClipboardList, ChefHat, FileText, MessageCircle, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/lib/user-context";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -14,6 +15,7 @@ const navItems = [
 function DesktopSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const user = useUser();
 
   return (
     <aside className="hidden lg:flex flex-col w-56 shrink-0 bg-white border-r border-kuali-border min-h-screen sticky top-0">
@@ -25,7 +27,7 @@ function DesktopSidebar() {
           </div>
           <div>
             <div className="font-bold text-sm text-kuali-text-dark leading-tight">kuali</div>
-            <div className="text-[10px] text-kuali-text-light leading-tight">Dapur Bu Rani</div>
+            <div className="text-[10px] text-kuali-text-light leading-tight">{user?.business ?? user?.name ?? "Kuali"}</div>
           </div>
         </div>
       </div>

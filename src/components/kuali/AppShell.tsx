@@ -4,9 +4,10 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard, ClipboardList, ChefHat, BarChart2,
-  MessageCircle, Home, ArrowLeft, Info,
+  MessageCircle, Home, ArrowLeft, Info, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/lib/user-context";
 
 // ── Navigation items ──────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -17,9 +18,15 @@ const NAV_ITEMS = [
 ];
 
 // ── Desktop sidebar ───────────────────────────────────────────────────────────
+async function handleLogout() {
+  await fetch("/api/auth/logout", { method: "POST" });
+  window.location.href = "/";
+}
+
 function DesktopSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const user = useUser();
 
   return (
     <aside className="hidden lg:flex flex-col w-60 shrink-0 bg-white border-r border-kuali-border min-h-screen sticky top-0 z-20">
@@ -33,7 +40,7 @@ function DesktopSidebar() {
           />
           <div>
             <div className="font-black text-sm text-kuali-text-dark leading-tight tracking-tight">kuali</div>
-            <div className="text-[10px] text-kuali-text-light leading-tight">Dapur Bu Rani</div>
+            <div className="text-[10px] text-kuali-text-light leading-tight">{user?.business ?? user?.name ?? "Kuali"}</div>
           </div>
         </Link>
       </div>
@@ -77,6 +84,13 @@ function DesktopSidebar() {
           <Info size={10} />
           Tentang Kuali
         </Link>
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center gap-1.5 text-[10px] text-kuali-text-light hover:text-red-500 font-medium transition-colors py-1 w-full"
+        >
+          <LogOut size={10} />
+          Keluar
+        </button>
         <p className="text-[9px] text-kuali-text-light text-center leading-relaxed">
           MVP Prototype · Data Simulasi
         </p>
@@ -174,7 +188,16 @@ function MobileHeader({
           {subtitle && <p className="text-xs text-kuali-text-mid mt-0.5">{subtitle}</p>}
         </div>
       </div>
-      {right && <div className="shrink-0">{right}</div>}
+      <div className="flex items-center gap-2 shrink-0">
+        {right}
+        <button
+          onClick={handleLogout}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-kuali-text-light hover:text-red-500 hover:bg-red-50 transition-colors"
+          aria-label="Keluar"
+        >
+          <LogOut size={15} />
+        </button>
+      </div>
     </div>
   );
 }
