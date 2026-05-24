@@ -1,84 +1,101 @@
 # 11 — Mermaid Diagrams
 
-> Dibuat: 2026-05-18
-> Dibuat oleh: Claude Code — Technical Architect & Mermaid Diagram Specialist
-> Sumber: 00_PROPOSAL_MASTER_KUALI.md, 04_HACKER_TECH_IMPLEMENTATION.md, 05_DIAGRAMS_AND_MOCKUP_PLAN.md, 99_FINAL_PROPOSAL_SUBMISSION.md
+> **Diperbarui:** 2026-05-23
+> **Dibuat oleh:** Claude Code — Technical Architect & Mermaid Diagram Specialist
+> **Sumber:** 00_PROPOSAL_MASTER_KUALI.md · 04_HACKER_TECH_IMPLEMENTATION.md · 07_SCOPE_PURGE_AND_SIMPLIFICATION_REPORT.md · 99_FINAL_PROPOSAL_SUBMISSION.md
 >
-> **Cara preview:** Buka file ini di VS Code → install extension "Markdown Preview Mermaid Support" (bitnoop) atau "Mermaid Preview" (vstirbu) → tekan Ctrl+Shift+V untuk preview.
+> **Cara preview:** Buka di VS Code → install "Markdown Preview Mermaid Support" (bitnoop) → Ctrl+Shift+V.
 >
-> **Cara export PNG/SVG:** Gunakan mermaid-js CLI (`npx -p @mermaid-js/mermaid-cli mmdc -i file.md -o diagram.png`) atau copy blok mermaid ke mermaid.live kemudian export.
+> **Cara export PNG/SVG:** `npx -p @mermaid-js/mermaid-cli mmdc -i 11_MERMAID_DIAGRAMS.md -o diagrams/ -e png`
+> Atau copy blok ke [mermaid.live](https://mermaid.live) → Actions → Download SVG/PNG.
+>
+> **File .mmd tersedia di:** `docs/proposal/diagrams/` — satu file per diagram untuk batch export.
 
 ---
 
 ## Daftar Diagram
 
-| ID | Nama | Tipe | Prioritas | Status |
-|---|---|---|---|---|
-| DIA-01 | Use Case Diagram | flowchart TD | P0 | ✅ DONE |
-| DIA-02 | Sequence: Chat Order → Draft Order | sequenceDiagram | P0 | ✅ DONE |
-| DIA-03 | Sequence: Production Planner | sequenceDiagram | P0 | ✅ DONE |
-| DIA-04 | System Architecture Diagram | flowchart TB | P0 | ✅ DONE |
-| DIA-05 | Data Flow Diagram | flowchart TD | P1 | ✅ DONE |
-| DIA-06 | Entity Relationship Diagram (ERD) | erDiagram | P0 | ✅ DONE |
-| DIA-07 | Roadmap Architecture Diagram | flowchart LR | P2 | ✅ DONE |
+| ID | Nama | Tipe | Scope | Prioritas | Status |
+|---|---|---|---|---|---|
+| DIA-01 | Use Case Diagram | flowchart TD | MVP Saat Ini | P0 | ✅ DONE |
+| DIA-02 | Sequence: Chat Order → Draft Order | sequenceDiagram | MVP Saat Ini | P0 | ✅ DONE |
+| DIA-03 | Sequence: Production Planner | sequenceDiagram | MVP Saat Ini | P0 | ✅ DONE |
+| DIA-04 | System Architecture | flowchart TB | MVP Saat Ini | P0 | ✅ DONE |
+| DIA-05 | Data Flow Diagram | flowchart TD | MVP Saat Ini | P1 | ✅ DONE |
+| DIA-06 | Simplified ERD — Konseptual | erDiagram | MVP Saat Ini | P0 | ✅ DONE |
+| DIA-07 | Roadmap Architecture | flowchart LR | Roadmap Saja | P2 | ✅ DONE |
+
+---
+
+# BAGIAN A — Diagram MVP Saat Ini
+
+> Semua diagram di bagian ini menggambarkan **prototype hackathon yang berjalan sekarang**.
+> Stack aktual: Next.js 14 · SQLite (Prisma ORM) · Mock WhatsApp UI · Mock AI Parser (rule-based).
+> Tidak ada Supabase, GCP, WhatsApp Cloud API, atau n8n dalam prototype saat ini.
 
 ---
 
 ## DIA-01 — Use Case Diagram
 
-Menggambarkan aktor dan use case utama dalam sistem Kuali MVP.
+**Tujuan:** Menggambarkan semua aktor dan interaksi utama dalam sistem Kuali MVP.
+**Scope:** Prototype hackathon — saat ini.
+**Catatan juri:** Owner selalu memegang kendali di UC4. AI tidak pernah mengonfirmasi order secara otomatis.
 
 ```mermaid
 flowchart TD
-    subgraph Aktor
-        Owner(["👤 Owner / Bu Rani"])
-        AI(["🤖 Sistem AI"])
-        Backend(["⚙️ Sistem Backend"])
-    end
+    Pelanggan(["👤 Pelanggan"])
+    Owner(["🧑‍🍳 Owner / Bu Rani"])
+    Admin(["👨‍👩‍👧 Admin / Keluarga"])
+    AIParser(["🤖 AI Parser\n(Rule-based · Mock)"])
+    KualiSys(["⚙️ Sistem Kuali\n(Next.js + SQLite)"])
 
-    subgraph UseCaseMVP["Use Case — MVP"]
-        UC1["Pilih chat pesanan masuk"]
-        UC2["Parse chat menjadi draft order"]
+    subgraph UseCaseMVP["🟢 Use Case — MVP Saat Ini"]
+        UC0["Kirim chat pesanan\n(Mock WA UI)"]
+        UC1["Input & pilih chat\npesanan masuk"]
+        UC2["Parse chat menjadi\ndraft order terstruktur"]
         UC3["Tampilkan confidence score\n& missing fields"]
-        UC4["Review dan konfirmasi\natau tolak draft"]
-        UC5["Kirim reminder pembayaran\nQRIS dummy"]
+        UC4["Review dan konfirmasi\natau tolak draft order"]
+        UC5["Kirim reminder pembayaran\n(QRIS dummy — teks siap salin)"]
         UC6["Buka production planner"]
-        UC7["Lihat daftar bahan\ndari order aktual"]
+        UC7["Lihat daftar bahan\ndari order aktual hari ini"]
         UC8["Lihat daily summary\n& impact dashboard"]
     end
 
+    Pelanggan -->|"Kirim pesan pesanan"| UC0
+    UC0 -->|"Chat masuk ke owner"| UC1
+
     Owner --> UC1
+    Admin --> UC1
     Owner --> UC4
     Owner --> UC5
     Owner --> UC6
     Owner --> UC8
 
-    UC1 --> AI
-    AI --> UC2
+    UC1 --> AIParser
+    AIParser --> UC2
     UC2 --> UC3
     UC3 --> UC4
 
-    UC4 --> Backend
-    Backend --> UC6
+    UC4 --> KualiSys
+    KualiSys --> UC6
     UC6 --> UC7
-    Backend --> UC8
+    KualiSys --> UC8
 ```
-
-**Catatan juri:** Owner selalu memegang kendali di UC4 — AI tidak pernah mengonfirmasi order secara otomatis.
 
 ---
 
 ## DIA-02 — Sequence Diagram: Chat Order → Draft Order
 
-Menggambarkan alur dari pesan chat pelanggan masuk hingga owner mengonfirmasi order ke sistem.
+**Tujuan:** Menggambarkan alur dari pesan chat pelanggan masuk hingga owner mengonfirmasi order.
+**Scope:** MVP — prototype. Storage menggunakan SQLite lokal, AI menggunakan mock rule-based parser.
 
 ```mermaid
 sequenceDiagram
     participant Pelanggan as Pelanggan
     participant MockWA as Mock WhatsApp UI
-    participant API as Kuali API
-    participant AI as AI Parser
-    participant DB as Database
+    participant API as Kuali API (Next.js)
+    participant AI as AI Parser (Rule-based)
+    participant DB as Prototype Storage (SQLite)
     participant Owner as Owner / Bu Rani
 
     Pelanggan->>MockWA: Kirim pesan pesanan
@@ -86,17 +103,17 @@ sequenceDiagram
     MockWA->>API: POST /api/ai/parse-order
     API->>AI: Teks chat mentah
 
-    AI->>AI: Ekstrak nama, menu, qty,\ntanggal, metode bayar
+    AI->>AI: Ekstrak nama, menu, qty,<br/>tanggal, metode bayar
     AI-->>API: Draft JSON + confidence score
 
-    API->>DB: Validasi menu & harga
-    DB-->>API: Data menu dari database bisnis
+    API->>DB: Validasi menu & harga dari data bisnis
+    DB-->>API: Data menu dari prototype storage
 
     API-->>MockWA: Draft order terstruktur
-    MockWA-->>Owner: Tampilkan ParsedOrderCard\n(confidence, missing fields)
+    MockWA-->>Owner: Tampilkan ParsedOrderCard<br/>(confidence, missing fields)
 
     alt Confidence tinggi (≥ 85%)
-        Owner->>API: Konfirmasi order
+        Owner->>API: Konfirmasi order langsung
     else Confidence sedang (60–84%)
         Owner->>API: Edit lalu konfirmasi
     else Confidence rendah (< 60%)
@@ -112,15 +129,16 @@ sequenceDiagram
 
 ## DIA-03 — Sequence Diagram: Production Planner
 
-Menggambarkan alur kalkulasi kebutuhan bahan dari order yang sudah dikonfirmasi.
+**Tujuan:** Menggambarkan kalkulasi kebutuhan bahan dari order yang sudah dikonfirmasi.
+**Scope:** MVP — semua kalkulasi dilakukan dari resep yang tersimpan di prototype storage (SQLite). Bukan estimasi AI.
 
 ```mermaid
 sequenceDiagram
     participant Owner as Owner / Bu Rani
-    participant Dashboard as Dashboard UI
-    participant API as Kuali API
-    participant OrderDB as Order Database
-    participant RecipeDB as Recipe Database
+    participant Dashboard as Dashboard UI (Next.js)
+    participant API as Kuali API (Next.js)
+    participant OrderDB as Order Store (SQLite)
+    participant RecipeDB as Recipe Store (SQLite)
     participant Planner as Production Planner
 
     Owner->>Dashboard: Buka halaman Production Planner
@@ -133,40 +151,43 @@ sequenceDiagram
         RecipeDB-->>API: Kebutuhan bahan per item
     end
 
-    API->>API: Agregasi total kebutuhan\nper bahan (groupBy ingredient)
+    API->>API: Agregasi total kebutuhan<br/>per bahan (groupBy ingredient)
     API-->>Dashboard: Daftar bahan + total qty + status stok
 
-    Dashboard-->>Owner: Tampilkan ingredient list\n(nama bahan, total, satuan, status cukup/kurang)
+    Dashboard-->>Owner: Tampilkan ingredient list<br/>(nama bahan, total, satuan, CUKUP/HAMPIR HABIS/PERLU BELI)
 
-    Note over Owner,Dashboard: Owner bisa cetak atau screenshot\nuntuk panduan belanja bahan
+    Note over Owner,Dashboard: Owner bisa screenshot atau salin<br/>untuk panduan belanja bahan
 ```
 
 ---
 
 ## DIA-04 — System Architecture Diagram
 
-Menggambarkan lapisan teknologi sistem Kuali dari client hingga database pada scope MVP.
+**Tujuan:** Menggambarkan lapisan teknologi sistem Kuali dari client hingga storage pada scope MVP.
+**Scope:** MVP — prototype saat ini. Tidak ada cloud database, tidak ada external API, tidak ada n8n.
 
 ```mermaid
 flowchart TB
     subgraph Client["🖥️ Client Layer — Browser / Mobile"]
-        NextJS["Next.js 14 App Router\nTypeScript + Tailwind CSS\nMobile-first PWA"]
+        NextJS["Next.js 14 App Router\nTypeScript + Tailwind CSS\nFramer Motion · Lucide React"]
     end
 
     subgraph APILayer["⚡ API Layer — Next.js API Routes"]
         ParseAPI["POST /api/ai/parse-order"]
-        OrderAPI["GET/POST /api/orders\nPATCH /api/orders/:id/status\nPATCH /api/orders/:id/payment"]
+        OrderAPI["GET /POST /api/orders\nPATCH /api/orders/:id/status\nPATCH /api/orders/:id/payment"]
         DashAPI["GET /api/dashboard"]
         PlanAPI["GET /api/production-plan"]
         NotifAPI["POST /api/notifications/payment-reminder"]
     end
 
-    subgraph AILayer["🤖 AI Layer"]
-        MockParser["Mock AI Parser\nRule-based — tanpa external API\n(Prototype MVP)"]
+    subgraph AILayer["🤖 AI Layer — Prototype"]
+        MockParser["Mock AI Parser\nRule-based — tanpa external API\nKonfidence score dari heuristik"]
     end
 
-    subgraph DBLayer["🗄️ Database Layer — Prisma ORM"]
-        SQLite["SQLite\n(Development & Demo)"]
+    subgraph DBLayer["🗄️ Storage Layer — Prototype"]
+        Prisma["Prisma ORM"]
+        SQLite["SQLite\n(Development & Demo)\nDummy seed data"]
+        Prisma --> SQLite
     end
 
     NextJS --> ParseAPI
@@ -176,42 +197,43 @@ flowchart TB
     NextJS --> NotifAPI
 
     ParseAPI --> MockParser
-    MockParser --> DBLayer
+    MockParser --> Prisma
 
-    OrderAPI --> SQLite
-    DashAPI --> SQLite
-    PlanAPI --> SQLite
-    NotifAPI --> SQLite
+    OrderAPI --> Prisma
+    DashAPI --> Prisma
+    PlanAPI --> Prisma
+    NotifAPI --> Prisma
 ```
 
 ---
 
 ## DIA-05 — Data Flow Diagram
 
-Menggambarkan alur data dari chat mentah masuk hingga output yang diterima owner (produksi, pembayaran, rekap).
+**Tujuan:** Menggambarkan alur data dari chat mentah hingga output ke owner (produksi, pembayaran, rekap).
+**Scope:** MVP — seluruh alur berjalan di prototype lokal. Tidak ada external service.
 
 ```mermaid
 flowchart TD
-    P0(["Pelanggan"])
-    O(["Owner / Bu Rani"])
+    Pelanggan(["👤 Pelanggan"])
+    Owner(["🧑‍🍳 Owner / Bu Rani"])
 
-    P0 -->|"Teks chat pesanan"| D1
+    Pelanggan -->|"Teks chat pesanan"| D1
 
-    D1[/"Input: Raw Chat Text"/]
+    D1[/"Input: Raw Chat Text\n(Mock WA UI)"/]
     D1 --> P1
 
-    P1["AI Parser\nEkstraksi entitas dari teks"]
+    P1["AI Parser — Rule-based\nEkstraksi entitas dari teks"]
     P1 -->|"Draft JSON + confidence score"| D2
 
-    D2[/"Draft Order\nnama, menu, qty, tanggal, bayar"/]
+    D2[/"Draft Order\nnama · menu · qty · tanggal · bayar"/]
     D2 --> P2
 
     P2["Owner Review\nKonfirmasi / Edit / Tolak"]
-    O -->|"Approve atau edit"| P2
+    Owner -->|"Approve atau edit"| P2
 
     P2 -->|"Order dikonfirmasi"| DS1
 
-    DS1[("Database\nOrder + OrderItem")]
+    DS1[("Prototype Storage\nSQLite via Prisma ORM")]
 
     DS1 --> P3
     DS1 --> P4
@@ -220,163 +242,108 @@ flowchart TD
     P3["Kalkulasi Bahan\nbahan = qty_order × qty_resep"]
     P3 -->|"Daftar bahan harian"| D3
 
-    P4["Payment Reminder\nGenerate teks reminder + QRIS dummy"]
+    P4["Payment Reminder\nGenerate teks + QRIS dummy\n(bukan gateway pembayaran)"]
     P4 -->|"Draft reminder siap salin"| D4
 
     P5["Daily Summary\nRekap total order, bayar, produksi"]
     P5 -->|"Ringkasan hari ini"| D5
 
-    D3[/"Production Planner Output"/]
-    D4[/"Payment Reminder Draft"/]
-    D5[/"Daily Summary Card"/]
+    D3[/"Production Planner Output\n(ingredient list + status stok)"/]
+    D4[/"Payment Reminder Draft\n(teks siap disalin ke WA)"/]
+    D5[/"Daily Summary Card\n(metrik dampak harian)"/]
 
-    D3 --> O
-    D4 --> O
-    D5 --> O
+    D3 --> Owner
+    D4 --> Owner
+    D5 --> Owner
 ```
 
 ---
 
-## DIA-06 — Entity Relationship Diagram (ERD)
+## DIA-06 — Simplified ERD — Model Konseptual
 
-Menggambarkan relasi antar entitas database pada scope MVP Kuali.
+**Tujuan:** Menggambarkan tiga entitas konseptual utama dalam sistem Kuali MVP.
+**Scope:** Model konseptual — disederhanakan untuk proposal. Skema Prisma lengkap tersedia di `prisma/schema.prisma`.
+**Catatan:** Prototype menggunakan single-tenant — satu bisnis per instance. Tidak ada autentikasi multi-user.
 
 ```mermaid
 erDiagram
-    Business ||--o{ Menu : "punya"
-    Business ||--o{ Ingredient : "punya"
-    Business ||--o{ Customer : "melayani"
-    Business ||--o{ Order : "menerima"
-    Business ||--o{ DailySummary : "menghasilkan"
+    BusinessState ||--o{ OrderStore : "menerima pesanan"
+    BusinessState ||--o{ InventoryEstimation : "menentukan resep bahan"
+    OrderStore ||--|{ InventoryEstimation : "memicu kalkulasi"
 
-    Menu ||--o{ RecipeItem : "menggunakan"
-    Ingredient ||--o{ RecipeItem : "dipakai_di"
-
-    Customer ||--o{ Order : "memesan"
-
-    Order ||--o{ OrderItem : "berisi"
-    Order ||--o| Payment : "punya"
-    Order ||--o{ NotificationLog : "menghasilkan"
-
-    Menu ||--o{ OrderItem : "direferensikan_oleh"
-
-    Business {
-        string id
-        string name
+    BusinessState {
+        string namaUsaha
         string ownerName
-        string phone
+        string menuAktif
+        string resepBahan
+        string modetampilan
     }
 
-    Menu {
-        string id
-        string name
-        string unit
-        number pricePerUnit
-        boolean isActive
-    }
-
-    Ingredient {
-        string id
-        string name
-        string unit
-        number stockQty
-    }
-
-    RecipeItem {
-        string id
-        string menuId
-        string ingredientId
-        number qtyPerUnit
-    }
-
-    Customer {
-        string id
-        string name
-        string phone
-    }
-
-    Order {
-        string id
+    OrderStore {
         string orderNumber
-        string status
-        string paymentStatus
-        number totalAmount
-        number confidenceScore
-        string missingFields
+        string pelangganName
+        string itemDipesan
+        string statusOrder
+        string statusPembayaran
+        datetime tanggalKirim
+        float confidenceScore
         string rawMessage
-        datetime deliveryDate
-        datetime createdAt
-        datetime approvedAt
     }
 
-    OrderItem {
-        string id
-        string orderId
-        string menuId
-        number quantity
-        number unitPrice
-        number subtotal
-    }
-
-    Payment {
-        string id
-        string orderId
-        string method
-        string status
-        number amount
-        datetime paidAt
-    }
-
-    NotificationLog {
-        string id
-        string orderId
-        string type
-        string message
-        datetime sentAt
-    }
-
-    DailySummary {
-        string id
-        string businessId
-        date date
-        number totalOrders
-        number confirmedOrders
-        number pendingOrders
-        number unpaidAmount
+    InventoryEstimation {
+        date tanggalProduksi
+        string namaBahan
+        float totalQtyDibutuhkan
+        string satuan
+        string statusStok
     }
 ```
 
+> **Keterangan status stok:** `CUKUP` · `HAMPIR HABIS` · `PERLU BELI`
+> **Keterangan status order:** `PENDING` → `CONFIRMED` → `CANCELLED`
+> **Keterangan status pembayaran:** `UNPAID` · `PARTIAL` · `PAID`
+
 ---
 
-## DIA-07 — Roadmap Architecture Diagram
+# BAGIAN B — Diagram Roadmap Masa Depan
 
-Menggambarkan evolusi arsitektur Kuali dari MVP prototype hingga visi roadmap. **Diagram ini hanya untuk menunjukkan arah pengembangan — bukan bagian MVP yang didemonstrasikan.**
+> ⚠️ **BUKAN BAGIAN DEMO UTAMA.** Diagram ini menggambarkan arah pengembangan jangka panjang.
+> Supabase, GCP, WhatsApp Cloud API, n8n, dan seluruh item di Roadmap Fase 1 & 2 **tidak tersedia** dalam prototype hackathon saat ini.
+> Gunakan hanya untuk bagian Q&A juri atau Bab 5.2 Rencana Pengembangan dalam proposal.
+
+---
+
+## DIA-07 — Production Roadmap Architecture
+
+**Tujuan:** Menggambarkan jalur pengembangan dari MVP ke sistem produksi penuh.
+**Scope:** ROADMAP SAJA — bukan fitur saat ini.
 
 ```mermaid
 flowchart LR
     subgraph MVP["🟢 MVP — Prototype Hackathon (Saat Ini)"]
         direction TB
         M1["Mock WhatsApp UI\n(Input manual chat)"]
-        M2["Mock AI Parser\n(Rule-based, no external API)"]
-        M3["SQLite Database\n(Dev & Demo)"]
-        M4["QRIS Dummy Reminder\n(Teks siap salin, bukan gateway)"]
-        M5["Production Planner\n(Kalkulasi dari resep)"]
+        M2["Mock AI Parser\n(Rule-based · tanpa external API)"]
+        M3["SQLite + Prisma ORM\n(Dev & Demo · dummy data)"]
+        M4["QRIS Dummy Reminder\n(Teks siap salin · bukan gateway)"]
+        M5["Production Planner\n(Kalkulasi dari resep lokal)"]
         M6["Daily Summary\n(Rekap otomatis)"]
     end
 
     subgraph R1["🔵 Roadmap Fase 1 — Post-Hackathon"]
         direction TB
-        R1A["WhatsApp Business Cloud API\n(Meta — webhook nyata)"]
+        R1A["WhatsApp Business Cloud API\n(Meta · webhook nyata)"]
         R1B["Real AI Parser\n(OpenAI / Anthropic structured output)"]
-        R1C["Supabase PostgreSQL\n(Multi-tenant, scalable)"]
-        R1D["Real QRIS / Payment Reminder\n(BI SNAP API — bukan settlement)"]
+        R1C["Supabase PostgreSQL\n(Multi-tenant · scalable)"]
+        R1D["Real QRIS Payment Reminder\n(BI SNAP API · bukan settlement)"]
+        R1E["Auth Multi-tenant\n(Owner + staff access)"]
     end
 
     subgraph R2["🟣 Roadmap Fase 2 — Skala"]
         direction TB
         R2A["Community Sourcing\n(Opt-in supplier pooling)"]
         R2B["Rescue Sale\n(Consent-based flash sale)"]
-        R2C["Multi-Staff Access\n(Autentikasi multi-akun)"]
+        R2C["GCP Cloud Run\n(Production deployment)"]
         R2D["SaaS Subscription\n(Freemium → Pro plan)"]
     end
 
@@ -392,57 +359,65 @@ flowchart LR
 
 ---
 
-## Catatan Syntax Mermaid
+# Catatan Teknis Mermaid
 
 | Isu | Penjelasan | Mitigasi |
 |---|---|---|
-| `subgraph` dengan `direction` | Hanya didukung Mermaid ≥ 9.0. VS Code Mermaid extension umumnya sudah versi baru | Jika gagal render, hapus `direction TB` di dalam subgraph |
-| Label dengan `\n` | Baris baru dalam node label — didukung di Mermaid ≥ 8.x | Jika gagal, ganti dengan label satu baris |
-| `Note over` dengan `<br/>` | HTML dalam note — didukung oleh sebagian renderer | Jika gagal, ganti `<br/>` dengan spasi |
-| ERD label dengan spasi | Mermaid ERD menggunakan `"label dalam kutip"` untuk relasi — sudah diterapkan | Pastikan tidak ada kutip tunggal dalam label |
-| Emoji dalam node label | Didukung di sebagian renderer. Jika gagal di PDF, hapus emoji | Hapus karakter emoji jika renderer PDF tidak mendukung unicode |
-| `style` di flowchart | Dipakai di DIA-07 untuk warna MVP/Roadmap | Jika renderer tidak mendukung, hapus baris `style` |
+| `subgraph` dengan `direction` | Hanya didukung Mermaid ≥ 9.0 | Jika gagal render, hapus `direction TB` di dalam subgraph |
+| Label dengan `\n` | Baris baru dalam node label — Mermaid ≥ 8.x | Jika gagal, ganti dengan label satu baris |
+| `Note over` dengan `<br/>` | HTML dalam note — didukung sebagian renderer | Jika gagal, ganti `<br/>` dengan spasi |
+| Emoji dalam node label | Didukung sebagian renderer | Hapus emoji jika renderer PDF tidak mendukung unicode |
+| `style` di flowchart | Dipakai di DIA-07 untuk warna zona | Hapus baris `style` jika renderer tidak mendukung |
 
 ---
 
-## Next Step: Export ke PNG/SVG
+# Cara Export PNG/SVG
 
-### Opsi 1 — Mermaid Live (tanpa install)
+### Opsi 1 — Mermaid Live (tanpa install, tercepat)
 1. Buka [mermaid.live](https://mermaid.live)
 2. Copy blok Mermaid (tanpa ` ```mermaid ` dan ` ``` `)
-3. Paste ke editor kiri
-4. Download PNG atau SVG dari tombol Actions
+3. Paste ke editor kiri → Download PNG atau SVG dari tombol Actions
 
-### Opsi 2 — CLI (untuk batch export)
+### Opsi 2 — CLI (batch export semua diagram sekaligus)
 ```bash
-npm install -g @mermaid-js/mermaid-cli
-mmdc -i 11_MERMAID_DIAGRAMS.md -o diagrams/ -e png
+npx -p @mermaid-js/mermaid-cli mmdc \
+  -i docs/proposal/11_MERMAID_DIAGRAMS.md \
+  -o docs/proposal/diagrams/ \
+  -e png \
+  --backgroundColor white
 ```
-Ini akan mengekstrak semua blok Mermaid dan mengekspornya sebagai file PNG terpisah.
+Output: `docs/proposal/diagrams/11_MERMAID_DIAGRAMS-1.png` hingga `-7.png`
 
-### Opsi 3 — VS Code Screenshot
-1. Buka preview (Ctrl+Shift+V)
-2. Klik kanan diagram → Save image
-3. Atau screenshot dan crop dengan Snipping Tool (Win+Shift+S)
+### Opsi 3 — Export per diagram via .mmd files
+File .mmd sudah tersedia di `docs/proposal/diagrams/`:
+```bash
+npx -p @mermaid-js/mermaid-cli mmdc -i docs/proposal/diagrams/01_use_case_mvp.mmd -o docs/proposal/diagrams/01_use_case_mvp.png -e png --backgroundColor white
+```
+
+### Opsi 4 — VS Code Preview + Screenshot
+1. Ctrl+Shift+V untuk preview
+2. Klik kanan diagram → Save image, atau Snipping Tool (Win+Shift+S)
 
 ### Untuk proposal PDF
-- Export semua 7 diagram sebagai PNG
-- Sisipkan di Bab 4 (Teknologi & Implementasi) untuk DIA-01 hingga DIA-06
-- DIA-07 Roadmap sisipkan di Bab 5 (Kesimpulan & Roadmap)
-- Lampiran B dapat berisi semua diagram dalam resolusi tinggi
+- Export DIA-01 hingga DIA-06 sebagai PNG → sisipkan di Bab 4 (Teknologi & Implementasi)
+- Export DIA-07 sebagai PNG → sisipkan di Bab 5.2 (Rencana Pengembangan)
+- Lampiran B: semua 7 diagram resolusi tinggi
+
+> **Catatan re-rendering:** File SVG di `docs/proposal/` (`11_MERMAID_DIAGRAMS_rendered-*.svg`) dibuat dari versi sebelumnya dan perlu di-render ulang setelah revisi ini.
 
 ---
 
-## Laporan Status
+# Laporan Status
 
 | Item | Status |
 |---|---|
-| DIA-01 Use Case | ✅ Dibuat — flowchart TD, aktor dan UC jelas |
-| DIA-02 Sequence Chat→Order | ✅ Dibuat — confidence score branching ada |
-| DIA-03 Sequence Production Planner | ✅ Dibuat — loop kalkulasi bahan per item ada |
-| DIA-04 System Architecture | ✅ Dibuat — API routes spesifik, no roadmap items |
-| DIA-05 Data Flow Diagram | ✅ Dibuat — external entity, proses, data store |
-| DIA-06 ERD | ✅ Dibuat — 10 entitas, field detail untuk Order/Menu/Ingredient |
-| DIA-07 Roadmap Architecture | ✅ Dibuat — 3 fase dengan warna berbeda, label eksplisit |
-| File app code diubah | ✅ Tidak ada — hanya docs/ |
-| Scope MVP terjaga | ✅ Roadmap hanya di DIA-07 dengan label jelas |
+| DIA-01 Use Case | ✅ Diperbarui — ditambahkan aktor Pelanggan, Admin/Keluarga, Sistem Kuali |
+| DIA-02 Sequence Chat→Order | ✅ Diperbarui — DB label: "Prototype Storage (SQLite)" |
+| DIA-03 Sequence Production Planner | ✅ Diperbarui — DB labels: "Order Store" & "Recipe Store (SQLite)" |
+| DIA-04 System Architecture | ✅ Bersih — tidak ada perubahan diperlukan |
+| DIA-05 Data Flow Diagram | ✅ Bersih — tidak ada perubahan diperlukan |
+| DIA-06 Simplified ERD | ✅ Diganti — model konseptual 3-entitas (BusinessState / OrderStore / InventoryEstimation) |
+| DIA-07 Roadmap Architecture | ✅ Diperbarui — ditambahkan R1E (Auth Multi-tenant), warning diperkuat |
+| Scope MVP terjaga | ✅ Supabase/GCP/WhatsApp API/n8n hanya di DIA-07 Bagian B |
+| .mmd files | ✅ Dibuat di `docs/proposal/diagrams/` — 7 file |
+| SVG files existing | ⚠️ Perlu di-render ulang — versi lama di `docs/proposal/*.svg` |

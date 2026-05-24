@@ -191,7 +191,7 @@ export default function SummaryPage() {
     {
       id: "review", icon: AlertTriangle, label: "Perlu Dicek",
       val: metrics.needsReview,
-      sublabel: "Keandalan sistem rendah",
+      sublabel: "AI butuh review owner",
       badge: metrics.needsReview > 0 ? "Tinjau" : null,
       bgIcon: "bg-[#FEF2F2] text-[#DC2626]", color: "#DC2626",
       path: "M0 32 L20 31 L40 32 L60 29 L80 30 L100 27 L120 28 L140 26",
@@ -324,7 +324,10 @@ export default function SummaryPage() {
 
       {/* Roadmap */}
       <motion.div variants={itemVariants}>
-        <Label>Fitur Roadmap</Label>
+        <div className="flex items-center gap-2.5 mb-2.5">
+          <p className="text-[11px] font-black text-[#A3A3A3] uppercase tracking-wider">Roadmap Pengembangan</p>
+          <span className="text-[10px] font-black text-purple-600 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-full">Belum tersedia di MVP</span>
+        </div>
         <RoadmapCard />
       </motion.div>
 
@@ -335,7 +338,7 @@ export default function SummaryPage() {
       >
         <div className="flex items-center gap-2 text-[12px] text-[#ADADAD] font-semibold">
           <Layers3 size={12} className="text-orange-400" />
-          Laporan rekap harian diperbarui otomatis
+          Data simulasi demo · bukan data produksi nyata
         </div>
         <div className="flex gap-3">
           <button
@@ -444,7 +447,10 @@ export default function SummaryPage() {
 
         {/* Roadmap */}
         <div>
-          <Label>Fitur Roadmap</Label>
+          <div className="flex items-center gap-2 mb-2">
+            <p className="text-[11px] font-black text-[#A3A3A3] uppercase tracking-wider">Roadmap Pengembangan</p>
+            <span className="text-[10px] font-black text-purple-600 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-full">Belum tersedia di MVP</span>
+          </div>
           <RoadmapCard />
         </div>
 

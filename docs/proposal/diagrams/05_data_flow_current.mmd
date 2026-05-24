@@ -1,0 +1,43 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+flowchart TD
+    Pelanggan(["👤 Pelanggan"])
+    Owner(["🧑‍🍳 Owner / Bu Rani"])
+
+    Pelanggan -->|"Teks chat pesanan"| D1
+
+    D1[/"Input: Raw Chat Text\n(Mock WA UI)"/]
+    D1 --> P1
+
+    P1["AI Parser — Rule-based\nEkstraksi entitas dari teks"]
+    P1 -->|"Draft JSON + confidence score"| D2
+
+    D2[/"Draft Order\nnama · menu · qty · tanggal · bayar"/]
+    D2 --> P2
+
+    P2["Owner Review\nKonfirmasi / Edit / Tolak"]
+    Owner -->|"Approve atau edit"| P2
+
+    P2 -->|"Order dikonfirmasi"| DS1
+
+    DS1[("Prototype Storage\nSQLite via Prisma ORM")]
+
+    DS1 --> P3
+    DS1 --> P4
+    DS1 --> P5
+
+    P3["Kalkulasi Bahan\nbahan = qty_order × qty_resep"]
+    P3 -->|"Daftar bahan harian"| D3
+
+    P4["Payment Reminder\nGenerate teks + QRIS dummy\n(bukan gateway pembayaran)"]
+    P4 -->|"Draft reminder siap salin"| D4
+
+    P5["Daily Summary\nRekap total order, bayar, produksi"]
+    P5 -->|"Ringkasan hari ini"| D5
+
+    D3[/"Production Planner Output\n(ingredient list + status stok)"/]
+    D4[/"Payment Reminder Draft\n(teks siap disalin ke WA)"/]
+    D5[/"Daily Summary Card\n(metrik dampak harian)"/]
+
+    D3 --> Owner
+    D4 --> Owner
+    D5 --> Owner

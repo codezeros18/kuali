@@ -36,7 +36,7 @@ Status:
 | MCK-07 | Mockup | Production Planner | Hipster | GREY / NOT_STARTED | P0 | Figma/Frontend | Cek recipe dummy | Estimasi bahan | Buat planner | Review | Laporkan | Bahan dari order aktual |
 | MCK-08 | Mockup | Daily Summary | Hipster | GREY / NOT_STARTED | P1 | Figma/Frontend | Cek summary dummy | Summary aman | Buat card summary | Review | Laporkan | Tidak overclaim |
 | MCK-09 | Mockup | Impact Dashboard | Hipster/Hustler | GREY / NOT_STARTED | P0 | Figma/Frontend | Cek metrics | Aman tanpa angka palsu | Buat dashboard | Review | Laporkan | Metric aman |
-| MCK-10 | Mockup | Roadmap Simulation Card | Hipster/Lead | PURPLE / DEFERRED | P2 | Figma/Frontend | Cek roadmap | Label roadmap | Buat card | Review | Laporkan | Tidak tampak MVP |
+| MCK-10 | Mockup | Roadmap Simulation Card | Hipster/Lead | BLACK / DROPPED | P2 | — | — | Scope purge: roadmap features tidak masuk demo utama | — | — | Roadmap hanya muncul di Bagian 5.2 proposal dan Q&A backup |
 
 ## Priority
 

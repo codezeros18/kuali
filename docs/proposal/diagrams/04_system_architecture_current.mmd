@@ -1,0 +1,37 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#E8541A', 'primaryTextColor': '#fff', 'lineColor': '#6B6B6B'}}}%%
+flowchart TB
+    subgraph Client["🖥️ Client Layer — Browser / Mobile"]
+        NextJS["Next.js 14 App Router\nTypeScript + Tailwind CSS\nFramer Motion · Lucide React"]
+    end
+
+    subgraph APILayer["⚡ API Layer — Next.js API Routes"]
+        ParseAPI["POST /api/ai/parse-order"]
+        OrderAPI["GET /POST /api/orders\nPATCH /api/orders/:id/status\nPATCH /api/orders/:id/payment"]
+        DashAPI["GET /api/dashboard"]
+        PlanAPI["GET /api/production-plan"]
+        NotifAPI["POST /api/notifications/payment-reminder"]
+    end
+
+    subgraph AILayer["🤖 AI Layer — Prototype"]
+        MockParser["Mock AI Parser\nRule-based — tanpa external API\nKonfidence score dari heuristik"]
+    end
+
+    subgraph DBLayer["🗄️ Storage Layer — Prototype"]
+        Prisma["Prisma ORM"]
+        SQLite["SQLite\n(Development & Demo)\nDummy seed data"]
+        Prisma --> SQLite
+    end
+
+    NextJS --> ParseAPI
+    NextJS --> OrderAPI
+    NextJS --> DashAPI
+    NextJS --> PlanAPI
+    NextJS --> NotifAPI
+
+    ParseAPI --> MockParser
+    MockParser --> Prisma
+
+    OrderAPI --> Prisma
+    DashAPI --> Prisma
+    PlanAPI --> Prisma
+    NotifAPI --> Prisma

@@ -123,7 +123,7 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
                       Merapikan Pesanan,<br />Menyiapkan Dapur.
                     </h2>
                     <p className="text-white/80 text-[14px] font-medium leading-relaxed max-w-xs mt-2">
-                      Masuk kembali untuk mengelola pesanan aktual hari ini secara real-time.
+                      Masuk kembali untuk mengelola pesanan hari ini — data simulasi aktif.
                     </p>
                   </>
                 ) : (

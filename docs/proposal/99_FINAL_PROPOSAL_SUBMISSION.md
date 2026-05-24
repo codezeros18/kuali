@@ -34,6 +34,7 @@
    - 3.2 User Journey
    - 3.3 Alur Layar Produk (Mockup)
    - 3.4 Prinsip UX
+   - 3.5 Desain Inklusif — Mode Sederhana dan Mode Standar
 4. Teknologi & Implementasi
    - 4.1 Pemanfaatan AI
    - 4.2 Use Case Diagram (Tekstual)
@@ -117,8 +118,7 @@ Kuali bertujuan untuk:
 - Daftar bahan yang harus disiapkan lebih jelas dan terhitung dari pesanan nyata.
 - Produksi dapat direncanakan dengan lebih baik sejak pagi hari.
 
-**Komunitas UMKM kuliner (roadmap):**
-- Potensi pengembangan fitur berbagi kebutuhan bahan bersama UMKM lain di sekitar (community sourcing berbasis consent pengguna — bukan fitur MVP).
+*Fitur komunitas (community sourcing, supplier pooling, rescue sale) adalah bagian dari roadmap jangka panjang — tidak termasuk dalam MVP ini. Lihat Bagian 5.2.*
 
 ---
 
@@ -133,10 +133,10 @@ Kuali bertujuan untuk:
 | Channels | Demo langsung, komunitas UMKM kuliner, media sosial, word-of-mouth, kampus (mahasiswa yang berjualan) |
 | Customer Relationships | Self-service dashboard; owner approval setiap order; AI sebagai asisten bukan pengganti |
 | Revenue Streams | (Roadmap) Freemium dengan fitur dasar gratis; langganan bulanan untuk fitur lengkap |
-| Key Resources | Mock AI parser; dashboard web; menu dan resep sederhana; Prisma + SQLite/PostgreSQL |
+| Key Resources | Mock AI parser; dashboard web; menu dan resep sederhana; Prisma + SQLite (prototype) |
 | Key Activities | Parsing chat order; owner approval flow; production planner; payment reminder; daily summary |
 | Key Partnerships | (Roadmap) WhatsApp Business API; supplier bahan lokal; komunitas UMKM |
-| Cost Structure | Infrastruktur cloud (Vercel/GCP); development; WhatsApp API cost (roadmap) |
+| Cost Structure | Infrastruktur cloud (Vercel); development; WhatsApp API cost (roadmap) |
 
 ### 2.2 Analisis Kompetitor
 
@@ -168,12 +168,13 @@ Kuali tidak berusaha menggantikan semua solusi yang sudah ada. Kuali mengisi cel
 **Opportunities (Peluang Eksternal):**
 - Banyak UMKM kuliner sudah aktif berjualan melalui WhatsApp [NEED SOURCE]
 - Pertumbuhan penggunaan QR payment di kalangan UMKM Indonesia [NEED SOURCE: Bank Indonesia — QRIS adoption]
-- Potensi pengembangan fitur komunitas sourcing berbasis consent sebagai differensiator roadmap
+- Potensi pengembangan fitur komunitas sourcing berbasis consent sebagai differensiator *(roadmap jangka panjang — tidak termasuk prototype hackathon)*
+- Tingkat kenyamanan digital yang bervariasi antar pelaku UMKM membuka peluang desain inklusif yang belum diakomodasi tools yang ada
 
 **Threats (Ancaman Eksternal):**
 - Pesaing POS besar dengan sumber daya dan ekosistem lebih besar
 - Perubahan kebijakan WhatsApp Business API yang dapat mempengaruhi roadmap integrasi
-- Variasi kemampuan adopsi teknologi antar segmen UMKM yang berbeda
+- Kenyamanan adopsi teknologi baru bervariasi — membutuhkan onboarding yang ringkas dan tampilan yang tidak mengintimidasi
 
 ### 2.4 Strategi Go-To-Market
 
@@ -217,7 +218,6 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 | Aspek | Detail |
 |---|---|
 | Nama | Bu Rani |
-| Usia | 30–45 tahun |
 | Jenis Usaha | Catering rumahan, nasi box |
 | Kanal Jualan | WhatsApp, grup pelanggan, Instagram Story, repeat order |
 | Volume Order | 20–50 pesanan/hari saat ramai |
@@ -226,6 +226,7 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 | Pain Utama | Order tercecer, pembayaran perlu dicek satu per satu, bahan dihitung pakai perkiraan |
 | Takut | Salah order, pelanggan kecewa, bahan kurang/berlebih, lupa tagih |
 | Butuh | Order rapi, reminder pembayaran, daftar bahan, rekap harian |
+| Tampilan yang cocok | Mode Sederhana — fokus ke aksi utama tanpa grafik |
 
 **Jobs-To-Be-Done Bu Rani:**
 - Bu Rani tidak butuh POS canggih — ia butuh order dari WhatsApp tidak tercecer.
@@ -234,10 +235,13 @@ Kuali mengukur dampak melalui metrik operasional yang dapat diobservasi secara l
 - Bu Rani tidak butuh AI yang memutuskan — ia butuh AI yang membantu buat draft agar ia bisa cek sendiri.
 
 **Persona Sekunder 1 — Mas Budi (Penjual Snack Box / Pre-order):**
-Mahasiswa atau fresh graduate yang berjualan risol, snack box, atau makanan ringan pre-order melalui WhatsApp grup teman kampus dan kantor. Volume 10–30 pesanan per hari atau minggu. Pain utama: pesanan kecil tapi banyak varian, reminder pembayaran mudah terlupa. Butuh: draft order cepat, reminder, rekap sederhana.
+Mahasiswa atau fresh graduate yang berjualan risol, snack box, atau makanan ringan pre-order melalui WhatsApp grup teman kampus dan kantor. Volume 10–30 pesanan per hari atau minggu. Pain utama: pesanan kecil tapi banyak varian, reminder pembayaran mudah terlupa. Butuh: draft order cepat, reminder, rekap sederhana. Tampilan cocok: **Mode Standar** — terbiasa membaca angka dan tabel.
 
 **Persona Sekunder 2 — Kak Rina (Bakery / Dessert Rumahan):**
-Pelaku usaha bakery atau dessert rumahan yang melayani pesanan acara khusus dan repeat order. Volume bervariasi, pesanan sering memiliki tanggal pengiriman berbeda dan varian yang detail. Pain utama: banyak pesanan beda tanggal dan item, kebutuhan bahan harus tepat karena barang tidak tahan lama. Butuh: order detail, tanggal ambil jelas, estimasi bahan akurat.
+Pelaku usaha bakery atau dessert rumahan yang melayani pesanan acara khusus dan repeat order. Volume bervariasi, pesanan sering memiliki tanggal pengiriman berbeda dan varian yang detail. Pain utama: banyak pesanan beda tanggal dan item, kebutuhan bahan harus tepat karena barang tidak tahan lama. Butuh: order detail, tanggal ambil jelas, estimasi bahan akurat. Tampilan cocok: **Mode Standar** — membutuhkan detail operasional lengkap.
+
+**Persona Aksesibilitas — Owner dengan Kenyamanan Digital Rendah:**
+Pemilik usaha yang terbiasa dengan WhatsApp, tetapi kurang nyaman membaca grafik, tabel, atau istilah teknis di layar HP. Bukan soal usia — kenyamanan digital setiap orang berbeda. Yang dibutuhkan: tombol besar, teks langsung ke aksi, tanpa grafik yang membutuhkan interpretasi. Tampilan cocok: **Mode Sederhana** — fokus ke pesanan, pembayaran, dan bahan. Kuali tidak meminta pengguna memasukkan usia atau menentukan kategori kemampuan — pilihan tampilan tersedia secara langsung dan dapat diubah kapan saja.
 
 ### 3.2 User Journey
 
@@ -267,23 +271,48 @@ Kuali dirancang sebagai web app mobile-first dengan layar-layar berikut:
 2. **Mock WhatsApp UI** — input chat pesanan, preset chat dummy untuk demo.
 3. **AI Parsed Draft Order** — card order terstruktur dengan confidence score dan missing field indicator.
 4. **Owner Approval Screen** — konfirmasi atau penolakan draft oleh owner, dengan ringkasan order.
-5. **Dashboard Hari Ini** — metrik utama (total order, belum bayar, perlu cek, draft pending), daftar order terbaru.
-6. **Daftar Order** — dengan filter status (semua, draft, dikonfirmasi, belum bayar).
-7. **Detail Order** — informasi lengkap order, confidence bar, missing fields, aksi approve/edit/tolak.
-8. **Payment Reminder QRIS Dummy** — preview reminder dengan QRIS dummy, tombol salin pesan, disclaimer jelas bahwa ini bukan settlement.
-9. **Production Planner** — daftar bahan yang harus disiapkan berdasarkan order aktual yang dikonfirmasi, dengan perbandingan stok tersedia.
-10. **Daily Summary** — rekap harian: total order, dikonfirmasi, belum bayar, bahan utama produksi besok.
-11. **Impact Dashboard** — metrik operasional dari data demo: jumlah chat diparse, order dikonfirmasi, reminder siap, bahan terhitung.
-12. **Roadmap Simulation Card** — preview fitur masa depan dengan label jelas "Roadmap — Belum tersedia di MVP".
+5. **Dashboard Mode Sederhana** — tampilan ringkas untuk owner yang ingin aksi langsung: Pesanan Perlu Dicek, Pelanggan Belum Bayar, Bahan untuk Besok, Rekap Hari Ini. Tombol besar, tanpa grafik.
+6. **Dashboard Mode Standar** — tampilan lengkap dengan metric cards, grafik tren, tabel order terbaru, dan confidence score. Untuk owner atau admin yang membutuhkan detail operasional.
+7. **Daftar Order** — dengan filter status (semua, draft, dikonfirmasi, belum bayar).
+8. **Detail Order** — informasi lengkap order, confidence bar, missing fields, aksi approve/edit/tolak.
+9. **Payment Reminder QRIS Dummy** — preview reminder dengan QRIS dummy, tombol salin pesan, disclaimer jelas bahwa ini bukan settlement.
+10. **Production Planner** — daftar bahan yang harus disiapkan berdasarkan order aktual yang dikonfirmasi, dengan perbandingan stok tersedia.
+11. **Daily Summary** — rekap harian: total order, dikonfirmasi, belum bayar, bahan utama produksi besok.
+12. **Impact Dashboard** — metrik operasional dari data demo: jumlah chat diparse, order dikonfirmasi, reminder siap, bahan terhitung.
+13. **Profil Usaha** — informasi dasar usaha (nama, jenis, area, WhatsApp, menu aktif, QRIS dummy, preferensi tampilan). Ringan dan tidak meminta data personal yang tidak diperlukan MVP.
+
+*Catatan: Fitur roadmap (community sourcing, rescue sale, supplier pooling) tidak termasuk dalam layar demo utama. Jika ada pertanyaan juri, tersedia di Bagian 5.2.*
 
 ### 3.4 Prinsip UX
 
 - **Mobile-first (360–430px):** Semua layar dirancang untuk layar HP Android ukuran sedang ke bawah. Tombol dengan tinggi minimum 52px agar mudah disentuh satu tangan.
 - **Bahasa Indonesia sederhana:** Tidak ada istilah teknis atau Bahasa Inggris tanpa konteks. Teks tombol menggunakan kata kerja: Konfirmasi, Simpan, Salin, Kirim.
 - **Status langsung terbaca:** Badge berwarna untuk setiap status order dan pembayaran — tidak perlu membaca keterangan panjang.
-- **Dashboard ringan:** Tidak ada grafik kompleks atau tabel besar. Informasi disajikan dalam card sederhana yang bisa dibaca sekilas.
+- **Pilihan tampilan adaptif:** Kuali menyediakan dua mode tampilan — Mode Sederhana untuk aksi cepat tanpa grafik, dan Mode Standar untuk detail operasional lengkap. Pengguna memilih berdasarkan kenyamanan, bukan berdasarkan kategori usia atau kemampuan.
+- **Low cognitive load:** Mode Sederhana membatasi informasi di layar pertama menjadi maksimal 4 kartu aksi utama. Tidak ada angka yang perlu diinterpretasi — hanya aksi yang perlu dilakukan.
 - **Tidak terlihat seperti POS kasir:** Tidak ada tampilan struk, meja, printer, atau multi-cabang. Kuali adalah alat operasional chat, bukan sistem kasir.
 - **Owner selalu punya kontrol penuh:** Setiap hasil AI ditampilkan sebagai draft. Tidak ada satu pun order yang dikonfirmasi tanpa persetujuan eksplisit dari owner.
+
+### 3.5 Desain Inklusif — Mode Sederhana dan Mode Standar
+
+Kuali memahami bahwa pelaku UMKM mikro memiliki tingkat kenyamanan digital yang berbeda-beda. Bukan soal usia — seorang pemilik warung berusia 28 tahun bisa lebih nyaman dengan tampilan sederhana, sementara pemilik katering berusia 50 tahun terbiasa membaca laporan keuangan di spreadsheet. Kenyamanan digital ditentukan oleh pengalaman dan kebiasaan, bukan angka tahun lahir.
+
+Karena itu, Kuali menyediakan dua mode tampilan yang bisa dipilih sendiri oleh pengguna kapan saja, tanpa perlu mengisi formulir profil atau menjawab pertanyaan tentang kemampuan digital:
+
+**Mode Sederhana**
+Tampilan difokuskan pada 4 kartu aksi utama: pesanan baru masuk, order perlu dikonfirmasi, pembayaran belum diterima, dan rencana produksi hari ini. Tidak ada grafik, tidak ada tabel angka panjang, tidak ada istilah teknis. Setiap kartu memiliki satu tombol aksi yang jelas — pengguna tahu langsung apa yang harus dilakukan berikutnya.
+
+**Mode Standar**
+Tampilan penuh dengan metrik operasional: total order, breakdown status, ringkasan pembayaran, grafik harian, dan daftar order lengkap. Cocok untuk owner yang ingin gambaran lengkap operasional sebelum memulai hari.
+
+Pengguna bisa berpindah mode kapan saja dengan toggle yang terlihat di sudut kanan atas dashboard. Tidak ada mode yang "lebih rendah" atau "lebih mudah" — keduanya adalah pilihan tampilan yang setara. Kuali tidak menyimpan mode pengguna sebagai data profil yang dikirim ke server; pilihan disimpan secara lokal di perangkat.
+
+**Prinsip desain inklusif Kuali:**
+- Tidak ada pertanyaan tentang usia, tingkat pendidikan, atau kemampuan teknologi.
+- Pilihan tampilan tersedia untuk semua pengguna secara langsung.
+- Label dan teks menggunakan kata kerja aksi, bukan jargon teknis.
+- Ukuran tombol minimum 52px × 44px — dapat disentuh dengan satu jari di HP Android ukuran sedang.
+- Kontras warna minimum 4.5:1 pada semua teks penting.
 
 ---
 
@@ -321,204 +350,224 @@ AI dalam Kuali tunduk pada batasan yang ketat:
 
 **Aktor dalam sistem Kuali:**
 
+- **Pelanggan:** Mengirim pesan pesanan melalui WhatsApp. Dalam prototype, chat pelanggan dimasukkan manual melalui Mock WhatsApp UI.
 - **Owner (Bu Rani):** Pemilik UMKM kuliner yang menggunakan Kuali setiap hari. Mereview draft order, mengonfirmasi atau menolak, memantau dashboard, melihat production planner.
-- **Sistem AI:** Mengekstrak informasi dari chat masuk, menghasilkan confidence score, membuat draft order terstruktur.
-- **Sistem Backend:** Menyimpan dan memvalidasi order, menghitung kebutuhan bahan dari resep, menghasilkan rekap harian.
+- **Admin / Keluarga:** Anggota keluarga atau asisten yang membantu owner dalam mengoperasikan dashboard — dapat menggunakan fitur yang sama dengan owner di prototype single-tenant.
+- **AI Parser (Mock):** Mengekstrak informasi dari chat masuk secara rule-based, menghasilkan confidence score, membuat draft order terstruktur.
+- **Sistem Kuali:** Menyimpan dan memvalidasi order, menghitung kebutuhan bahan dari data resep, menghasilkan rekap harian.
 
 **Use Cases Utama:**
 
-1. Owner memilih chat WhatsApp masuk dari pelanggan.
-2. Sistem AI mem-parse teks chat menjadi draft order terstruktur.
-3. Owner mereview confidence score dan missing fields pada draft.
-4. Owner mengonfirmasi draft menjadi order aktif — atau menolaknya.
-5. Sistem menyimpan order yang dikonfirmasi.
-6. Sistem menghitung kebutuhan bahan dari semua order yang dikonfirmasi untuk tanggal produksi tertentu menggunakan data resep.
-7. Owner membuka production planner dan melihat daftar bahan yang harus disiapkan.
+1. Pelanggan mengirim pesan pesanan — diterima owner melalui WhatsApp.
+2. Owner (atau Admin) memasukkan chat ke Mock WhatsApp UI, memilih chat pesanan yang akan diproses.
+3. AI Parser mem-parse teks chat menjadi draft order terstruktur dengan confidence score dan missing fields.
+4. Owner mereview draft dan mengonfirmasi, mengedit, atau menolak.
+5. Sistem menyimpan order yang dikonfirmasi ke prototype storage.
+6. Sistem menghitung kebutuhan bahan dari semua order dikonfirmasi menggunakan data resep.
+7. Owner membuka production planner dan melihat daftar bahan harian.
 8. Owner menyalin dan mengirim reminder pembayaran QRIS dummy ke pelanggan yang belum bayar.
-9. Owner membuka daily summary dan impact dashboard untuk melihat rekap dan metrik hari ini.
+9. Owner membuka daily summary dan impact dashboard untuk melihat rekap hari ini.
 
 ```mermaid
-graph TD
-    Owner([Owner / Bu Rani])
-    AI([Sistem AI])
-    Backend([Sistem Backend])
+flowchart TD
+    Pelanggan(["👤 Pelanggan"])
+    Owner(["🧑‍🍳 Owner / Bu Rani"])
+    Admin(["👨‍👩‍👧 Admin / Keluarga"])
+    AIParser(["🤖 AI Parser\n(Rule-based · Mock)"])
+    KualiSys(["⚙️ Sistem Kuali\n(Next.js + SQLite)"])
 
-    Owner --> UC1[Pilih chat pelanggan]
-    Owner --> UC2[Review draft order]
-    Owner --> UC3[Konfirmasi atau tolak order]
-    Owner --> UC4[Lihat production planner]
-    Owner --> UC5[Kirim reminder pembayaran]
-    Owner --> UC6[Lihat daily summary]
+    subgraph UseCaseMVP["Use Case — MVP Saat Ini"]
+        UC0["Kirim chat pesanan\n(Mock WA UI)"]
+        UC1["Input & pilih chat\npesanan masuk"]
+        UC2["Parse chat → draft order\n+ confidence score"]
+        UC3["Review dan konfirmasi\natau tolak draft"]
+        UC4["Kirim reminder pembayaran\n(QRIS dummy)"]
+        UC5["Buka production planner\n& lihat daftar bahan"]
+        UC6["Lihat daily summary\n& impact dashboard"]
+    end
 
-    UC1 --> AI
-    AI --> UC2
-    UC3 --> Backend
-    Backend --> UC4
-    Backend --> UC6
+    Pelanggan -->|"Kirim pesan pesanan"| UC0
+    UC0 -->|"Chat masuk ke owner"| UC1
+    Owner --> UC1
+    Admin --> UC1
+    Owner --> UC3
+    Owner --> UC4
+    Owner --> UC5
+    Owner --> UC6
+
+    UC1 --> AIParser
+    AIParser --> UC2
+    UC2 --> UC3
+    UC3 --> KualiSys
+    KualiSys --> UC5
+    KualiSys --> UC6
 ```
 
 ### 4.3 Sequence Diagram (Mermaid)
 
+**Sequence 1: Chat Order → Draft Order**
+
 ```mermaid
 sequenceDiagram
-    participant Owner
+    participant Pelanggan as Pelanggan
     participant MockWA as Mock WhatsApp UI
-    participant AIParser as AI Parser
-    participant Backend
-    participant Dashboard
+    participant API as Kuali API (Next.js)
+    participant AI as AI Parser (Rule-based)
+    participant DB as Prototype Storage (SQLite)
+    participant Owner as Owner / Bu Rani
 
-    Owner->>MockWA: Pilih chat pelanggan
-    MockWA->>AIParser: POST /api/ai/parse-order
-    AIParser->>AIParser: Ekstrak menu, qty, tanggal, metode
-    AIParser->>MockWA: Draft order JSON + confidence score
-    MockWA->>Owner: Tampilkan ParsedOrderCard
-    Owner->>Backend: Konfirmasi order (POST /api/orders)
-    Backend->>Backend: Simpan order, update stok estimasi
-    Backend->>Dashboard: Update metrik harian
-    Owner->>Dashboard: Lihat production planner
-    Dashboard->>Owner: Daftar bahan + estimasi jumlah
+    Pelanggan->>MockWA: Kirim pesan pesanan
+    Note over MockWA: "Kak mau pesan 12 risol mayo<br/>buat besok jam 3. Atas nama Dinda."
+    MockWA->>API: POST /api/ai/parse-order
+    API->>AI: Teks chat mentah
+    AI->>AI: Ekstrak nama, menu, qty,<br/>tanggal, metode bayar
+    AI-->>API: Draft JSON + confidence score
+    API->>DB: Validasi menu & harga dari data bisnis
+    DB-->>API: Data menu dari prototype storage
+    API-->>MockWA: Draft order terstruktur
+    MockWA-->>Owner: Tampilkan ParsedOrderCard<br/>(confidence, missing fields)
+
+    alt Confidence tinggi (≥ 85%)
+        Owner->>API: Konfirmasi order langsung
+    else Confidence sedang (60–84%)
+        Owner->>API: Edit lalu konfirmasi
+    else Confidence rendah (< 60%)
+        Owner->>MockWA: Minta klarifikasi ke pelanggan
+    end
+
+    API->>DB: Simpan order dikonfirmasi
+    DB-->>API: Order ID tersimpan
+    API-->>MockWA: Status order: Confirmed
 ```
 
-**Sequence Diagram 2: Production Planner**
+**Sequence 2: Production Planner**
 
 ```mermaid
 sequenceDiagram
-    participant Owner
-    participant Backend
-    participant RecipeDB as Recipe Database
-    participant Planner as Production Planner
+    participant Owner as Owner / Bu Rani
+    participant Dashboard as Dashboard UI (Next.js)
+    participant API as Kuali API (Next.js)
+    participant OrderDB as Order Store (SQLite)
+    participant RecipeDB as Recipe Store (SQLite)
 
-    Owner->>Backend: Konfirmasi order (POST /api/orders)
-    Backend->>Backend: Simpan order dikonfirmasi
-    Owner->>Planner: Buka production planner (GET /api/production-plan)
-    Planner->>Backend: Ambil semua order dikonfirmasi hari ini
-    Backend->>RecipeDB: Hitung qty bahan per menu × qty order
-    RecipeDB->>Backend: Total kebutuhan bahan
-    Backend->>Planner: Daftar bahan + stok tersedia + status (cukup/kurang)
-    Planner->>Owner: Tampilkan ingredient list + progress bar
+    Owner->>Dashboard: Buka halaman Production Planner
+    Dashboard->>API: GET /api/production-plan?date=hari-ini
+    API->>OrderDB: Ambil semua order confirmed hari ini
+    OrderDB-->>API: Daftar order + OrderItem
+
+    loop Untuk setiap OrderItem
+        API->>RecipeDB: Hitung qty bahan = qty_order × qty_per_resep
+        RecipeDB-->>API: Kebutuhan bahan per item
+    end
+
+    API->>API: Agregasi total per bahan
+    API-->>Dashboard: Daftar bahan + total qty + status stok
+    Dashboard-->>Owner: Tampilkan ingredient list<br/>(CUKUP / HAMPIR HABIS / PERLU BELI)
 ```
 
 ### 4.4 System Design
 
-**Frontend:**
+---
 
-| Layer | Teknologi |
-|---|---|
-| Framework | Next.js 14 App Router |
-| Language | TypeScript |
-| Styling | Tailwind CSS + design tokens |
-| Icons | Lucide React |
-| Toast | Sonner |
+#### 4.4.1 Arsitektur Prototype Babak 1
 
-**Backend:**
+Prototype Kuali dibangun dengan arsitektur yang dapat dijalankan, didemonstrasikan, dan diverifikasi sepenuhnya dalam lingkungan lokal maupun cloud hosting standar. Semua komponen yang tercantum di bawah ini adalah komponen yang **aktif berjalan** dalam prototype hackathon ini.
 
-| Layer | Teknologi |
-|---|---|
-| API | Next.js API Routes |
-| ORM | Prisma |
-| Database (dev) | SQLite |
-| Database (prod roadmap) | Supabase PostgreSQL |
+**Stack Teknologi — Aktif di Prototype Saat Ini:**
 
-**AI:**
+| Layer | Teknologi | Keterangan |
+|---|---|---|
+| Framework | Next.js 14 App Router | Frontend + API Routes dalam satu codebase |
+| Language | TypeScript | Type safety tanpa overhead setup terpisah |
+| Styling | Tailwind CSS + design tokens | Responsive, mobile-first (360–430px) |
+| Animation | Framer Motion | Transisi UI halus tanpa library besar |
+| Icons | Lucide React | Icon konsisten dan ringan |
+| Toast | Sonner | Notifikasi dalam-app |
+| ORM | Prisma ORM | Type-safe query; skema sebagai single source of truth |
+| Database | SQLite | Prototype lokal — satu file, zero-config, zero server |
+| AI Parser | Mock rule-based parser | Ekstraksi entitas dari teks; tanpa external API |
+| Payment | QRIS dummy reminder | Teks siap salin — bukan payment gateway, bukan settlement |
+| Deployment | Vercel | Zero-config deployment dari Git push |
 
-| Layer | Teknologi |
-|---|---|
-| Parser | Mock rule-based (tanpa external API untuk prototype) |
-| Roadmap | OpenAI / Anthropic structured output |
-
-**Deployment:**
-
-| Layer | Teknologi |
-|---|---|
-| Hosting | Vercel |
-| Database | SQLite (dev) / Supabase (roadmap) |
-| Automation | n8n (roadmap) |
-
-**Diagram Arsitektur Sistem:**
+**Diagram Arsitektur — Prototype Aktif:**
 
 ```mermaid
-graph TB
-    subgraph Client["Client (Browser / Mobile)"]
-        NextJS["Next.js 14 App Router\nTypeScript + Tailwind CSS"]
+flowchart TB
+    subgraph Client["🖥️ Client Layer — Browser / Mobile"]
+        NextJS["Next.js 14 App Router\nTypeScript + Tailwind CSS\nFramer Motion · Lucide React"]
     end
 
-    subgraph API["API Layer (Next.js API Routes)"]
-        ParseAPI["/api/ai/parse-order"]
-        OrderAPI["/api/orders"]
-        DashAPI["/api/dashboard"]
-        PlanAPI["/api/production-plan"]
+    subgraph APILayer["⚡ API Layer — Next.js API Routes"]
+        ParseAPI["POST /api/ai/parse-order"]
+        OrderAPI["GET /POST /api/orders\nPATCH /api/orders/:id/status\nPATCH /api/orders/:id/payment"]
+        DashAPI["GET /api/dashboard"]
+        PlanAPI["GET /api/production-plan"]
+        NotifAPI["POST /api/notifications/payment-reminder"]
     end
 
-    subgraph AI["AI Layer"]
-        MockParser["Mock AI Parser\n(Rule-based, tanpa external API)"]
-        RoadmapAI["OpenAI / Anthropic\n(Roadmap)"]
+    subgraph AILayer["🤖 AI Layer — Prototype"]
+        MockParser["Mock AI Parser\nRule-based — tanpa external API\nKonfidence score dari heuristik"]
     end
 
-    subgraph DB["Database (Prisma ORM)"]
-        SQLite["SQLite (dev)"]
-        Postgres["Supabase PostgreSQL\n(Roadmap)"]
+    subgraph DBLayer["🗄️ Storage Layer — Prototype"]
+        Prisma["Prisma ORM"]
+        SQLite["SQLite\n(Development & Demo)\nDummy seed data"]
+        Prisma --> SQLite
     end
 
     NextJS --> ParseAPI
     NextJS --> OrderAPI
     NextJS --> DashAPI
     NextJS --> PlanAPI
+    NextJS --> NotifAPI
+
     ParseAPI --> MockParser
-    MockParser -.-> RoadmapAI
-    OrderAPI --> SQLite
-    DashAPI --> SQLite
-    PlanAPI --> SQLite
-    SQLite -.-> Postgres
+    MockParser --> Prisma
+    OrderAPI --> Prisma
+    DashAPI --> Prisma
+    PlanAPI --> Prisma
+    NotifAPI --> Prisma
 ```
 
-**Entitas Database:**
-
-Business, Menu, Ingredient, RecipeItem, Customer, Order, OrderItem, Payment, NotificationLog, DailySummary
-
-**Entity Relationship Diagram:**
+**Model Data Konseptual:**
 
 ```mermaid
 erDiagram
-    Business ||--o{ Menu : has
-    Business ||--o{ Customer : has
-    Business ||--o{ Order : has
-    Menu ||--o{ RecipeItem : contains
-    Ingredient ||--o{ RecipeItem : used_in
-    Customer ||--o{ Order : places
-    Order ||--o{ OrderItem : contains
-    Menu ||--o{ OrderItem : referenced_by
-    Order ||--o| Payment : has
-    Order ||--o{ NotificationLog : generates
-    Business ||--o{ DailySummary : generates
+    BusinessState ||--o{ OrderStore : "menerima pesanan"
+    BusinessState ||--o{ InventoryEstimation : "menentukan resep bahan"
+    OrderStore ||--|{ InventoryEstimation : "memicu kalkulasi"
 
-    Order {
-        string id
+    BusinessState {
+        string namaUsaha
+        string ownerName
+        string menuAktif
+        string resepBahan
+        string modeTampilan
+    }
+
+    OrderStore {
         string orderNumber
-        string status
-        string paymentStatus
-        number totalAmount
-        number confidenceScore
-        string missingFields
-        datetime createdAt
-        datetime approvedAt
+        string pelangganName
+        string itemDipesan
+        string statusOrder
+        string statusPembayaran
+        datetime tanggalKirim
+        float confidenceScore
+        string rawMessage
     }
 
-    Menu {
-        string id
-        string name
-        string unit
-        number pricePerUnit
-    }
-
-    Ingredient {
-        string id
-        string name
-        string unit
-        number stockQty
+    InventoryEstimation {
+        date tanggalProduksi
+        string namaBahan
+        float totalQtyDibutuhkan
+        string satuan
+        string statusStok
     }
 ```
 
-**API Endpoints:**
+> Skema Prisma lengkap (10 entitas) tersedia di `prisma/schema.prisma`. Model di atas adalah representasi konseptual untuk kemudahan pembacaan proposal.
+
+**API Endpoints — Aktif di Prototype:**
 
 | Method | Endpoint | Fungsi |
 |---|---|---|
@@ -527,13 +576,81 @@ erDiagram
 | GET | /api/orders | Daftar order |
 | POST | /api/orders | Buat order |
 | GET | /api/orders/:id | Detail order |
-| PATCH | /api/orders/:id/status | Update status |
-| PATCH | /api/orders/:id/payment | Update pembayaran |
+| PATCH | /api/orders/:id/status | Update status order |
+| PATCH | /api/orders/:id/payment | Update status pembayaran |
 | GET | /api/menus | Daftar menu |
 | GET | /api/ingredients | Daftar bahan |
-| POST | /api/ai/parse-order | AI parsing |
-| GET | /api/production-plan | Production planner |
-| POST | /api/notifications/payment-reminder | Kirim reminder |
+| POST | /api/ai/parse-order | AI parsing dari teks chat |
+| GET | /api/production-plan | Production planner harian |
+| POST | /api/notifications/payment-reminder | Reminder pembayaran dummy |
+
+---
+
+#### 4.4.2 Alasan Menggunakan Arsitektur Ringan
+
+Pilihan SQLite, mock AI parser, dan Next.js API Routes bukan keterbatasan — ini adalah keputusan teknis yang disengaja untuk konteks hackathon. Setiap pilihan dapat diganti dengan komponen production-grade tanpa mengubah logika aplikasi:
+
+**SQLite, bukan PostgreSQL:**
+Prisma sebagai ORM mendukung migrasi database tanpa perubahan kode aplikasi. SQLite di prototype, PostgreSQL di produksi — skema tetap sama, `prisma migrate` menangani sisanya. SQLite dipilih karena zero-config, portabel dalam satu file, dan tidak membutuhkan server database terpisah. Untuk membuktikan alur order, ini lebih dari cukup.
+
+**Mock AI parser, bukan external LLM:**
+Parser rule-based bekerja secara offline, deterministik, dan bebas latency jaringan maupun biaya API. Output formatnya identik dengan yang akan dihasilkan oleh OpenAI atau Anthropic structured output — hanya provider-nya yang berbeda. Menukar mock parser dengan real LLM tidak memerlukan perubahan pada API contract atau frontend.
+
+**Next.js API Routes, bukan backend terpisah:**
+Menghilangkan kebutuhan dua deployment (frontend + backend), mengurangi kompleksitas konfigurasi, dan mempercepat development dalam waktu hackathon yang terbatas. Untuk produksi dengan skala lebih tinggi, API Routes dapat dipisah ke layanan mandiri tanpa mengubah endpoint contract.
+
+**Vercel, bukan GCP:**
+Deployment dari Git push dengan SSL otomatis dan preview URL per branch. Untuk volume hackathon demo, ini sudah lebih dari cukup. Migrasi ke GCP Cloud Run di roadmap tidak mengubah kode aplikasi.
+
+**Kesimpulan:** Arsitektur ini dipilih bukan karena tidak bisa lebih kompleks — melainkan karena kompleksitas yang tidak diperlukan di tahap ini akan memperlambat validasi hipotesis inti: *"apakah alur order dari chat WhatsApp bisa dibuat lebih terstruktur dengan AI-assisted parsing dan human-in-the-loop approval?"*
+
+---
+
+#### 4.4.3 Rencana Arsitektur Production
+
+Komponen-komponen berikut adalah **rencana pengembangan pasca-hackathon** yang akan diimplementasikan setelah validasi product-market fit dengan pengguna nyata. **Tidak satu pun dari ini aktif di prototype Babak 1.**
+
+| Layer | Teknologi (Roadmap) | Keterangan |
+|---|---|---|
+| Database | PostgreSQL via Supabase atau Cloud SQL | Multi-tenant, scalable, backup otomatis |
+| WhatsApp | Meta WhatsApp Business Cloud API | Integrasi langsung dengan webhook — setelah review dan approval Meta |
+| AI Parser | OpenAI / Anthropic structured output | Parsing lebih akurat untuk teks informal Bahasa Indonesia |
+| Deployment | GCP Cloud Run | Auto-scaling, production-grade reliability |
+| Secret Management | Google Secret Manager / Vercel Env | Pengelolaan credential aman untuk API key dan database |
+| Auth | NextAuth.js / Supabase Auth | Multi-tenant dengan isolasi data per bisnis |
+| Logging | GCP Cloud Logging | Observability, audit trail, dan debugging produksi |
+| Payment Reminder | BI SNAP API | Reminder nyata — bukan settlement, bukan payment gateway |
+| Consent Management | Opt-in database per pelanggan | Untuk fitur broadcast di Roadmap Fase 2 |
+
+---
+
+#### 4.4.4 Batasan Implementasi Saat Ini
+
+Batasan berikut adalah **keputusan scope yang disengaja** untuk hackathon Babak 1, bukan kekurangan desain:
+
+| Batasan | Status | Penjelasan |
+|---|---|---|
+| Single-tenant | Disengaja | Satu bisnis per instance. Multi-tenant diimplementasikan setelah validasi PMF |
+| Tidak ada autentikasi | Disengaja | Demo tidak membutuhkan auth. Produksi menggunakan auth yang proper dan aman |
+| SQLite | Disengaja | Cukup untuk demo. Prisma ORM memudahkan migrasi ke PostgreSQL tanpa ubah kode |
+| Mock AI parser | Disengaja | Membuktikan alur tanpa biaya API. Output format identik dengan real LLM |
+| Mock WhatsApp UI | Disengaja | Meta WhatsApp Business API memerlukan proses review — ada di roadmap Fase 1 |
+| QRIS dummy | Disengaja | Kuali bukan payment gateway. Reminder nyata via BI SNAP API ada di roadmap |
+| Tidak ada logging | Disengaja | Tidak diperlukan untuk hackathon demo |
+| Data dummy | Disengaja | Seluruh data adalah data simulasi — tidak ada data pelanggan nyata yang diproses |
+
+---
+
+#### 4.4.5 Risiko dan Mitigasi Teknis
+
+| Risiko | Dampak | Mitigasi |
+|---|---|---|
+| AI parser salah ekstrak entitas dari teks informal | Draft order tidak akurat | Confidence score + missing field indicator + owner approval wajib di setiap order |
+| AI menyebut harga yang tidak ada di database menu | Misinformasi order | Harga selalu diambil dari database menu — AI tidak menentukan atau mengarang harga |
+| Demo error atau crash saat presentasi | Demonstrasi terganggu | Dummy seed data statik sebagai fallback; semua alur sudah diuji dari end-to-end |
+| Parser tidak mengenali variasi Bahasa Indonesia informal | Confidence rendah | Owner approval + klarifikasi ke pelanggan sebagai fallback yang jelas di UI |
+| Scope creep ke fitur roadmap | Prototype tidak selesai tepat waktu | Boundary MVP terdokumentasi dan dijaga ketat di seluruh tim |
+| Pertanyaan juri soal WhatsApp/QRIS nyata | Ekspektasi yang meleset | Mock UI + disclaimer eksplisit di setiap layar; jawaban Q&A sudah disiapkan |
 
 ### 4.5 Keamanan, Privasi, dan Etika
 
@@ -566,7 +683,7 @@ Kuali bukan POS. Bukan marketplace. Bukan chatbot biasa. Kuali adalah asisten op
 Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian dari prototype hackathon ini. Fitur roadmap hanya akan dikembangkan setelah validasi dari pengguna nyata.
 
 1. **Integrasi WhatsApp Business Cloud API** — Memungkinkan parsing langsung dari pesan WhatsApp tanpa perlu copy-paste. Memerlukan persetujuan dari Meta dan proses review Business Verification.
-2. **Auth multi-tenant** — Satu platform melayani banyak UMKM dengan data yang terpisah dan aman.
+2. **Auth multi-tenant** — Satu sistem melayani banyak UMKM dengan data yang terpisah dan aman.
 3. **Customer opt-in/opt-out system** — Pelanggan dapat memilih untuk menerima atau tidak menerima notifikasi dari sistem.
 4. **Community sourcing** — UMKM sekitar dapat menggabungkan kebutuhan bahan untuk pembelian bersama. Berbasis consent pengguna — bukan broadcast otomatis.
 5. **Supplier pooling berbasis consent** — Jaringan supplier bahan baku lokal yang terhubung ke UMKM yang sudah opt-in.
@@ -576,13 +693,15 @@ Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian d
 
 ### 5.3 Tantangan dan Mitigasi
 
+*Catatan: Risiko dan mitigasi teknis dibahas secara lengkap di §4.4.5. Bagian ini fokus pada tantangan produk dan adopsi.*
+
 | Tantangan | Mitigasi |
 |---|---|
-| Validasi pengguna nyata | User testing dengan UMKM kuliner lokal sebelum pengembangan lebih lanjut |
-| Kepatuhan WhatsApp Business API | Gunakan mock UI untuk MVP; real API dikembangkan di roadmap setelah review Meta |
-| Privasi data pelanggan | Minimasi data; consent opt-in untuk fitur broadcast; data dummy untuk prototype |
-| Onboarding owner yang sibuk | UI sederhana, mobile-first; onboarding cukup dengan memasukkan 3–5 menu utama |
-| Akurasi AI parser | Confidence score + missing field detector + owner approval wajib untuk setiap order |
+| Validasi pengguna nyata belum dilakukan | User testing dengan UMKM kuliner lokal dijadwalkan sebagai prioritas pertama pasca-hackathon sebelum pengembangan lebih lanjut |
+| Onboarding owner yang sibuk dan waktu terbatas | UI mobile-first; onboarding minimal — cukup masukkan 3–5 menu utama untuk mulai menggunakan production planner |
+| Privasi data pelanggan saat produksi | Minimasi data di semua titik; consent opt-in eksplisit untuk fitur broadcast di roadmap; data dummy untuk prototype |
+| Adopsi teknologi baru untuk owner yang tidak terbiasa | Mode Sederhana sebagai entry point — tidak ada grafik, tidak ada jargon; dapat beralih ke Mode Standar kapan saja |
+| Ketergantungan pada WhatsApp sebagai kanal utama | Mock UI berfungsi tanpa WhatsApp API; integrasi real dikembangkan di roadmap setelah review Meta |
 
 ---
 
@@ -627,7 +746,7 @@ Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian d
       "subtotal": 42000
     }
   ],
-  "deliveryDate": "Besok, 18 Mei 2025",
+  "deliveryDate": "Besok, 23 Mei 2026",
   "deliveryTime": "15:00",
   "paymentStatus": "unpaid",
   "paymentNote": "Bayar nanti sore",
@@ -650,5 +769,5 @@ Fitur-fitur berikut adalah **rencana pengembangan pasca-MVP** dan bukan bagian d
 ---
 
 *Dokumen ini adalah draft proposal untuk review leader. Belum dalam format PDF final.*
-*Tanggal terakhir diperbarui: 2026-05-17*
-*Versi: 1.0 — Draft*
+*Tanggal terakhir diperbarui: 2026-05-23*
+*Versi: 1.2 — Technology section rewrite: prototype vs roadmap separation, §4.4 restructured into 5 subsections, §4.2 updated with all actors, §4.3 sequence diagram participant labels updated*

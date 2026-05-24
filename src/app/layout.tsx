@@ -5,6 +5,11 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Kuali — Order rapi, produksi siap",
+  icons: {
+    icon: "/kuali-logo-mark.svg",
+    shortcut: "/kuali-logo-mark.svg",
+    apple: "/kuali-logo-mark.svg",
+  },
   description:
     "Asisten operasional WhatsApp-first untuk UMKM kuliner. Kuali membantu mengubah chat pesanan menjadi draft order, reminder pembayaran, dan rencana produksi harian.",
   keywords: ["UMKM", "kuliner", "catering", "WhatsApp", "order", "produksi"],

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ShoppingBasket, CheckCircle, AlertTriangle, XCircle, ChefHat, Layers3, ChevronRight } from "lucide-react";
+import { ShoppingBasket, CheckCircle, AlertTriangle, XCircle, ChefHat, Layers3, ChevronRight, Search, X } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
 import { ProductionPlanCard } from "@/components/kuali/ProductionPlanCard";
 import { NARRATIVE_SAFE } from "@/lib/constants";
@@ -117,7 +117,7 @@ function MetricTabStrip({
   const [hoveredCard, setHoveredCard] = useState<FilterStatus | null>(null);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full relative z-10 flex-shrink-0">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full relative z-10 flex-shrink-0">
       {cards.map((card) => {
         const isActive = active === card.id;
         const showFullOpacity = hoveredCard === null || hoveredCard === card.id;
@@ -193,6 +193,7 @@ function MetricTabStrip({
 export default function ProductionPage() {
   const [plan, setPlan] = useState<ProductionPlan | null>(null);
   const [activeTab, setActiveTab] = useState<FilterStatus>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/production-plan")
@@ -210,8 +211,9 @@ export default function ProductionPage() {
 
   // Filter logika data bahan baku
   const filteredIngredients = allIngredients.filter((item) => {
-    if (activeTab === "all") return true;
-    return item.status === activeTab;
+    if (activeTab !== "all" && item.status !== activeTab) return false;
+    if (searchQuery.trim()) return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return true;
   });
 
   const statusTotals = {
@@ -223,7 +225,7 @@ export default function ProductionPage() {
 
   // ── Desktop Layout Viewport Locked (No Scroll Luar) ───────────────────
   const desktopContent = (
-    <div className="h-[calc(100vh-120px)] flex flex-col gap-5 w-full px-6 overflow-hidden animate-fade-in mt-1">
+    <div className="flex flex-col gap-5 w-full animate-fade-in pb-6">
 
       {/* Info bar top header widget */}
       <div className="bg-white rounded-2xl border border-[#E8E8E6] p-5 flex items-center gap-5 flex-shrink-0 shadow-sm w-full">
@@ -249,11 +251,28 @@ export default function ProductionPage() {
           {/* Card Statistik Filter Persegi Multi-Sparkline */}
           <MetricTabStrip active={activeTab} totals={statusTotals} onSelect={setActiveTab} />
 
-          {/* Tabel Utama Bahan Baku (Scroll Internal Terkunci) */}
-          <div className="bg-white rounded-2xl border border-[#E8E8E6] overflow-hidden shadow-sm flex flex-col flex-1 min-h-0 w-full">
-            
+          {/* Search bar bahan baku */}
+          <div className="relative flex items-center flex-shrink-0">
+            <Search size={14} className="absolute left-3.5 text-[#ADADAD] pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Cari nama bahan baku..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border border-[#E8E8E6] rounded-xl pl-9 pr-9 py-2.5 text-[13px] font-medium text-[#1A1A1A] placeholder:text-[#ADADAD] outline-none focus:border-orange-400 transition-colors"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="absolute right-3 text-[#ADADAD] hover:text-[#555] transition-colors">
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* Tabel Utama Bahan Baku */}
+          <div className="bg-white rounded-2xl border border-[#E8E8E6] overflow-hidden shadow-sm w-full overflow-x-auto">
+            <div className="min-w-[780px]">
             {/* Header Tabel Grid Pas dan Presisi */}
-            <div className="grid grid-cols-[200px_1fr_160px_160px_160px] items-center gap-4 px-8 py-4 bg-[#FAFAF8] border-b border-[#F4F4F2] flex-shrink-0 w-full">
+            <div className="grid grid-cols-[200px_1fr_160px_160px_160px] items-center gap-4 px-8 py-4 bg-[#FAFAF8] border-b border-[#F4F4F2] w-full">
               {[
                 ["Nama Bahan Mentah", ""],
                 ["Rasio Pemenuhan Stok", ""],
@@ -279,16 +298,18 @@ export default function ProductionPage() {
                 >
                   <p className="text-4xl mb-3">📋</p>
                   <p className="text-[14px] font-bold text-[#1A1A1A]">Bahan baku tidak ditemukan</p>
-                  <p className="text-[13px] text-[#888888] mt-0.5">Tidak ada bahan baku dengan kategori status ini.</p>
+                  <p className="text-[13px] text-[#888888] mt-0.5">
+                    {searchQuery ? `Tidak ada hasil untuk "${searchQuery}"` : "Tidak ada bahan baku dengan kategori status ini."}
+                  </p>
                 </motion.div>
               ) : (
-                <motion.div 
+                <motion.div
                   key={activeTab}
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="divide-y divide-[#F4F4F2] overflow-y-auto flex-1 min-h-0 w-full no-scrollbar"
+                  className="divide-y divide-[#F4F4F2] w-full"
                 >
                   {filteredIngredients.map((item) => (
                     <IngredientRow key={item.ingredientId} item={item} />
@@ -296,6 +317,7 @@ export default function ProductionPage() {
                 </motion.div>
               )}
             </AnimatePresence>
+            </div>{/* /min-w wrapper */}
           </div>
 
           {/* Footer Log Items */}
@@ -331,6 +353,22 @@ export default function ProductionPage() {
     >
       {/* Mobile view standard card sync */}
       <div className="px-4 py-5 flex flex-col gap-4">
+        {/* Search mobile */}
+        <div className="relative flex items-center">
+          <Search size={14} className="absolute left-3.5 text-[#ADADAD] pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Cari bahan baku..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white border border-[#E8E8E6] rounded-xl pl-9 pr-9 py-2.5 text-[13px] font-medium text-[#1A1A1A] placeholder:text-[#ADADAD] outline-none focus:border-orange-400 transition-colors"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="absolute right-3 text-[#ADADAD] hover:text-[#555] transition-colors">
+              <X size={14} />
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {cardsMobileShort(statusTotals).map((tab) => (
             <button
