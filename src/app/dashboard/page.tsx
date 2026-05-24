@@ -292,7 +292,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between pt-1">
         <div>
           <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-            Halo, {user?.name ?? "kamu"}! 👋
+            Halo, {user?.name ?? "kamu"}! 
           </h2>
           <p className="text-[14px] text-[#6B6B6B] font-medium mt-0.5">
             {today}
@@ -454,7 +454,7 @@ export default function DashboardPage() {
         <div className="bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl p-5 text-white shadow-md shadow-orange-200/40">
           <p className="text-[13px] font-semibold text-orange-100">{today}</p>
           <h2 className="text-xl font-black mt-1 leading-tight">
-            Halo, {user?.name ?? "kamu"}! 👋
+            Halo, {user?.name ?? "kamu"}! 
           </h2>
           <p className="text-[13px] text-orange-100 font-medium mt-1">
             {metrics.totalOrdersToday > 0
