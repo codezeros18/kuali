@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  MessageCircle, CreditCard, ArrowRight, Zap,
+  TrendingUp, CheckCircle2, Clock, AlertTriangle,
+  Bot, Wallet, ArrowRight, MessageCircle, ChefHat,
 } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
-import { MetricCard } from "@/components/kuali/MetricCard";
 import { OrderCard } from "@/components/kuali/OrderCard";
-import { StatusBadge } from "@/components/kuali/StatusBadge";
 import { formatRupiah } from "@/lib/format";
 import { dashboardMetrics, orders as dummyOrders } from "@/lib/dummy-data";
 import type { Order } from "@/lib/dummy-data";
@@ -50,58 +49,198 @@ function apiToOrder(o: ApiOrder): Order {
   };
 }
 
-function DashCard({ children, className }: { children: React.ReactNode; className?: string }) {
+// ── Stat Card (Desktop + Mobile) ────────────────────────────────────────────
+function StatCard({
+  icon: Icon, label, value, sub, color, bg, onClick,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: number;
+  sub: string;
+  color: string;
+  bg: string;
+  onClick: () => void;
+}) {
   return (
-    <motion.div
-      whileHover={{ borderColor: "rgba(249,115,22,0.25)", boxShadow: "0 12px 30px rgba(0,0,0,0.03)" }}
-      transition={{ duration: 0.22 }}
-      className={cn(
-        "bg-white rounded-2xl border border-[#E8E8E6] p-6 flex flex-col gap-3 min-h-0 overflow-hidden shadow-sm w-full",
-        className
-      )}
+    <motion.button
+      whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
+      whileTap={{ scale: 0.97 }}
+      onClick={onClick}
+      className="bg-white rounded-2xl border border-[#E8E8E6] p-5 text-left flex flex-col gap-3 shadow-sm w-full"
     >
-      {children}
-    </motion.div>
+      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", bg)}>
+        <Icon size={18} className={color} strokeWidth={2} />
+      </div>
+      <div>
+        <div className="text-[34px] font-black text-[#1A1A1A] leading-none tracking-tight">{value}</div>
+        <div className="text-[13px] font-bold text-[#1A1A1A] mt-1">{label}</div>
+      </div>
+      <div className="text-[12px] text-[#ADADAD] font-medium">{sub}</div>
+    </motion.button>
   );
 }
 
+// ── Weekly Stats Card ────────────────────────────────────────────────────────
+function WeeklyStatsCard({ metrics }: { metrics: Metrics }) {
+  const DAY = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+  const todayIdx = new Date().getDay();
+
+  // Mock past 6 days — deterministic so it doesn't flicker on re-render
+  const MOCK_PAST = [6, 11, 8, 14, 9, 12];
+  const weekData = Array.from({ length: 7 }, (_, i) => {
+    if (i === 6) return { day: DAY[todayIdx], value: metrics.totalOrdersToday, isToday: true };
+    const dayIdx = (todayIdx - (6 - i) + 7) % 7;
+    return { day: DAY[dayIdx], value: MOCK_PAST[i], isToday: false };
+  });
+
+  const maxValue = Math.max(...weekData.map((d) => d.value), 1);
+
+  const breakdown = [
+    { label: "Dikonfirmasi", value: metrics.confirmed,   color: "bg-green-500", textColor: "text-green-600" },
+    { label: "Nunggu Konfirmasi",  value: metrics.draftPending, color: "bg-amber-400", textColor: "text-amber-600" },
+    { label: "Perlu Dicek",  value: metrics.needsReview, color: "bg-red-400",   textColor: "text-red-500"   },
+  ];
+  const total = Math.max(metrics.totalOrdersToday, 1);
+
+  return (
+    <div className="bg-white rounded-2xl border border-[#E8E8E6] p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider">Statistik</p>
+          <h3 className="font-black text-[16px] text-[#1A1A1A] tracking-tight">Tren 7 Hari Terakhir</h3>
+        </div>
+        <span className="text-[11px] font-bold text-[#ADADAD] bg-[#F4F4F2] px-3 py-1 rounded-lg">Jumlah pesanan masuk</span>
+      </div>
+
+      <div className="grid grid-cols-[1fr_1px_260px] gap-6 items-start">
+
+        {/* Bar chart */}
+        <div>
+          <div className="flex items-end gap-2 h-[100px]">
+            {weekData.map((d, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                {/* Tooltip on hover */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#1A1A1A] text-white text-[10px] font-black px-1.5 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                  {d.value}
+                </div>
+                <div className="w-full flex items-end" style={{ height: "100px" }}>
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: `${Math.max((d.value / maxValue) * 100, 6)}%` }}
+                    transition={{ duration: 0.55, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                      "w-full rounded-t-lg transition-colors",
+                      d.isToday
+                        ? "bg-orange-500"
+                        : "bg-[#EBEBEB] group-hover:bg-orange-200"
+                    )}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Day labels */}
+          <div className="flex gap-2 mt-2">
+            {weekData.map((d, i) => (
+              <div key={i} className={cn(
+                "flex-1 text-center text-[10px] font-black",
+                d.isToday ? "text-orange-500" : "text-[#CECECE]"
+              )}>
+                {d.day}
+              </div>
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center gap-4 mt-4">
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#ADADAD]">
+              <span className="w-3 h-3 rounded-sm bg-orange-500 inline-block" /> Hari ini
+            </span>
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#ADADAD]">
+              <span className="w-3 h-3 rounded-sm bg-[#EBEBEB] inline-block" /> Hari lain (estimasi)
+            </span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="self-stretch bg-[#F0F0EE] rounded-full" />
+
+        {/* Breakdown hari ini */}
+        <div className="flex flex-col gap-4">
+          <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">Komposisi Hari Ini</p>
+          {breakdown.map((b) => (
+            <div key={b.label} className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-bold text-[#555]">{b.label}</span>
+                <span className={cn("text-[13px] font-black tabular-nums", b.textColor)}>{b.value}</span>
+              </div>
+              <div className="w-full h-2.5 bg-[#F4F4F2] rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.round((b.value / total) * 100)}%` }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  className={cn("h-full rounded-full", b.color)}
+                />
+              </div>
+              <span className="text-[11px] text-[#CECECE] font-medium">
+                {Math.round((b.value / total) * 100)}% dari total
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Desktop Order Row ────────────────────────────────────────────────────────
 function DOrderRow({ order, onClick }: { order: Order; onClick: () => void }) {
   const confidence = typeof order.confidenceScore === "number"
     ? Math.round(order.confidenceScore > 1 ? order.confidenceScore : order.confidenceScore * 100)
     : 0;
-  const confColor = confidence >= 85 ? "text-green-600" : confidence >= 70 ? "text-amber-500" : "text-red-500";
+
+  const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+    confirmed:   { label: "✅ Konfirmasi", bg: "bg-green-50",  text: "text-green-700" },
+    draft:       { label: "📝 Draft",      bg: "bg-amber-50",  text: "text-amber-700" },
+    needs_check: { label: "⚠️ Perlu Cek", bg: "bg-red-50",    text: "text-red-700"   },
+    cancelled:   { label: "❌ Batal",      bg: "bg-gray-100",  text: "text-gray-500"  },
+  };
+  const s = statusConfig[order.status] ?? { label: order.status, bg: "bg-gray-100", text: "text-gray-600" };
 
   return (
     <button
       onClick={onClick}
-      className="grid grid-cols-[160px_1fr_140px_160px_100px] items-center gap-6 px-7 py-4 border-b border-[#F4F4F2] last:border-0 hover:bg-[#FAFAF8] transition-colors w-full text-left group"
+      className="grid grid-cols-[1fr_120px_140px_80px] items-center gap-5 px-6 py-4 border-b border-[#F4F4F2] last:border-0 hover:bg-[#FAFAF8] transition-colors w-full text-left group"
     >
-      <div className="shrink-0">
-        <span className="text-[13px] font-mono font-semibold text-[#888888] bg-[#FAFAF8] px-2.5 py-1.5 rounded-xl border border-[#E8E8E6] group-hover:bg-white transition-colors">{order.orderNumber}</span>
+      <div className="min-w-0">
+        <div className="text-[14px] font-black text-[#1A1A1A] truncate group-hover:text-orange-500 transition-colors">
+          {order.customerName}
+        </div>
+        <div className="text-[12px] text-[#6B6B6B] truncate mt-0.5">{order.items}</div>
       </div>
-      <div className="min-w-0 pr-4">
-        <div className="text-[15px] font-black text-[#1A1A1A] truncate group-hover:text-orange-500 transition-colors">{order.customerName}</div>
-        <div className="text-[13px] text-[#6B6B6B] font-medium truncate mt-1">{order.items}</div>
+      <div>
+        <span className={cn("text-[11px] font-black px-2.5 py-1 rounded-lg", s.bg, s.text)}>
+          {s.label}
+        </span>
       </div>
-      <div className="shrink-0 flex items-center">
-        <StatusBadge status={order.status as any} />
-      </div>
-      <div className="text-right pr-4">
-        <div className="text-[15px] font-black text-[#1A1A1A] tracking-tight leading-none">{formatRupiah(order.totalAmount)}</div>
-        <div className={cn(
-          "text-[12px] font-bold mt-2 inline-block leading-none",
-          order.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"
-        )}>
-          {order.paymentStatus === "paid" ? "Lunas" : "Belum Payar"}
+      <div>
+        <div className="text-[14px] font-black text-[#1A1A1A]">{formatRupiah(order.totalAmount)}</div>
+        <div className={cn("text-[11px] font-bold mt-0.5", order.paymentStatus === "paid" ? "text-green-600" : "text-amber-600")}>
+          {order.paymentStatus === "paid" ? "Lunas ✓" : "Belum bayar"}
         </div>
       </div>
-      <div className={cn("text-right text-[14px] font-black pr-4", confColor)}>
+      <div className={cn(
+        "text-[14px] font-black text-right",
+        confidence >= 85 ? "text-green-600" : confidence >= 70 ? "text-amber-500" : "text-red-500"
+      )}>
         {confidence > 0 ? `${confidence}%` : "—"}
       </div>
     </button>
   );
 }
 
+// ── Page ─────────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const router = useRouter();
   const user = useUser();
@@ -109,7 +248,6 @@ export default function DashboardPage() {
   const [recentOrders, setRecentOrders] = useState<Order[]>(dummyOrders.slice(0, 5));
   const [parsedChats, setParsedChats] = useState(13);
   const [totalChats, setTotalChats] = useState(15);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -127,180 +265,136 @@ export default function DashboardPage() {
   const today = new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" });
   const parseRate = Math.round((parsedChats / totalChats) * 100);
 
-  // ── Desktop Layout Full Width & Viewport Locked ──────────────────
+  const statCards = [
+    {
+      id: "total",     icon: TrendingUp,    label: "Total Pesanan",   value: metrics.totalOrdersToday,
+      sub: "masuk hari ini",         color: "text-blue-600",   bg: "bg-blue-50",   filter: "",
+    },
+    {
+      id: "confirmed", icon: CheckCircle2,  label: "Dikonfirmasi",    value: metrics.confirmed,
+      sub: "siap ke dapur",          color: "text-green-600",  bg: "bg-green-50",  filter: "confirmed",
+    },
+    {
+      id: "draft",     icon: Clock,         label: "Nunggu Konfirmasi", value: metrics.draftPending,
+      sub: "perlu kamu review",      color: "text-amber-600",  bg: "bg-amber-50",  filter: "draft",
+    },
+    {
+      id: "review",    icon: AlertTriangle, label: "Perlu Dicek",     value: metrics.needsReview,
+      sub: "AI kurang yakin",        color: "text-red-500",    bg: "bg-red-50",    filter: "needs_check",
+    },
+  ];
+
+  // ── Desktop ───────────────────────────────────────────────────────────────
   const desktopContent = (
-    <div className="flex flex-col gap-5 w-full px-6 pb-6 animate-fade-in">
+    <div className="flex flex-col gap-6 w-full px-6 pb-6 animate-fade-in">
 
-      {/* Header Greeting */}
-      <div className="flex-shrink-0 pt-1">
-        <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-          Selamat datang, {user?.name ?? "kamu"}
-        </h2>
-        <p className="text-[14px] font-medium text-[#6B6B6B] mt-0.5">
-          {today} <span className="mx-1 text-[#CECECE]">·</span> <span className="text-orange-500 font-bold">{metrics.totalOrdersToday}</span> pesanan aktif hari ini
-        </p>
+      {/* Greeting */}
+      <div className="flex items-center justify-between pt-1">
+        <div>
+          <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
+            Halo, {user?.name ?? "kamu"}! 👋
+          </h2>
+          <p className="text-[14px] text-[#6B6B6B] font-medium mt-0.5">
+            {today}
+            {metrics.totalOrdersToday > 0 && (
+              <> · ada <span className="text-orange-500 font-bold">{metrics.totalOrdersToday} pesanan</span> masuk hari ini</>
+            )}
+          </p>
+        </div>
+        {metrics.needsReview > 0 && (
+          <button
+            onClick={() => router.push("/orders?filter=needs_check")}
+            className="flex items-center gap-2 bg-red-50 border border-red-100 text-red-600 text-[12px] font-black px-4 py-2 rounded-full hover:bg-red-100 transition-colors"
+          >
+            ⚠️ {metrics.needsReview} perlu dicek
+          </button>
+        )}
       </div>
 
-      {/* ── Row 1: 4 Dashboard Metric Cards (Lebih Lebar & Besar) ── */}
-      <div className="grid grid-cols-4 gap-4 flex-shrink-0 w-full">
-        {[
-          { id: "total", label: "Total Order", value: metrics.totalOrdersToday, sub: "vs 8 kemarin", badge: "↑ 27%", bgIcon: "bg-[#EFF6FF] text-[#2563EB]", filter: "", path: "M0 24 L20 16 L40 22 L60 10 L80 14 L100 6 L120 12 L140 4", color: "#2563EB" },
-          { id: "confirmed", label: "Dikonfirmasi", value: metrics.confirmed, sub: "siap produksi", badge: "↑ 2", bgIcon: "bg-[#F0FDF4] text-[#16A34A]", filter: "confirmed", path: "M0 28 L20 25 L40 26 L60 18 L80 20 L100 12 L120 14 L140 8", color: "#16A34A" },
-          { id: "draft", label: "Draft / Pending", value: metrics.draftPending, sub: "menunggu review", badge: null, bgIcon: "bg-[#FFFBEB] text-[#D97706]", lineAccent: "border-l-4 border-l-[#D97706]", filter: "draft", path: "M0 20 L20 22 L40 18 L60 25 L80 22 L100 28 L120 24 L140 26", color: "#D97706" },
-          { id: "review", label: "Perlu Dicek", value: metrics.needsReview, sub: "confidence rendah", badge: "!", bgIcon: "bg-[#FEF2F2] text-[#DC2626]", lineAccent: "border-l-4 border-l-[#DC2626]", filter: "needs_check", path: "M0 32 L20 31 L40 32 L60 29 L80 30 L100 27 L120 28 L140 26", color: "#DC2626" }
-        ].map((card) => {
-          const showFullOpacity = hoveredCard === null || hoveredCard === card.id;
-
-          return (
-            <motion.button
-              key={card.id}
-              whileHover={{ scale: 1.012 }}
-              whileTap={{ scale: 0.988 }}
-              onHoverStart={() => setHoveredCard(card.id)}
-              onHoverEnd={() => setHoveredCard(null)}
-              onClick={() => router.push(`/orders${card.filter ? `?filter=${card.filter}` : ""}`)}
-              className={cn(
-                "bg-white rounded-2xl border border-[#E8E8E6] p-5 text-left flex min-h-[176px] flex-col justify-between shadow-sm transition-all relative overflow-hidden group w-full",
-                card.lineAccent
-              )}
-            >
-              <div className="flex justify-between items-start w-full">
-                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0", card.bgIcon)}>
-                  {card.id === "total" && <svg className="stroke-current stroke-[1.6] fill-none" width="18" height="18" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>}
-                  {card.id === "confirmed" && <svg className="stroke-current stroke-[1.6] fill-none" width="18" height="18" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>}
-                  {card.id === "draft" && <svg className="stroke-current stroke-[1.6] fill-none" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
-                  {card.id === "review" && <svg className="stroke-current stroke-[1.6] fill-none" width="18" height="18" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>}
-                </div>
-                {card.badge && (
-                  <span className={cn(
-                    "text-[11px] font-black px-2 py-0.5 rounded-md border",
-                    card.id === "review" ? "text-[#DC2626] bg-[#FEF2F2] border-[#FCA5A5]" : "text-[#16A34A] bg-[#F0FDF4] border-[#BBF7D0]"
-                  )}>
-                    {card.badge}
-                  </span>
-                )}
-              </div>
-              
-              <div className="min-w-0">
-                <div className="text-[32px] font-black text-[#1A1A1A] leading-none tracking-tight mb-1">{card.value}</div>
-                <div className="text-[14px] font-black text-[#1A1A1A] leading-tight tracking-tight truncate">{card.label}</div>
-              </div>
-
-              {/* Sparkline Multi-Series Core */}
-              <div className="w-full h-9 relative">
-                <svg width="100%" height="100%" viewBox="0 0 140 36" preserveAspectRatio="none">
-                  <path 
-                    d={card.path} 
-                    fill="none" 
-                    stroke={card.color} 
-                    strokeWidth={showFullOpacity ? 2.2 : 1.0} 
-                    strokeOpacity={showFullOpacity ? 1.0 : 0.14}
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    className="transition-all duration-300"
-                  />
-                </svg>
-              </div>
-              <div className="text-[12px] text-[#ADADAD] font-semibold leading-tight truncate">{card.sub}</div>
-            </motion.button>
-          );
-        })}
-      </div>
-
-      {/* ── Row 2: Keuangan & Rasio Ekstraksi AI ── */}
-      <div className="grid grid-cols-[1.4fr_1fr] gap-4 flex-shrink-0 w-full">
-
-        {/* Belum Dibayar Hero Card */}
-        <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl border border-[rgba(180,83,9,0.15)] p-6 relative overflow-hidden flex flex-col gap-2.5 shadow-sm w-full">
-          <img 
-            src="/pak-wok.svg"
-            width="104" height="104" 
-            alt=""
-            onError={(e) => (e.currentTarget.style.display = "none")}
-            className="absolute right-5 bottom-2 opacity-90 transform rotate-[6deg] pointer-events-none"
+      {/* Stat Cards */}
+      <div className="grid grid-cols-4 gap-4">
+        {statCards.map((c) => (
+          <StatCard
+            key={c.id} icon={c.icon} label={c.label} value={c.value}
+            sub={c.sub} color={c.color} bg={c.bg}
+            onClick={() => router.push(`/orders${c.filter ? `?filter=${c.filter}` : ""}`)}
           />
-          
+        ))}
+      </div>
+
+      {/* Stats Chart */}
+      <WeeklyStatsCard metrics={metrics} />
+
+      {/* Row 2: Finance + AI */}
+      <div className="grid grid-cols-[1.5fr_1fr] gap-4">
+
+        {/* Tagihan Belum Bayar */}
+        <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl border border-amber-200/50 p-6 flex flex-col gap-3 relative overflow-hidden shadow-sm">
+          <img
+            src="/pak-wok.svg" width="96" height="96" alt=""
+            onError={(e) => (e.currentTarget.style.display = "none")}
+            className="absolute right-4 bottom-2 opacity-80 rotate-6 pointer-events-none"
+          />
           <div className="flex items-center gap-2">
-            <svg className="stroke-[1.6] fill-none" width="14" height="14" viewBox="0 0 24 24" stroke="#B45309">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-            </svg>
-            <span className="text-[11px] font-black text-[#B45309] uppercase tracking-wider">Belum dibayar</span>
+            <Wallet size={14} className="text-amber-700" strokeWidth={2} />
+            <span className="text-[11px] font-black text-amber-700 uppercase tracking-wider">Tagihan Belum Masuk</span>
           </div>
-          
-          <div className="text-[32px] font-black text-[#1A1A1A] leading-none tracking-tight whitespace-nowrap">
+          <div className="text-[30px] font-black text-[#1A1A1A] leading-none tracking-tight">
             {formatRupiah(metrics.unpaidAmount)}
           </div>
-          
-          <div className="text-[13px] text-[#92400E] max-w-[65%] font-semibold mt-0.5">
-            Dari <strong className="font-black text-[#1A1A1A]">{metrics.unpaidOrders} order</strong> dikonfirmasi belum bayar
+          <p className="text-[13px] text-amber-800 font-semibold max-w-[60%]">
+            {metrics.unpaidOrders} order belum bayar
             {metrics.paidOrders > 0 && (
-              <span className="text-[#92400E]"> · {metrics.paidOrders} lunas ({formatRupiah(metrics.paidAmount)})</span>
+              <span className="text-amber-700"> · {metrics.paidOrders} sudah lunas ({formatRupiah(metrics.paidAmount)})</span>
             )}
-          </div>
-
+          </p>
           {(metrics.unpaidOrders + metrics.paidOrders) > 0 && (
-            <div className="flex h-1.5 rounded-full overflow-hidden gap-0.5 max-w-[65%] w-full mt-1.5">
-              {metrics.unpaidOrders > 0 && (
-                <div className="bg-[#B45309]" style={{ flex: metrics.unpaidOrders }}></div>
-              )}
-              {metrics.paidOrders > 0 && (
-                <div className="bg-[#059669]" style={{ flex: metrics.paidOrders }}></div>
-              )}
+            <div className="flex h-2 rounded-full overflow-hidden gap-0.5 max-w-[60%]">
+              {metrics.unpaidOrders > 0 && <div className="bg-amber-600 rounded-full" style={{ flex: metrics.unpaidOrders }} />}
+              {metrics.paidOrders > 0 && <div className="bg-emerald-500 rounded-full" style={{ flex: metrics.paidOrders }} />}
             </div>
           )}
-
-          <div className="flex gap-4 text-[11px] font-black text-[#555555] mt-0.5">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#B45309]"></span>{metrics.unpaidOrders} belum
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#059669]"></span>{metrics.paidOrders} lunas
-            </span>
+          <div className="flex gap-4 text-[11px] font-bold text-amber-900">
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-600 inline-block" />{metrics.unpaidOrders} belum bayar</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />{metrics.paidOrders} lunas</span>
           </div>
-
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={() => router.push("/orders?filter=unpaid")}
-            className="absolute right-5 top-5 flex items-center gap-1 text-[13px] font-black text-[#B45309] hover:text-[#78350f] bg-white/50 border border-[#B45309]/15 px-3.5 py-2 rounded-xl transition-all shadow-sm"
+            className="absolute right-5 top-5 flex items-center gap-1 text-[12px] font-black text-amber-700 bg-white/60 border border-amber-300/40 px-3 py-1.5 rounded-xl hover:bg-white/80 transition-all"
           >
-            Lihat <ArrowRight size={13} />
-          </motion.button>
+            Lihat <ArrowRight size={12} />
+          </button>
         </div>
 
-        {/* Parse Efficiency Card */}
-        <DashCard className="p-6 justify-between gap-2 w-full">
-          <div className="flex items-center gap-1.5">
-            <svg className="stroke-[1.6] fill-none" width="14" height="14" viewBox="0 0 24 24" stroke="#E8541A">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-            <span className="text-[11px] font-black text-[#6B6B6B] uppercase tracking-wider">Chat diparse</span>
+        {/* AI Parsing Rate */}
+        <div className="bg-white rounded-2xl border border-[#E8E8E6] p-6 flex flex-col gap-3 shadow-sm">
+          <div className="flex items-center gap-2">
+            <Bot size={14} className="text-orange-500" strokeWidth={2} />
+            <span className="text-[11px] font-black text-[#6B6B6B] uppercase tracking-wider">AI udah baca</span>
           </div>
-          
-          <div className="flex items-baseline gap-1.5 w-full">
-            <span className="text-[34px] font-black text-[#E8541A] leading-none tracking-tight">{parsedChats}</span>
-            <span className="text-[15px] font-bold text-[#ADADAD]">/ {totalChats} chat</span>
-            <span className="text-[12px] font-black text-[#16A34A] ml-auto flex items-center">{parseRate}%</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-[34px] font-black text-[#E8541A] leading-none">{parsedChats}</span>
+            <span className="text-[15px] font-bold text-[#ADADAD]">dari {totalChats} chat</span>
+            <span className="ml-auto text-[13px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-lg">{parseRate}%</span>
           </div>
-          
-          <svg width="100%" height="36" viewBox="0 0 140 36" preserveAspectRatio="none" className="mt-1">
-            <path d="M0 28 L20 22 L40 25 L60 16 L80 18 L100 8 L120 12 L140 6" stroke="#E8541A" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M0 28 L20 22 L40 25 L60 16 L80 18 L100 8 L120 12 L140 6 L140 36 L0 36 Z" fill="#E8541A" opacity="0.08"/>
-            <circle cx="140" cy="6" r="3" fill="#E8541A"/>
-          </svg>
-          
-          <div className="flex justify-between text-[10px] font-black text-[#ADADAD] tracking-wider uppercase mt-1">
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-400 rounded-full transition-all" style={{ width: `${parseRate}%` }} />
+          </div>
+          <p className="text-[12px] text-[#ADADAD] font-medium">
+            {parseRate >= 80 ? "🔥 Performa bagus hari ini!" : parseRate >= 60 ? "👍 Lumayan, terus semangat!" : "💪 Masih ada yang perlu diproses"}
+          </p>
+          <div className="flex justify-between text-[10px] font-bold text-[#D4D4D4] uppercase tracking-wider mt-auto">
             <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
           </div>
-        </DashCard>
+        </div>
       </div>
 
-      {/* ── Row 3: Tabel Log Order Terbaru (Scroll Internal) ── */}
-      <DashCard className="p-0 gap-0 min-h-[320px] w-full">
-        <div className="flex items-center justify-between px-7 py-4 border-b border-[#F4F4F2] flex-shrink-0">
+      {/* Recent Orders */}
+      <div className="bg-white rounded-2xl border border-[#E8E8E6] shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F4F4F2]">
           <div>
-            <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider">Ikhtisar Data</p>
-            <h2 className="font-black text-[16px] text-[#1A1A1A] tracking-tight mt-0.5">Daftar Pesanan Terbaru</h2>
+            <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider">Terbaru</p>
+            <h2 className="font-black text-[16px] text-[#1A1A1A] tracking-tight">Pesanan Masuk Hari Ini</h2>
           </div>
           <button
             onClick={() => router.push("/orders")}
@@ -310,41 +404,30 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Tabel dengan scroll internal untuk viewport rendah atau sempit */}
-        <div className="flex-1 min-h-0 w-full overflow-auto">
-          <div className="min-w-[760px]">
-            <div className="sticky top-0 z-10 grid grid-cols-[150px_1fr_130px_140px_90px] items-center gap-4 px-7 py-3 bg-[#FAFAF8] border-b border-[#F4F4F2] w-full">
-              {[
-                ["No. Order", ""],
-                ["Nama Pelanggan & Item Menu", ""],
-                ["Status", ""],
-                ["Total Omzet", "text-right pr-2"],
-                ["Akurasi AI", "text-right pr-2"],
-              ].map(([col, cls], idx) => (
-                <div key={idx} className={cn("text-[11px] font-black text-[#ADADAD] uppercase tracking-wider", cls)}>
-                  {col}
-                </div>
-              ))}
-            </div>
-
-            <div className="divide-y divide-[#F4F4F2]">
-              {recentOrders.map((order) => (
-                <DOrderRow key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
-              ))}
-            </div>
-          </div>
+        {/* Table header */}
+        <div className="grid grid-cols-[1fr_120px_140px_80px] gap-5 px-6 py-3 bg-[#FAFAF8] border-b border-[#F4F4F2] text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">
+          <span>Pelanggan</span>
+          <span>Status</span>
+          <span>Total</span>
+          <span className="text-right">Akurasi</span>
         </div>
-      </DashCard>
 
-      {/* Tombol Aksi Cepat */}
-      <div className="flex gap-3.5 flex-shrink-0 pb-1">
+        <div>
+          {recentOrders.map((order) => (
+            <DOrderRow key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="flex gap-3 pb-1">
         <motion.button
-          whileHover={{ scale: 1.015, boxShadow: "0 10px 25px rgba(232,84,26,0.2)" }}
+          whileHover={{ scale: 1.015, boxShadow: "0 8px 24px rgba(232,84,26,0.18)" }}
           whileTap={{ scale: 0.985 }}
           onClick={() => router.push("/demo")}
-          className="bg-orange-500 text-white font-bold text-[14px] px-6 py-3.5 rounded-2xl flex items-center gap-2 shadow-sm transition-colors hover:bg-orange-600"
+          className="bg-orange-500 text-white font-bold text-[14px] px-6 py-3.5 rounded-2xl flex items-center gap-2 shadow-sm hover:bg-orange-600 transition-colors"
         >
-          <MessageCircle size={16} /> Jalankan Simulasi Chat Baru
+          <MessageCircle size={16} /> Simulasi Chat Baru
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.012 }}
@@ -352,57 +435,166 @@ export default function DashboardPage() {
           onClick={() => router.push("/production")}
           className="bg-white text-[#1A1A1A] font-bold text-[14px] px-6 py-3.5 rounded-2xl flex items-center gap-2 border border-[#E5E5E3] hover:bg-[#FAFAF8] transition-all shadow-sm"
         >
-          Buka Rencana Produksi Dapur <ArrowRight size={16} />
+          <ChefHat size={16} /> Rencana Produksi <ArrowRight size={15} />
         </motion.button>
       </div>
     </div>
   );
 
+  // ── Mobile ────────────────────────────────────────────────────────────────
   return (
     <Shell
-      title="Dashboard Hari Ini"
+      title="Dashboard"
       subtitle={user?.business ?? user?.name}
-      headerRight={
-        <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-full shadow-sm">
-          <Zap size={12} className="fill-orange-500" /> Mock AI aktif
-        </div>
-      }
       desktopContent={desktopContent}
     >
-      {/* Mobile view */}
-      <div className="px-4 py-4 flex flex-col gap-5">
-        <div>
-          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-3">Ringkasan</p>
-          <div className="grid grid-cols-2 gap-3">
-            <MetricCard value={metrics.totalOrdersToday} label="Total Order" sublabel="Hari ini" onClick={() => router.push("/orders")} />
-            <MetricCard value={metrics.confirmed} label="Dikonfirmasi" accent="success" onClick={() => router.push("/orders?filter=confirmed")} />
-            <MetricCard value={metrics.draftPending} label="Draft / Pending" accent="warning" onClick={() => router.push("/orders?filter=draft")} />
-            <MetricCard value={metrics.needsReview} label="Perlu Dicek" sublabel={`${metrics.unpaidOrders} belum bayar`} accent="danger" onClick={() => router.push("/orders?filter=needs_check")} />
-          </div>
+      <div className="px-4 py-5 flex flex-col gap-5">
+
+        {/* Greeting */}
+        <div className="bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl p-5 text-white shadow-md shadow-orange-200/40">
+          <p className="text-[13px] font-semibold text-orange-100">{today}</p>
+          <h2 className="text-xl font-black mt-1 leading-tight">
+            Halo, {user?.name ?? "kamu"}! 👋
+          </h2>
+          <p className="text-[13px] text-orange-100 font-medium mt-1">
+            {metrics.totalOrdersToday > 0
+              ? `Ada ${metrics.totalOrdersToday} pesanan hari ini`
+              : "Belum ada pesanan masuk hari ini"}
+          </p>
         </div>
 
-        {metrics.unpaidAmount > 0 && (
-          <div className="bg-amber-50/60 border border-amber-200 rounded-2xl p-4 shadow-sm">
-            <p className="text-[11px] font-black text-amber-800 uppercase tracking-wider mb-1">
-              Total belum dibayar
-            </p>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {statCards.map((c) => (
+            <motion.button
+              key={c.id}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => router.push(`/orders${c.filter ? `?filter=${c.filter}` : ""}`)}
+              className="bg-white rounded-2xl border border-[#E8E8E6] p-4 text-left shadow-sm flex flex-col gap-2"
+            >
+              <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center", c.bg)}>
+                <c.icon size={15} className={c.color} strokeWidth={2} />
+              </div>
+              <div className="text-[28px] font-black text-[#1A1A1A] leading-none">{c.value}</div>
+              <div className="text-[12px] font-bold text-[#1A1A1A]">{c.label}</div>
+              <div className="text-[11px] text-[#ADADAD]">{c.sub}</div>
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Payment Banner */}
+        {(metrics.unpaidOrders > 0 || metrics.paidOrders > 0) && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <p className="text-[11px] font-black text-amber-700 uppercase tracking-wider mb-1">💰 Tagihan Belum Masuk</p>
             <p className="text-2xl font-black text-[#1A1A1A] tracking-tight">{formatRupiah(metrics.unpaidAmount)}</p>
-            <p className="text-[13px] text-[#6B6B6B] font-medium mt-1">
-              {metrics.unpaidOrders} order · {parsedChats}/{totalChats} chat diparse
+            <p className="text-[12px] text-amber-700 font-semibold mt-1">
+              {metrics.unpaidOrders} belum bayar · {metrics.paidOrders} sudah lunas
             </p>
+            <div className="flex h-1.5 rounded-full overflow-hidden gap-0.5 mt-2">
+              {metrics.unpaidOrders > 0 && <div className="bg-amber-500 rounded-full" style={{ flex: metrics.unpaidOrders }} />}
+              {metrics.paidOrders > 0 && <div className="bg-emerald-500 rounded-full" style={{ flex: metrics.paidOrders }} />}
+            </div>
           </div>
         )}
 
+        {/* AI Rate */}
+        <div className="bg-white border border-[#E8E8E6] rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Bot size={14} className="text-orange-500" />
+              <span className="text-[12px] font-black text-[#6B6B6B] uppercase tracking-wider">AI udah baca</span>
+            </div>
+            <span className="text-[12px] font-black text-green-600">{parseRate}%</span>
+          </div>
+          <div className="flex items-baseline gap-1.5 mb-2">
+            <span className="text-2xl font-black text-orange-500">{parsedChats}</span>
+            <span className="text-[13px] text-[#ADADAD] font-medium">dari {totalChats} chat</span>
+          </div>
+          <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-400 rounded-full" style={{ width: `${parseRate}%` }} />
+          </div>
+        </div>
+
+        {/* CTA */}
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={() => router.push("/demo")}
           className="bg-orange-500 text-white font-bold text-[14px] py-4 rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-orange-200/40 hover:bg-orange-600 transition-all"
         >
-          <MessageCircle size={16} /> Proses Chat Baru
+          <MessageCircle size={16} /> Simulasi Chat Baru
         </motion.button>
 
+        {/* Stats — Mobile */}
+        <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
+          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-1">Statistik</p>
+          <p className="font-black text-[15px] text-[#1A1A1A] mb-4">Tren 7 Hari Terakhir</p>
+
+          {/* Mini bar chart */}
+          {(() => {
+            const DAY = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+            const todayIdx = new Date().getDay();
+            const MOCK_PAST = [6, 11, 8, 14, 9, 12];
+            const weekData = Array.from({ length: 7 }, (_, i) => {
+              if (i === 6) return { day: DAY[todayIdx], value: metrics.totalOrdersToday, isToday: true };
+              return { day: DAY[(todayIdx - (6 - i) + 7) % 7], value: MOCK_PAST[i], isToday: false };
+            });
+            const maxValue = Math.max(...weekData.map((d) => d.value), 1);
+            return (
+              <div className="flex items-end gap-1.5 h-[72px] mb-2">
+                {weekData.map((d, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center" style={{ height: "72px", justifyContent: "flex-end" }}>
+                    <div
+                      className={cn("w-full rounded-t-md transition-all", d.isToday ? "bg-orange-500" : "bg-[#EBEBEB]")}
+                      style={{ height: `${Math.max((d.value / maxValue) * 100, 8)}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+          <div className="flex gap-1.5 mb-4">
+            {(() => {
+              const DAY = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+              const todayIdx = new Date().getDay();
+              const MOCK_PAST = [6, 11, 8, 14, 9, 12];
+              return Array.from({ length: 7 }, (_, i) => {
+                const isToday = i === 6;
+                const day = isToday ? DAY[todayIdx] : DAY[(todayIdx - (6 - i) + 7) % 7];
+                return (
+                  <div key={i} className={cn("flex-1 text-center text-[9px] font-black", isToday ? "text-orange-500" : "text-[#CECECE]")}>
+                    {day}
+                  </div>
+                );
+              });
+            })()}
+          </div>
+
+          {/* Breakdown */}
+          <div className="flex flex-col gap-2.5">
+            {[
+              { label: "Dikonfirmasi",      value: metrics.confirmed,   color: "bg-green-500", textColor: "text-green-600" },
+              { label: "Nunggu Konfirmasi", value: metrics.draftPending, color: "bg-amber-400", textColor: "text-amber-600" },
+              { label: "Perlu Dicek",       value: metrics.needsReview, color: "bg-red-400",   textColor: "text-red-500"   },
+            ].map((b) => {
+              const pct = Math.round((b.value / Math.max(metrics.totalOrdersToday, 1)) * 100);
+              return (
+                <div key={b.label}>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[12px] font-bold text-[#555]">{b.label}</span>
+                    <span className={cn("text-[12px] font-black", b.textColor)}>{b.value} <span className="text-[#ADADAD] font-medium">({pct}%)</span></span>
+                  </div>
+                  <div className="w-full h-2 bg-[#F4F4F2] rounded-full overflow-hidden">
+                    <div className={cn("h-full rounded-full", b.color)} style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Recent Orders */}
         <div>
-          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-3">Order Terbaru</p>
+          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-3">Pesanan Terbaru</p>
           <div className="flex flex-col gap-3">
             {recentOrders.map((order) => (
               <OrderCard key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
