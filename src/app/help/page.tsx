@@ -8,8 +8,6 @@ import {
   CheckCircle2, AlertCircle, Lightbulb, BookOpen,
 } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
-import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
-import { useViewMode } from "@/lib/view-mode";
 import { cn } from "@/lib/utils";
 
 // ── Tipe data ─────────────────────────────────────────────────────────────────
@@ -231,7 +229,6 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 
 // ── Konten utama ──────────────────────────────────────────────────────────────
 export default function HelpPage() {
-  const { mode, toggle } = useViewMode();
   const [activeSection, setActiveSection] = useState("demo");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -243,27 +240,6 @@ export default function HelpPage() {
       !searchQuery.trim() ||
       item.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.a.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Simple mode: all FAQs from all sections flat
-  const allFaqBySection = GUIDE_SECTIONS.map((s) => ({ label: s.label, icon: s.icon, color: s.color, faq: s.faq }));
-
-  const simpleFaqContent = (
-    <div className="flex flex-col gap-5">
-      {allFaqBySection.map(({ label, icon: Icon, color, faq }) => (
-        <div key={label} className="bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-[#F4F4F2] flex items-center gap-3">
-            <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center shrink-0", color)}>
-              <Icon size={13} className="text-white" strokeWidth={2} />
-            </div>
-            <span className="text-[13px] font-black text-[#1A1A1A]">{label}</span>
-          </div>
-          <div className="p-4">
-            <FaqAccordion items={faq} />
-          </div>
-        </div>
-      ))}
-    </div>
   );
 
   const content = (
@@ -475,22 +451,13 @@ export default function HelpPage() {
     <Shell
       title="Pusat Bantuan"
       subtitle="Panduan penggunaan Kuali"
-      headerRight={<ViewModeToggle mode={mode} onToggle={toggle} />}
       desktopContent={
-        mode === "simple" ? (
-          <div className="max-w-2xl">{simpleFaqContent}</div>
-        ) : (
-          <div className="h-[calc(100vh-120px)] overflow-hidden">
-            {content}
-          </div>
-        )
+        <div className="h-[calc(100vh-120px)] overflow-hidden">
+          {content}
+        </div>
       }
     >
-      {mode === "simple" ? (
-        <div className="px-4 py-4 flex flex-col gap-5">
-          {simpleFaqContent}
-        </div>
-      ) : mobileContent}
+      {mobileContent}
     </Shell>
   );
 }
