@@ -10,7 +10,6 @@ import {
   Mail,
   User,
   X,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
 import { useState } from "react";
@@ -154,9 +153,6 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
             </div>
           </div>
 
-          <div className="relative z-10 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-white/60">
-            <Sparkles size={11} /> MVP Prototype Platform v2.0
-          </div>
         </div>
 
         {/* ── Panel kanan (form) ── */}

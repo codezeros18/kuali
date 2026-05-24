@@ -143,7 +143,7 @@ export default function AboutPage() {
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
               <div className="inline-flex items-center gap-2 bg-white border border-orange-100 text-orange-600 rounded-full px-3.5 py-1.5 mb-6 text-[11px] font-black uppercase tracking-widest shadow-sm">
                 <Zap size={11} className="text-orange-500 fill-orange-500" />
-                MVP Prototype · Gunadarma Code Week 2.0
+                Gunadarma Code Week 2.0
               </div>
               <h1 className="text-5xl lg:text-7xl font-black text-[#2F241F] leading-[1.0] tracking-tight mb-6" style={{ fontFamily: "Poppins, sans-serif" }}>
                 {APP_TAGLINE.split(",")[0]},<br />
@@ -552,7 +552,7 @@ export default function AboutPage() {
                 </Link>
               </div>
               <p className="mt-10 text-[#ADADAD] font-semibold text-[11px] uppercase tracking-widest">
-                Prototipe MVP · Data Simulasi · Gunadarma Code Week 2.0
+                Gunadarma Code Week 2.0
               </p>
             </motion.div>
           </div>
@@ -578,7 +578,6 @@ export default function AboutPage() {
             <Link href="/demo" className="hover:text-orange-500 transition-colors">Demo</Link>
             <Link href="/dashboard" className="hover:text-orange-500 transition-colors">Dashboard</Link>
           </div>
-          <p className="text-[12px] text-[#ADADAD] font-medium">MVP Prototype · Data Simulasi</p>
         </div>
       </footer>
     </div>
