@@ -10,7 +10,6 @@ import {
 import { Shell } from "@/components/kuali/AppShell";
 import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
 import { useViewMode } from "@/lib/view-mode";
-import { BigMetric } from "@/components/kuali/MetricCard";
 import { ImpactDashboard } from "@/components/kuali/ImpactDashboard";
 import { RoadmapCard } from "@/components/kuali/RoadmapCard";
 import { PaymentReminderCard } from "@/components/kuali/PaymentReminderCard";
@@ -427,29 +426,31 @@ export default function SummaryPage() {
     >
       {/* ── Mobile ───────────────────────────────────────────────────────── */}
       {mode === "simple" ? (
-        <div className="px-4 py-5 flex flex-col gap-5">
-          <div className="bg-white border border-[#E8E8E6] rounded-2xl p-4 flex items-center justify-between shadow-sm">
-            <div>
-              <p className="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Rekap Operasional</p>
-              <p className="text-[14px] font-black text-[#1A1A1A] capitalize leading-snug">{today}</p>
-            </div>
-            <div className="text-3xl select-none">📊</div>
+        /* ── Mobile simple ── */
+        <div className="px-4 py-5 flex flex-col gap-4">
+          <div className="bg-white border border-[#E8E8E6] rounded-2xl px-4 py-4 shadow-sm">
+            <p className="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Rekap Operasional</p>
+            <p className="text-[15px] font-black text-[#1A1A1A] capitalize">{today}</p>
           </div>
           <div>
             <Label>Angka Capaian Hari Ini</Label>
-            <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
-              <div className="grid grid-cols-3 gap-4 py-1">
-                <BigMetric value={metrics.confirmed} label="Dikonfirmasi" icon="✅" />
-                <BigMetric value={metrics.draftPending} label="Draft" icon="📝" />
-                <BigMetric value={metrics.needsReview} label="Perlu Cek" icon="⚠️" />
-              </div>
-              <div className="border-t border-[#F4F4F2] my-3" />
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
-                <p className="text-[11px] text-amber-800 font-black uppercase tracking-wider mb-1">Total belum dibayar</p>
-                <p className="text-2xl font-black text-[#1A1A1A] tracking-tight">{formatRupiah(metrics.unpaidAmount)}</p>
-                <p className="text-[12px] text-[#6B6B6B] font-medium mt-1">Dari {metrics.unpaidOrders} order</p>
-              </div>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Dikonfirmasi", value: metrics.confirmed,    color: "text-green-600", bg: "bg-green-50",  border: "border-green-100" },
+                { label: "Draft",        value: metrics.draftPending, color: "text-amber-600", bg: "bg-amber-50",  border: "border-amber-100" },
+                { label: "Perlu Cek",    value: metrics.needsReview,  color: "text-red-600",   bg: "bg-red-50",    border: "border-red-100"   },
+              ].map(({ label, value, color, bg, border }) => (
+                <div key={label} className={`rounded-2xl border p-3 text-center ${bg} ${border}`}>
+                  <div className={`text-[28px] font-black leading-none tabular-nums ${color}`}>{value}</div>
+                  <div className="text-[11px] text-[#6B6B6B] font-medium mt-1.5 leading-tight">{label}</div>
+                </div>
+              ))}
             </div>
+          </div>
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <p className="text-[11px] text-amber-800 font-black uppercase tracking-wider mb-1">Total belum dibayar</p>
+            <p className="text-[26px] font-black text-[#1A1A1A] tracking-tight leading-none">{formatRupiah(metrics.unpaidAmount)}</p>
+            <p className="text-[12px] text-[#6B6B6B] font-medium mt-1.5">Dari {metrics.unpaidOrders} order dikonfirmasi</p>
           </div>
           <div>
             <Label>Catatan Hari Ini</Label>
@@ -460,103 +461,95 @@ export default function SummaryPage() {
           </div>
         </div>
       ) : (
-      <div className="px-4 py-5 flex flex-col gap-5">
-        {/* Banner */}
-        <div className="bg-white border border-[#E8E8E6] rounded-2xl p-4 flex items-center justify-between shadow-sm">
+        /* ── Mobile standard ── */
+        <div className="px-4 py-5 flex flex-col gap-4">
+          {/* Banner */}
+          <div className="bg-white border border-[#E8E8E6] rounded-2xl px-4 py-4 shadow-sm">
+            <p className="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Rekap Operasional</p>
+            <p className="text-[15px] font-black text-[#1A1A1A] capitalize">{today}</p>
+          </div>
+
+          {/* Stat chips */}
           <div>
-            <p className="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-0.5">
-              Rekap Operasional
-            </p>
-            <p className="text-[14px] font-black text-[#1A1A1A] capitalize leading-snug">{today}</p>
-          </div>
-          <div className="text-3xl select-none">📊</div>
-        </div>
-
-        {/* Angka hari ini */}
-        <div>
-          <Label>Angka Capaian Hari Ini</Label>
-          <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
-            <div className="grid grid-cols-3 gap-4 py-1">
-              <BigMetric value={metrics.confirmed} label="Dikonfirmasi" icon="✅" />
-              <BigMetric value={metrics.draftPending} label="Draft" icon="📝" />
-              <BigMetric value={metrics.needsReview} label="Perlu Cek" icon="⚠️" />
-            </div>
-            <div className="border-t border-[#F4F4F2] my-3" />
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
-              <p className="text-[11px] text-amber-800 font-black uppercase tracking-wider mb-1">
-                Total belum dibayar
-              </p>
-              <p className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-                {formatRupiah(metrics.unpaidAmount)}
-              </p>
-              <p className="text-[12px] text-[#6B6B6B] font-medium mt-1">
-                Dari {metrics.unpaidOrders} order
-              </p>
+            <Label>Angka Capaian Hari Ini</Label>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Dikonfirmasi", value: metrics.confirmed,    color: "text-green-600", bg: "bg-green-50",  border: "border-green-100" },
+                { label: "Draft",        value: metrics.draftPending, color: "text-amber-600", bg: "bg-amber-50",  border: "border-amber-100" },
+                { label: "Perlu Cek",    value: metrics.needsReview,  color: "text-red-600",   bg: "bg-red-50",    border: "border-red-100"   },
+              ].map(({ label, value, color, bg, border }) => (
+                <div key={label} className={`rounded-2xl border p-3 text-center ${bg} ${border}`}>
+                  <div className={`text-[28px] font-black leading-none tabular-nums ${color}`}>{value}</div>
+                  <div className="text-[11px] text-[#6B6B6B] font-medium mt-1.5 leading-tight">{label}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Needs check */}
-        {metrics.needsReview > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
-              <AlertTriangle size={15} className="text-red-600" strokeWidth={2.5} />
+          {/* Unpaid */}
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <p className="text-[11px] text-amber-800 font-black uppercase tracking-wider mb-1">Total belum dibayar</p>
+            <p className="text-[26px] font-black text-[#1A1A1A] tracking-tight leading-none">{formatRupiah(metrics.unpaidAmount)}</p>
+            <p className="text-[12px] text-[#6B6B6B] font-medium mt-1.5">Dari {metrics.unpaidOrders} order dikonfirmasi</p>
+          </div>
+
+          {/* Needs check */}
+          {metrics.needsReview > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
+                <AlertTriangle size={15} className="text-red-600" strokeWidth={2.5} />
+              </div>
+              <p className="text-[13px] text-red-700 font-bold leading-tight">
+                {metrics.needsReview} pesanan perlu dicek ulang
+              </p>
             </div>
-            <p className="text-[13px] text-red-700 font-bold leading-tight">
-              {metrics.needsReview} pesanan perlu dicek ulang
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* Catatan */}
-        <div>
-          <Label>Catatan Hari Ini</Label>
-          <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
-            <p className="text-[13px] text-[#555555] font-medium leading-relaxed">
-              {narrative}
-            </p>
-            <p className="text-[10px] text-[#ADADAD] mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">
-              {NARRATIVE_SAFE.impactNote}
-            </p>
-          </div>
-        </div>
-
-        {/* Payment reminder */}
-        {unpaidOrder && (
+          {/* Catatan */}
           <div>
-            <Label>Contoh Reminder Pembayaran</Label>
-            <PaymentReminderCard
-              customerName={unpaidOrder.customerName}
-              amount={unpaidOrder.totalAmount}
-              orderNumber={unpaidOrder.orderNumber}
-              items={unpaidOrder.orderNumber}
-            />
+            <Label>Catatan Hari Ini</Label>
+            <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
+              <p className="text-[13px] text-[#555555] font-medium leading-relaxed">{narrative}</p>
+              <p className="text-[10px] text-[#ADADAD] mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">{NARRATIVE_SAFE.impactNote}</p>
+            </div>
           </div>
-        )}
 
-        {/* Impact */}
-        <div>
-          <Label>Dashboard Dampak</Label>
-          <ImpactDashboard />
-        </div>
+          {/* Payment reminder */}
+          {unpaidOrder && (
+            <div>
+              <Label>Contoh Reminder Pembayaran</Label>
+              <PaymentReminderCard
+                customerName={unpaidOrder.customerName}
+                amount={unpaidOrder.totalAmount}
+                orderNumber={unpaidOrder.orderNumber}
+                items={unpaidOrder.orderNumber}
+              />
+            </div>
+          )}
 
-        {/* Roadmap */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <p className="text-[11px] font-black text-[#A3A3A3] uppercase tracking-wider">Roadmap Pengembangan</p>
-            <span className="text-[10px] font-black text-purple-600 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-full">Belum tersedia di MVP</span>
+          {/* Impact */}
+          <div>
+            <Label>Dashboard Dampak</Label>
+            <ImpactDashboard />
           </div>
-          <RoadmapCard />
-        </div>
 
-        {/* Actions */}
-        <button
-          onClick={() => router.push("/demo")}
-          className="bg-white text-[#1A1A1A] font-black text-[13px] py-4 rounded-2xl flex items-center justify-center gap-2 border border-[#E5E5E3] hover:bg-[#FAFAF8] active:scale-[0.98] transition-all shadow-sm"
-        >
-          Ulangi Demo <ArrowRight size={14} />
-        </button>
-      </div>
+          {/* Roadmap */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-[11px] font-black text-[#A3A3A3] uppercase tracking-wider">Roadmap Pengembangan</p>
+              <span className="text-[10px] font-black text-purple-600 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-full">Belum tersedia di MVP</span>
+            </div>
+            <RoadmapCard />
+          </div>
+
+          {/* Action */}
+          <button
+            onClick={() => router.push("/demo")}
+            className="bg-white text-[#1A1A1A] font-black text-[13px] py-4 rounded-2xl flex items-center justify-center gap-2 border border-[#E5E5E3] hover:bg-[#FAFAF8] active:scale-[0.98] transition-all shadow-sm"
+          >
+            Ulangi Demo <ArrowRight size={14} />
+          </button>
+        </div>
       )}
     </Shell>
   );
