@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, ClipboardList, ChefHat, BarChart2,
   MessageCircle, ArrowLeft, LogOut, Store,
-  Menu, X, ChevronLeft, ChevronRight, HelpCircle, User,
+  Menu, X, ChevronLeft, ChevronRight, HelpCircle, User, Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/user-context";
@@ -406,6 +406,13 @@ function DesktopTopBar({ title, subtitle, right, back }: {
       </div>
       <div className="flex items-center gap-2 shrink-0 ml-3">
         {right}
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-[#555] hover:bg-[#F4F4F2] transition-colors"
+        >
+          <Home size={14} />
+          Beranda
+        </Link>
         <ProfileDropdown />
       </div>
     </div>
