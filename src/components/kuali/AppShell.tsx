@@ -2,9 +2,11 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import {
   LayoutDashboard, ClipboardList, ChefHat, BarChart2,
-  MessageCircle, Home, ArrowLeft, Info, LogOut,
+  MessageCircle, ArrowLeft, Info, LogOut, HelpCircle, User,
+  PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/user-context";
@@ -27,73 +29,100 @@ function DesktopSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar-collapsed");
+    if (saved === "true") setCollapsed(true);
+  }, []);
+
+  const toggle = () => {
+    setCollapsed((v) => {
+      localStorage.setItem("sidebar-collapsed", String(!v));
+      return !v;
+    });
+  };
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 shrink-0 bg-white border-r border-kuali-border min-h-screen sticky top-0 z-20">
-      {/* Logo */}
-      <div className="px-5 py-5 border-b border-kuali-border">
-        <Link href="/" className="flex items-center gap-3 group">
-          <img
-            src="/kuali-logo-mark.svg"
-            alt="Kuali"
-            className="w-9 h-9 shrink-0 group-hover:opacity-80 transition-opacity"
-          />
-          <div>
-            <div className="font-black text-sm text-kuali-text-dark leading-tight tracking-tight">kuali</div>
-            <div className="text-[10px] text-kuali-text-light leading-tight">{user?.business ?? user?.name ?? "Kuali"}</div>
-          </div>
-        </Link>
+    <aside className={cn(
+      "hidden lg:flex flex-col shrink-0 bg-white border-r border-kuali-border min-h-screen sticky top-0 z-20 transition-all duration-200",
+      collapsed ? "w-16" : "w-60"
+    )}>
+      {/* Logo + toggle */}
+      <div className={cn(
+        "py-5 border-b border-kuali-border flex items-center gap-3",
+        collapsed ? "px-3 justify-center" : "px-5 justify-between"
+      )}>
+        {collapsed ? (
+          <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-8 h-8 shrink-0" />
+        ) : (
+          <Link href="/" className="flex items-center gap-3 group min-w-0">
+            <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-9 h-9 shrink-0 group-hover:opacity-80 transition-opacity" />
+            <div className="min-w-0">
+              <div className="font-black text-sm text-kuali-text-dark leading-tight tracking-tight">kuali</div>
+              <div className="text-[10px] text-kuali-text-light leading-tight truncate">{user?.business ?? user?.name ?? "Kuali"}</div>
+            </div>
+          </Link>
+        )}
+        <button
+          onClick={toggle}
+          className="w-7 h-7 rounded-lg flex items-center justify-center text-kuali-text-light hover:bg-kuali-surface-alt hover:text-kuali-text-dark transition-colors shrink-0"
+          title={collapsed ? "Buka sidebar" : "Tutup sidebar"}
+        >
+          {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+        </button>
       </div>
 
       {/* Nav links */}
-      <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
-        <p className="text-[9px] font-semibold text-kuali-text-light uppercase tracking-widest px-2 mb-2">Navigasi</p>
+      <nav className="flex flex-col gap-1 px-2 py-4 flex-1">
+        {!collapsed && (
+          <p className="text-[9px] font-semibold text-kuali-text-light uppercase tracking-widest px-2 mb-2">Navigasi</p>
+        )}
         {NAV_ITEMS.map(({ href, label, Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
           return (
             <Link
               key={href}
               href={href}
+              title={collapsed ? label : undefined}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                collapsed && "justify-center",
                 active
                   ? "bg-kuali-primary text-white shadow-sm"
                   : "text-kuali-text-mid hover:bg-kuali-surface-alt hover:text-kuali-text-dark"
               )}
             >
               <Icon size={16} strokeWidth={active ? 2 : 1.5} className="shrink-0" />
-              {label}
+              {!collapsed && label}
             </Link>
           );
         })}
       </nav>
 
       {/* CTA */}
-      <div className="px-4 pb-6 flex flex-col gap-2">
-        <button
-          onClick={() => router.push("/demo")}
-          className="btn-primary w-full text-sm py-2.5 min-h-[40px]"
-        >
-          <MessageCircle size={15} />
-          Proses Chat Baru
-        </button>
-        <Link
-          href="/about"
-          className="flex items-center justify-center gap-1.5 text-[10px] text-kuali-text-light hover:text-kuali-primary font-medium transition-colors py-1"
-        >
-          <Info size={10} />
-          Tentang Kuali
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="flex items-center justify-center gap-1.5 text-[10px] text-kuali-text-light hover:text-red-500 font-medium transition-colors py-1 w-full"
-        >
-          <LogOut size={10} />
-          Keluar
-        </button>
-        <p className="text-[9px] text-kuali-text-light text-center leading-relaxed">
-          MVP Prototype · Data Simulasi
-        </p>
+      <div className={cn("pb-6 flex flex-col gap-2", collapsed ? "px-2" : "px-4")}>
+        {collapsed ? (
+          <button
+            onClick={() => router.push("/demo")}
+            title="Proses Chat Baru"
+            className="w-full h-10 rounded-xl bg-kuali-primary text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+          >
+            <MessageCircle size={16} />
+          </button>
+        ) : (
+          <>
+            <button onClick={() => router.push("/demo")} className="btn-primary w-full text-sm py-2.5 min-h-[40px]">
+              <MessageCircle size={15} /> Proses Chat Baru
+            </button>
+            <Link
+              href="/about"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-kuali-text-light hover:text-kuali-primary font-medium transition-colors py-1"
+            >
+              <Info size={10} /> Tentang Kuali
+            </Link>
+          </>
+        )}
       </div>
     </aside>
   );
@@ -131,6 +160,83 @@ function MobileBottomNav() {
   );
 }
 
+// ── Profile Dropdown ──────────────────────────────────────────────────────────
+function ProfileDropdown() {
+  const user = useUser();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const initials = user?.name
+    ? user.name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "?";
+
+  return (
+    <div className="relative" ref={ref}>
+      {/* Avatar button */}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "w-9 h-9 rounded-full bg-orange-500 text-white font-black text-[13px] flex items-center justify-center transition-all shadow-sm hover:bg-orange-600 active:scale-95",
+          open && "ring-2 ring-orange-300 ring-offset-1"
+        )}
+      >
+        {initials}
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div
+          className="absolute right-0 top-[calc(100%+8px)] w-56 bg-white rounded-2xl border border-[#E8E8E6] shadow-xl shadow-black/[0.08] overflow-hidden z-50"
+          style={{ animation: "modal-enter 0.18s cubic-bezier(0.16,1,0.3,1) both" }}
+        >
+          {/* User info */}
+          <div className="px-4 py-3 border-b border-[#F4F4F2]">
+            <div className="flex items-center gap-2.5 mb-1">
+              <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                <User size={14} className="text-orange-500" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-black text-[#1A1A1A] leading-tight truncate">{user?.name ?? "Pengguna"}</div>
+                {user?.business && (
+                  <div className="text-[11px] text-[#888] font-medium truncate">{user.business}</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Menu */}
+          <div className="p-1.5 flex flex-col gap-0.5">
+            <Link
+              href="/help"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-[#555] hover:bg-[#F4F4F2] transition-colors"
+            >
+              <HelpCircle size={15} className="text-[#ADADAD]" />
+              Help & Support
+            </Link>
+            <div className="h-px bg-[#F4F4F2] mx-1 my-0.5" />
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors w-full text-left"
+            >
+              <LogOut size={15} />
+              Keluar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Desktop top bar ────────────────────────────────────────────────────────────
 function DesktopTopBar({
   title, subtitle, right, back,
@@ -159,7 +265,10 @@ function DesktopTopBar({
           {subtitle && <p className="text-sm text-kuali-text-mid mt-0.5">{subtitle}</p>}
         </div>
       </div>
-      {right && <div className="flex items-center gap-3">{right}</div>}
+      <div className="flex items-center gap-3">
+        {right}
+        <ProfileDropdown />
+      </div>
     </div>
   );
 }
@@ -190,13 +299,7 @@ function MobileHeader({
       </div>
       <div className="flex items-center gap-2 shrink-0">
         {right}
-        <button
-          onClick={handleLogout}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-kuali-text-light hover:text-red-500 hover:bg-red-50 transition-colors"
-          aria-label="Keluar"
-        >
-          <LogOut size={15} />
-        </button>
+        <ProfileDropdown />
       </div>
     </div>
   );
