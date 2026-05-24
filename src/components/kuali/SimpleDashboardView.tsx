@@ -109,7 +109,7 @@ export function SimpleDashboardView({ metrics }: SimpleDashboardViewProps) {
       {/* Greeting */}
       <div className="pt-1">
         <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">
-          Selamat datang, Bu Rani 👋
+          Halo! 👋 Ini ringkasan hari ini
         </h2>
         <p className="text-[14px] font-medium text-[#6B6B6B] mt-0.5">
           {today} <span className="mx-1 text-[#CECECE]">·</span>{" "}
@@ -117,64 +117,66 @@ export function SimpleDashboardView({ metrics }: SimpleDashboardViewProps) {
         </p>
       </div>
 
-      {/* Status rows */}
-      <div className="flex flex-col gap-3">
-        <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">Yang perlu diperhatikan</p>
+      {/* Desktop: 2 panel — mobile: 1 kolom */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-5 items-start">
 
-        <StatusRow
-          icon={<ClipboardList size={20} />}
-          label="Pesanan perlu dicek"
-          value={metrics.needsReview}
-          unit="pesanan"
-          accent={needsReviewAccent}
-          onClick={() => router.push("/orders?filter=needs_check")}
-        />
+        {/* Kiri: Status rows */}
+        <div className="flex flex-col gap-3">
+          <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">Yang perlu diperhatikan</p>
 
-        <StatusRow
-          icon={<CreditCard size={20} />}
-          label="Pelanggan belum bayar"
-          value={metrics.unpaidOrders}
-          unit="order"
-          subValue={metrics.unpaidOrders > 0 ? `Total ${formatRupiah(metrics.unpaidAmount)}` : undefined}
-          accent={unpaidAccent}
-          onClick={() => router.push("/orders?filter=unpaid")}
-        />
+          <StatusRow
+            icon={<ClipboardList size={20} />}
+            label="Pesanan perlu dicek"
+            value={metrics.needsReview}
+            unit="pesanan"
+            accent={needsReviewAccent}
+            onClick={() => router.push("/orders?filter=needs_check")}
+          />
+          <StatusRow
+            icon={<CreditCard size={20} />}
+            label="Pelanggan belum bayar"
+            value={metrics.unpaidOrders}
+            unit="order"
+            subValue={metrics.unpaidOrders > 0 ? `Total ${formatRupiah(metrics.unpaidAmount)}` : undefined}
+            accent={unpaidAccent}
+            onClick={() => router.push("/orders?filter=unpaid")}
+          />
+          <StatusRow
+            icon={<ChefHat size={20} />}
+            label="Bahan untuk produksi"
+            value={null}
+            unit="Lihat rencana produksi →"
+            accent="neutral"
+            onClick={() => router.push("/production")}
+          />
+        </div>
 
-        <StatusRow
-          icon={<ChefHat size={20} />}
-          label="Bahan untuk produksi"
-          value={null}
-          unit="Lihat rencana produksi →"
-          accent="neutral"
-          onClick={() => router.push("/production")}
-        />
-      </div>
+        {/* Kanan: Quick actions card */}
+        <div className="bg-white border border-[#E8E8E6] rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+          <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">Aksi cepat</p>
 
-      {/* CTA buttons */}
-      <div className="flex flex-col gap-3 pt-1">
-        <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider">Aksi cepat</p>
-
-        <BigCTA
-          label="Tinjau Pesanan"
-          icon={<ClipboardList size={18} />}
-          onClick={() => router.push("/orders?filter=needs_check")}
-          primary
-        />
-        <BigCTA
-          label="Kirim Pengingat Bayar"
-          icon={<CreditCard size={18} />}
-          onClick={() => router.push("/orders?filter=unpaid")}
-        />
-        <BigCTA
-          label="Lihat Rencana Bahan"
-          icon={<ChefHat size={18} />}
-          onClick={() => router.push("/production")}
-        />
-        <BigCTA
-          label="Proses Chat Baru"
-          icon={<MessageCircle size={18} />}
-          onClick={() => router.push("/demo")}
-        />
+          <BigCTA
+            label="Tinjau Pesanan"
+            icon={<ClipboardList size={18} />}
+            onClick={() => router.push("/orders?filter=needs_check")}
+            primary
+          />
+          <BigCTA
+            label="Kirim Pengingat Bayar"
+            icon={<CreditCard size={18} />}
+            onClick={() => router.push("/orders?filter=unpaid")}
+          />
+          <BigCTA
+            label="Lihat Rencana Bahan"
+            icon={<ChefHat size={18} />}
+            onClick={() => router.push("/production")}
+          />
+          <BigCTA
+            label="Proses Chat Baru"
+            icon={<MessageCircle size={18} />}
+            onClick={() => router.push("/demo")}
+          />
+        </div>
       </div>
     </div>
   );
