@@ -8,6 +8,8 @@ import {
   BarChart2, CheckCircle2, Clock, CreditCard, Layers3,
 } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
+import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
+import { useViewMode } from "@/lib/view-mode";
 import { BigMetric } from "@/components/kuali/MetricCard";
 import { ImpactDashboard } from "@/components/kuali/ImpactDashboard";
 import { RoadmapCard } from "@/components/kuali/RoadmapCard";
@@ -132,6 +134,7 @@ function StatCard({
 
 export default function SummaryPage() {
   const router = useRouter();
+  const { mode, toggle } = useViewMode();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<LiveMetrics>(DUMMY_METRICS);
   const [narrative, setNarrative] = useState<string>(dailySummary.narrative);
@@ -198,6 +201,63 @@ export default function SummaryPage() {
       filter: "needs_check",
     },
   ];
+
+  // ── Simple mode desktop ───────────────────────────────────────────────────
+  const simpleDesktopContent = (
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col gap-5">
+      {/* Banner */}
+      <motion.div variants={itemVariants} className="bg-white border border-[#E8E8E6] rounded-2xl px-6 py-4 flex items-center justify-between shadow-sm">
+        <div>
+          <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Ringkasan Riwayat</p>
+          <h2 className="text-[16px] font-black text-[#1A1A1A] tracking-tight capitalize">Rekap Operasional · {today}</h2>
+        </div>
+        <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-4 py-2 rounded-full">
+          <Layers3 size={12} /> Data Terkonsolidasi
+        </div>
+      </motion.div>
+
+      {/* 4 metric cards */}
+      <div className="grid grid-cols-4 gap-4">
+        {statCardsData.map((s) => (
+          <StatCard
+            key={s.id}
+            {...s}
+            hoveredCard={hoveredCard}
+            onHoverStart={() => setHoveredCard(s.id)}
+            onHoverEnd={() => setHoveredCard(null)}
+            onClick={() => router.push(`/orders${s.filter ? `?filter=${s.filter}` : ""}`)}
+          />
+        ))}
+      </div>
+
+      {/* Unpaid + Narrative */}
+      <div className="grid grid-cols-2 gap-4">
+        <motion.div variants={itemVariants} className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl border border-amber-200 p-5 relative overflow-hidden">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center shrink-0">
+              <CreditCard size={13} className="text-white" />
+            </div>
+            <span className="text-[11px] font-black text-[#B45309] uppercase tracking-wider">Piutang Belum Dibayar</span>
+          </div>
+          <p className="text-[28px] font-black text-[#1A1A1A] leading-none tracking-tight mb-1">{formatRupiah(metrics.unpaidAmount)}</p>
+          <p className="text-[13px] text-[#92400E] font-semibold">
+            Dari <strong className="font-black text-[#1A1A1A]">{metrics.unpaidOrders} order</strong> dikonfirmasi
+          </p>
+          <button
+            onClick={() => router.push("/orders?filter=unpaid")}
+            className="mt-4 flex items-center gap-1.5 text-[12px] font-black text-[#B45309] hover:text-[#78350f] transition-colors"
+          >
+            Lihat detail <ChevronRight size={13} />
+          </button>
+        </motion.div>
+        <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-[#E8E8E6] p-5 shadow-sm">
+          <Label>Catatan Hari Ini</Label>
+          <p className="text-[13px] text-[#555555] font-medium leading-relaxed">{narrative}</p>
+          <p className="text-[10px] text-[#ADADAD] font-semibold mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">{NARRATIVE_SAFE.impactNote}</p>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
 
   // ── Desktop ───────────────────────────────────────────────────────────────
   const desktopContent = (
@@ -362,9 +422,44 @@ export default function SummaryPage() {
     <Shell
       title="Rekap Harian"
       subtitle={today}
-      desktopContent={desktopContent}
+      headerRight={<ViewModeToggle mode={mode} onToggle={toggle} />}
+      desktopContent={mode === "simple" ? simpleDesktopContent : desktopContent}
     >
       {/* ── Mobile ───────────────────────────────────────────────────────── */}
+      {mode === "simple" ? (
+        <div className="px-4 py-5 flex flex-col gap-5">
+          <div className="bg-white border border-[#E8E8E6] rounded-2xl p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p className="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Rekap Operasional</p>
+              <p className="text-[14px] font-black text-[#1A1A1A] capitalize leading-snug">{today}</p>
+            </div>
+            <div className="text-3xl select-none">📊</div>
+          </div>
+          <div>
+            <Label>Angka Capaian Hari Ini</Label>
+            <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
+              <div className="grid grid-cols-3 gap-4 py-1">
+                <BigMetric value={metrics.confirmed} label="Dikonfirmasi" icon="✅" />
+                <BigMetric value={metrics.draftPending} label="Draft" icon="📝" />
+                <BigMetric value={metrics.needsReview} label="Perlu Cek" icon="⚠️" />
+              </div>
+              <div className="border-t border-[#F4F4F2] my-3" />
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
+                <p className="text-[11px] text-amber-800 font-black uppercase tracking-wider mb-1">Total belum dibayar</p>
+                <p className="text-2xl font-black text-[#1A1A1A] tracking-tight">{formatRupiah(metrics.unpaidAmount)}</p>
+                <p className="text-[12px] text-[#6B6B6B] font-medium mt-1">Dari {metrics.unpaidOrders} order</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Label>Catatan Hari Ini</Label>
+            <div className="bg-white rounded-2xl border border-[#E8E8E6] p-4 shadow-sm">
+              <p className="text-[13px] text-[#555555] font-medium leading-relaxed">{narrative}</p>
+              <p className="text-[10px] text-[#ADADAD] mt-3 pt-3 border-t border-[#F4F4F2] leading-relaxed">{NARRATIVE_SAFE.impactNote}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
       <div className="px-4 py-5 flex flex-col gap-5">
         {/* Banner */}
         <div className="bg-white border border-[#E8E8E6] rounded-2xl p-4 flex items-center justify-between shadow-sm">
@@ -462,6 +557,7 @@ export default function SummaryPage() {
           Ulangi Demo <ArrowRight size={14} />
         </button>
       </div>
+      )}
     </Shell>
   );
 }

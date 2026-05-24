@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { ShoppingBasket, CheckCircle, AlertTriangle, XCircle, ChefHat, Layers3, ChevronRight, Search, X } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
 import { ProductionPlanCard } from "@/components/kuali/ProductionPlanCard";
+import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
+import { useViewMode } from "@/lib/view-mode";
 import { NARRATIVE_SAFE } from "@/lib/constants";
 
 interface ApiIngredient {
@@ -194,6 +196,7 @@ export default function ProductionPage() {
   const [plan, setPlan] = useState<ProductionPlan | null>(null);
   const [activeTab, setActiveTab] = useState<FilterStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { mode, toggle } = useViewMode();
 
   useEffect(() => {
     fetch("/api/production-plan")
@@ -345,48 +348,104 @@ export default function ProductionPage() {
     </div>
   );
 
+  const urgentItems = allIngredients.filter((i) => i.status === "low" || i.status === "insufficient");
+
+  const simpleContent = (
+    <div className="flex flex-col gap-4 animate-fade-in pb-6">
+      {/* Status ringkasan */}
+      <div className="grid grid-cols-3 gap-3">
+        {([
+          { label: "Stok Cukup",   count: statusTotals.sufficient,   bg: "bg-green-50 border-green-200",  text: "text-green-700",  val: "text-green-700" },
+          { label: "Hampir Habis", count: statusTotals.low,           bg: "bg-amber-50 border-amber-200",  text: "text-amber-700",  val: "text-amber-800" },
+          { label: "Perlu Beli",   count: statusTotals.insufficient,  bg: "bg-red-50 border-red-200",      text: "text-red-600",    val: "text-red-700"   },
+        ] as const).map((s) => (
+          <div key={s.label} className={cn("rounded-2xl border p-4 flex flex-col gap-1", s.bg)}>
+            <p className={cn("text-[11px] font-black uppercase tracking-wider", s.text)}>{s.label}</p>
+            <p className={cn("text-3xl font-black leading-none", s.val)}>{s.count}</p>
+            <p className="text-[11px] text-[#888] font-medium">bahan</p>
+          </div>
+        ))}
+      </div>
+
+      {urgentItems.length === 0 ? (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+          <p className="text-2xl mb-2">✅</p>
+          <p className="font-black text-green-700 text-[15px]">Semua stok cukup!</p>
+          <p className="text-[13px] text-green-600 mt-1">Tidak ada bahan yang perlu dibeli hari ini.</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-[#E8E8E6] shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#F4F4F2]">
+            <p className="text-[11px] font-black text-orange-500 uppercase tracking-wider mb-0.5">Perlu Perhatian</p>
+            <p className="font-black text-[15px] text-[#1A1A1A]">{urgentItems.length} bahan perlu ditindaklanjuti</p>
+          </div>
+          <div className="divide-y divide-[#F4F4F2]">
+            {urgentItems.map((item) => {
+              const cfg = statusConfig[item.status];
+              return (
+                <div key={item.ingredientId} className="flex items-center gap-4 px-5 py-3.5">
+                  <div className={cn("flex items-center gap-1.5 text-[11px] font-black px-2.5 py-1 rounded-full border shrink-0", cfg.bg, cfg.ring)}>
+                    <cfg.Icon size={11} strokeWidth={2.5} /> {cfg.label}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-black text-[14px] text-[#1A1A1A] truncate">{item.name}</p>
+                    <p className="text-[12px] text-[#888] font-medium">Butuh {item.needed} {item.unit} · Stok {item.stock} {item.unit}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <Shell
       title="Rencana Produksi"
       subtitle={`Untuk besok, ${tomorrowStr}`}
-      desktopContent={desktopContent}
+      headerRight={<ViewModeToggle mode={mode} onToggle={toggle} />}
+      desktopContent={mode === "simple" ? simpleContent : desktopContent}
     >
-      {/* Mobile view standard card sync */}
+      {/* Mobile */}
       <div className="px-4 py-5 flex flex-col gap-4">
-        {/* Search mobile */}
-        <div className="relative flex items-center">
-          <Search size={14} className="absolute left-3.5 text-[#ADADAD] pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Cari bahan baku..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-[#E8E8E6] rounded-xl pl-9 pr-9 py-2.5 text-[13px] font-medium text-[#1A1A1A] placeholder:text-[#ADADAD] outline-none focus:border-orange-400 transition-colors"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="absolute right-3 text-[#ADADAD] hover:text-[#555] transition-colors">
-              <X size={14} />
-            </button>
-          )}
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {cardsMobileShort(statusTotals).map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "p-4 rounded-xl border text-left flex flex-col justify-between min-h-[76px]",
-                activeTab === tab.id ? `${tab.bgActive} text-white` : "bg-white border-[#E8E8E6]"
+        {mode === "simple" ? simpleContent : (
+          <>
+            <div className="relative flex items-center">
+              <Search size={14} className="absolute left-3.5 text-[#ADADAD] pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Cari bahan baku..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white border border-[#E8E8E6] rounded-xl pl-9 pr-9 py-2.5 text-[13px] font-medium text-[#1A1A1A] placeholder:text-[#ADADAD] outline-none focus:border-orange-400 transition-colors"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="absolute right-3 text-[#ADADAD] hover:text-[#555] transition-colors">
+                  <X size={14} />
+                </button>
               )}
-            >
-              <span className={cn("text-[10px] font-black uppercase tracking-wider", activeTab === tab.id ? "text-white/80" : "text-[#888888]")}>{tab.label}</span>
-              <span className="text-lg font-black mt-1">{statusTotals[tab.id]}</span>
-            </button>
-          ))}
-        </div>
-        <div className="mt-2">
-          <ProductionPlanCard />
-        </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {cardsMobileShort(statusTotals).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "p-4 rounded-xl border text-left flex flex-col justify-between min-h-[76px]",
+                    activeTab === tab.id ? `${tab.bgActive} text-white` : "bg-white border-[#E8E8E6]"
+                  )}
+                >
+                  <span className={cn("text-[10px] font-black uppercase tracking-wider", activeTab === tab.id ? "text-white/80" : "text-[#888888]")}>{tab.label}</span>
+                  <span className="text-lg font-black mt-1">{statusTotals[tab.id]}</span>
+                </button>
+              ))}
+            </div>
+            <div className="mt-2">
+              <ProductionPlanCard />
+            </div>
+          </>
+        )}
       </div>
     </Shell>
   );

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Info } from "lucide-react";
 import { Shell } from "@/components/kuali/AppShell";
 import { ProfilUsahaCard } from "@/components/kuali/ProfilUsahaCard";
+import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
 import { useViewMode } from "@/lib/view-mode";
 import { menus } from "@/lib/dummy-data";
 
@@ -75,6 +76,7 @@ export default function ProfilePage() {
       title="Profil Usaha"
       subtitle="Katering Bu Rani"
       back
+      headerRight={<ViewModeToggle mode={mode} onToggle={toggle} />}
       desktopContent={desktopContent}
       mobileHeaderLeft={
         <button
