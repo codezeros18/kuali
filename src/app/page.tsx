@@ -215,7 +215,7 @@ export default function Page() {
             <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-6 h-6 opacity-80" />
             <span className="text-[12px] font-bold text-[#6B6B6B]">kuali</span>
           </div>
-          <span className="text-[11px] text-[#ADADAD] hidden sm:block">Gunadarma Code Week 2.0 · MVP Prototype</span>
+          <span className="text-[11px] text-[#ADADAD] hidden sm:block">Gunadarma Code Week 2.0</span>
           <Link href="/about" className="text-[12px] text-[#6B6B6B] font-bold hover:text-[#E8541A] transition-colors flex items-center gap-1">
             Tentang <ArrowUpRight size={11} />
           </Link>

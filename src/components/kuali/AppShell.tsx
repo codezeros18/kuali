@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 
 // Fires before browser paint on the client (prevents flash); falls back to
 // useEffect on the server where useLayoutEffect would warn.
@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, ClipboardList, ChefHat, BarChart2,
   MessageCircle, ArrowLeft, LogOut, Store,
-  Menu, X, ChevronLeft, ChevronRight, HelpCircle,
+  Menu, X, ChevronLeft, ChevronRight, HelpCircle, User, Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/user-context";
@@ -163,36 +163,20 @@ function DesktopSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
           })}
         </div>
 
-        {/* CTA + logout */}
+        {/* CTA */}
         <div className={cn("pb-5 shrink-0 flex flex-col gap-2", collapsed ? "px-2 items-center" : "px-4")}>
           {collapsed ? (
-            <>
-              <button
-                onClick={() => router.push("/demo")}
-                title="Proses Chat Baru"
-                className="w-10 h-10 rounded-xl bg-kuali-primary text-white flex items-center justify-center hover:bg-orange-600 transition-colors shadow-sm"
-              >
-                <MessageCircle size={16} />
-              </button>
-              <button
-                onClick={handleLogout}
-                title="Keluar"
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-kuali-text-light hover:text-red-500 hover:bg-red-50 transition-colors"
-              >
-                <LogOut size={15} />
-              </button>
-            </>
+            <button
+              onClick={() => router.push("/demo")}
+              title="Proses Chat Baru"
+              className="w-10 h-10 rounded-xl bg-kuali-primary text-white flex items-center justify-center hover:bg-orange-600 transition-colors shadow-sm"
+            >
+              <MessageCircle size={16} />
+            </button>
           ) : (
-            <>
-              <button onClick={() => router.push("/demo")} className="btn-primary w-full text-sm py-2.5 min-h-[40px]">
-                <MessageCircle size={15} /> Proses Chat Baru
-              </button>
-              <button onClick={handleLogout}
-                className="flex items-center justify-center gap-1.5 text-[10px] text-kuali-text-light hover:text-red-500 font-medium transition-colors py-1 w-full">
-                <LogOut size={10} /> Keluar
-              </button>
-              <p className="text-[9px] text-kuali-text-light text-center leading-relaxed">MVP Prototype · Data Simulasi</p>
-            </>
+            <button onClick={() => router.push("/demo")} className="btn-primary w-full text-sm py-2.5 min-h-[40px]">
+              <MessageCircle size={15} /> Proses Chat Baru
+            </button>
           )}
         </div>
       </div>
@@ -283,7 +267,6 @@ function MobileMenuDrawer({ open, onClose }: { open: boolean; onClose: () => voi
                 className="flex items-center justify-center gap-2 text-sm text-red-500 hover:bg-red-50 rounded-xl py-2.5 font-medium transition-colors w-full">
                 <LogOut size={15} /> Keluar
               </button>
-              <p className="text-[9px] text-kuali-text-light text-center">MVP Prototype · Data Simulasi</p>
             </div>
           </motion.div>
         </>
@@ -314,6 +297,91 @@ function MobileBottomNav() {
   );
 }
 
+// ── Profile Dropdown ──────────────────────────────────────────────────────────
+function ProfileDropdown() {
+  const user = useUser();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const initials = user?.name
+    ? user.name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "?";
+
+  return (
+    <div className="relative" ref={ref}>
+      {/* Avatar button */}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "w-9 h-9 rounded-full bg-orange-500 text-white font-black text-[13px] flex items-center justify-center transition-all shadow-sm hover:bg-orange-600 active:scale-95",
+          open && "ring-2 ring-orange-300 ring-offset-1"
+        )}
+      >
+        {initials}
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div
+          className="absolute right-0 top-[calc(100%+8px)] w-56 bg-white rounded-2xl border border-[#E8E8E6] shadow-xl shadow-black/[0.08] overflow-hidden z-50"
+          style={{ animation: "modal-enter 0.18s cubic-bezier(0.16,1,0.3,1) both" }}
+        >
+          {/* User info */}
+          <div className="px-4 py-3 border-b border-[#F4F4F2]">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                <User size={14} className="text-orange-500" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-black text-[#1A1A1A] leading-tight truncate">{user?.name ?? "Pengguna"}</div>
+                {user?.business && (
+                  <div className="text-[11px] text-[#888] font-medium truncate">{user.business}</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Menu */}
+          <div className="p-1.5 flex flex-col gap-0.5">
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-[#555] hover:bg-[#F4F4F2] transition-colors"
+            >
+              <Store size={15} className="text-[#ADADAD]" />
+              Profil Usaha
+            </Link>
+            <Link
+              href="/help"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-[#555] hover:bg-[#F4F4F2] transition-colors"
+            >
+              <HelpCircle size={15} className="text-[#ADADAD]" />
+              Bantuan
+            </Link>
+            <div className="h-px bg-[#F4F4F2] mx-1 my-0.5" />
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors w-full text-left"
+            >
+              <LogOut size={15} />
+              Keluar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Tablet / Desktop top bar — HEADER_H matches sidebar logo height ───────────
 function DesktopTopBar({ title, subtitle, right, back }: {
   title: string; subtitle?: string; right?: React.ReactNode; back?: boolean;
@@ -336,7 +404,17 @@ function DesktopTopBar({ title, subtitle, right, back }: {
           {subtitle && <p className="text-xs text-kuali-text-mid mt-0.5 truncate">{subtitle}</p>}
         </div>
       </div>
-      {right && <div className="flex items-center gap-2 shrink-0 ml-3">{right}</div>}
+      <div className="flex items-center gap-2 shrink-0 ml-3">
+        {right}
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-[#555] hover:bg-[#F4F4F2] transition-colors"
+        >
+          <Home size={14} />
+          Beranda
+        </Link>
+        <ProfileDropdown />
+      </div>
     </div>
   );
 }

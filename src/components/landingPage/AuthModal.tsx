@@ -10,7 +10,6 @@ import {
   Mail,
   User,
   X,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
 import { useState } from "react";
@@ -52,11 +51,11 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "Terjadi kesalahan."); return; }
+      const data = await res.json().catch(() => ({})) as { error?: string };
+      if (!res.ok) { setError(data.error ?? "Terjadi kesalahan server."); return; }
       window.location.href = "/dashboard";
     } catch {
-      setError("Gagal terhubung ke server.");
+      setError("Tidak dapat terhubung ke server. Cek apakah server sudah berjalan.");
     } finally {
       setLoading(false);
     }
@@ -154,9 +153,6 @@ export function AuthModal({ defaultMode = "login", onClose }: AuthModalProps) {
             </div>
           </div>
 
-          <div className="relative z-10 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-white/60">
-            <Sparkles size={11} /> MVP Prototype Platform v2.0
-          </div>
         </div>
 
         {/* ── Panel kanan (form) ── */}

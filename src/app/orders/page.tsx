@@ -7,9 +7,11 @@ import { ChevronRight, FileText, Calendar, Layers3, Search, ChevronLeft, X } fro
 import { Shell } from "@/components/kuali/AppShell";
 import { StatusBadge } from "@/components/kuali/StatusBadge";
 import { OrderCard } from "@/components/kuali/OrderCard";
+import { ViewModeToggle } from "@/components/kuali/ViewModeToggle";
 import { orders as dummyOrders } from "@/lib/dummy-data";
 import type { Order } from "@/lib/dummy-data";
 import { formatRupiah } from "@/lib/format";
+import { useViewMode } from "@/lib/view-mode";
 import { cn } from "@/lib/utils";
 
 type FilterTab = "all" | "confirmed" | "draft" | "needs_check" | "unpaid";
@@ -302,6 +304,7 @@ function OrdersContent() {
   const [allOrders, setAllOrders] = useState<Order[]>(dummyOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+  const { mode, toggle } = useViewMode();
 
   useEffect(() => {
     fetch("/api/orders?today=true")
@@ -346,6 +349,37 @@ function OrdersContent() {
         >
           <X size={14} />
         </button>
+      )}
+    </div>
+  );
+
+  const priorityWeight = { needs_check: 0, draft: 1, confirmed: 2, cancelled: 3 };
+  const sortedSimple = [...allOrders].sort((a, b) => {
+    const pa = priorityWeight[a.status as keyof typeof priorityWeight] ?? 4;
+    const pb = priorityWeight[b.status as keyof typeof priorityWeight] ?? 4;
+    return pa !== pb ? pa - pb : (a.paymentStatus === "unpaid" ? -1 : 1);
+  });
+  const searchedSimple = searchOrders(sortedSimple, searchQuery);
+
+  const simpleDesktopContent = (
+    <div className="flex flex-col gap-4 pb-6 animate-fade-in">
+      {searchBar}
+      <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider px-1">
+        {searchedSimple.length} order · diurutkan berdasarkan prioritas
+      </p>
+      {searchedSimple.length === 0 ? (
+        <div className="py-24 text-center flex flex-col items-center">
+          <div className="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 mb-3">
+            <FileText size={24} />
+          </div>
+          <p className="text-[14px] font-bold text-[#1A1A1A]">Tidak ada pesanan</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 gap-4">
+          {searchedSimple.map((order) => (
+            <OrderCard key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
+          ))}
+        </div>
       )}
     </div>
   );
@@ -443,17 +477,32 @@ function OrdersContent() {
       title="Daftar Pesanan"
       subtitle={`${allOrders.length} order aktif hari ini`}
       headerRight={
-        <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-4 py-2 rounded-full shadow-sm">
-          <Calendar size={12} /> Data Simulasi Aktif
+        <div className="flex items-center gap-3">
+          <ViewModeToggle mode={mode} onToggle={toggle} />
+          <div className="flex items-center gap-1.5 text-[12px] font-black text-orange-500 bg-orange-50 border border-orange-100 px-4 py-2 rounded-full shadow-sm">
+            <Calendar size={12} /> Data Simulasi Aktif
+          </div>
         </div>
       }
-      desktopContent={desktopContent}
+      desktopContent={mode === "simple" ? simpleDesktopContent : desktopContent}
     >
       {/* Mobile list view */}
       <div className="px-4 py-4 flex flex-col gap-4">
-        {/* Search */}
         {searchBar}
 
+        {mode === "simple" ? (
+          <>
+            <p className="text-[11px] font-black text-[#ADADAD] uppercase tracking-wider px-1">
+              {searchedSimple.length} order · prioritas teratas dulu
+            </p>
+            <div className="flex flex-col gap-4">
+              {searchedSimple.map((order) => (
+                <OrderCard key={order.id} order={order} onClick={() => router.push(`/orders/${order.id}`)} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
         {/* Mobile Filter Strip */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
@@ -518,6 +567,8 @@ function OrdersContent() {
             </motion.div>
           )}
         </AnimatePresence>
+          </>
+        )}
       </div>
     </Shell>
   );
