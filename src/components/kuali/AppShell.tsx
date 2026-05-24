@@ -49,13 +49,20 @@ function DesktopSidebar() {
       collapsed ? "w-16" : "w-60"
     )}>
       {/* Logo + toggle */}
-      <div className={cn(
-        "py-5 border-b border-kuali-border flex items-center gap-3",
-        collapsed ? "px-3 justify-center" : "px-5 justify-between"
-      )}>
-        {collapsed ? (
-          <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-8 h-8 shrink-0" />
-        ) : (
+      {collapsed ? (
+        /* Collapsed: hanya tombol toggle ditengah */
+        <div className="flex items-center justify-center py-5 border-b border-kuali-border">
+          <button
+            onClick={toggle}
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-kuali-text-light hover:bg-kuali-surface-alt hover:text-kuali-text-dark transition-colors"
+            title="Buka sidebar"
+          >
+            <PanelLeftOpen size={16} />
+          </button>
+        </div>
+      ) : (
+        /* Expanded: logo + tombol tutup */
+        <div className="px-5 py-5 border-b border-kuali-border flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group min-w-0">
             <img src="/kuali-logo-mark.svg" alt="Kuali" className="w-9 h-9 shrink-0 group-hover:opacity-80 transition-opacity" />
             <div className="min-w-0">
@@ -63,15 +70,15 @@ function DesktopSidebar() {
               <div className="text-[10px] text-kuali-text-light leading-tight truncate">{user?.business ?? user?.name ?? "Kuali"}</div>
             </div>
           </Link>
-        )}
-        <button
-          onClick={toggle}
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-kuali-text-light hover:bg-kuali-surface-alt hover:text-kuali-text-dark transition-colors shrink-0"
-          title={collapsed ? "Buka sidebar" : "Tutup sidebar"}
-        >
-          {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
-        </button>
-      </div>
+          <button
+            onClick={toggle}
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-kuali-text-light hover:bg-kuali-surface-alt hover:text-kuali-text-dark transition-colors shrink-0"
+            title="Tutup sidebar"
+          >
+            <PanelLeftClose size={14} />
+          </button>
+        </div>
+      )}
 
       {/* Nav links */}
       <nav className="flex flex-col gap-1 px-2 py-4 flex-1">
